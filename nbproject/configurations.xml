@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>headers/audioRaspi.h</itemPath>
+      <itemPath>headers/backend.h</itemPath>
+      <itemPath>headers/disdrv.h</itemPath>
+      <itemPath>headers/joydrv.h</itemPath>
+      <itemPath>headers/libaudio.h</itemPath>
+      <itemPath>headers/menu.h</itemPath>
+      <itemPath>headers/termlib.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="Audio" projectFiles="true">
+        <itemPath>res/audio/disparo.wav</itemPath>
+        <itemPath>res/audio/game over.wav</itemPath>
+        <itemPath>res/audio/nave impacto.wav</itemPath>
+        <itemPath>res/audio/shoot.wav</itemPath>
+        <itemPath>res/audio/ufo_highpitch.wav</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="Imagenes" projectFiles="true">
+        <itemPath>res/img/baseshipa.png</itemPath>
+        <itemPath>res/img/baseshipb.png</itemPath>
+        <itemPath>res/img/invaddx.png</itemPath>
+        <itemPath>res/img/invaders.png</itemPath>
+        <itemPath>res/img/mysterya.png</itemPath>
+        <itemPath>res/img/mysteryb.png</itemPath>
+        <itemPath>res/img/saucer1a.png</itemPath>
+        <itemPath>res/img/saucer1b.png</itemPath>
+        <itemPath>res/img/saucer2a.png</itemPath>
+        <itemPath>res/img/saucer2b.png</itemPath>
+        <itemPath>res/img/saucer3a.png</itemPath>
+        <itemPath>res/img/saucer3b.png</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="Backend" projectFiles="true">
+        <itemPath>src/backend/backend.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="Frontend" projectFiles="true">
+        <logicalFolder name="f1" displayName="Allegro" projectFiles="true">
+          <itemPath>src/frontend/allegro/front.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="Raspi" projectFiles="true">
+          <itemPath>src/frontend/raspi/Raspi.c</itemPath>
+          <itemPath>src/frontend/raspi/audioRaspi.c</itemPath>
+          <itemPath>src/frontend/raspi/menu.c</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>src</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug_RPI" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <incDir>
+            <pElem>/usr/local/include</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>RASPI</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </cTool>
+        <linkerTool>
+          <linkerAddLib>
+            <pElem>/usr/local/lib</pElem>
+          </linkerAddLib>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs sdl`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs sdl2`</linkerOptionItem>
+          </linkerLibItems>
+          <commandLine>libs/disdrv.o libs/joydrv.o libs/termlib.o</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="headers/audioRaspi.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/backend.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/disdrv.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/joydrv.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/libaudio.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/menu.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/termlib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/disparo.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/game over.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/nave impacto.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/shoot.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/ufo_highpitch.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/backend/backend.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/frontend/raspi/Raspi.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/frontend/raspi/menu.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug_ALLEGRO" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <standard>10</standard>
+          <preprocessorList>
+            <Elem>ALLEGRO</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </cTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs allegro-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_acodec-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_audio-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_color-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_dialog-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_font-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_image-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_main-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_memfile-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_physfs-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_primitives-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_ttf-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_video-5`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="headers/backend.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/disparo.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/game over.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/nave impacto.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/shoot.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/ufo_highpitch.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/baseshipa.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/baseshipb.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/invaddx.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/invaders.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/mysterya.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/mysteryb.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/saucer1a.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/saucer1b.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/saucer2a.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/saucer2b.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/saucer3a.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/saucer3b.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/backend/backend.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/frontend/allegro/front.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
