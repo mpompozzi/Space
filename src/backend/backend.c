@@ -172,6 +172,7 @@ int ciclonaves(void) {//mueva las naves en la matriz
                 exit = 1; //marco salir
             }
         }
+        bajar=0;
     }
     return exit;
 }
