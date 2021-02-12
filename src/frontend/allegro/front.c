@@ -15,7 +15,7 @@
 #define STATE_STATS 3
 #define STATE_EXIT  4
 #define STATE_PAUSE 5
-
+//9999
 
 #define GAME_BACKGROUND "../../../res/img/invaders.png"
 #define ENEMY_BMP "../../../res/img/saucer1b.png"
