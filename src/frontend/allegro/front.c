@@ -376,9 +376,9 @@ coord_t enemies [MAX_ENEMIES];
 int frontboard[LARGO + 2][ANCHO + 2];
 
 void board_update(juego_t * juego){
-    int i, j, n, object, aux;
-    aux = 1;
+    int i, j, n, object, k;
     n = 0;
+    k = 0;
     //frontboard[1][1] = juego->tablero;
     for (i = 0; i < LARGO ; i++) {
         for (j = 0; j < ANCHO; j++){
@@ -387,12 +387,12 @@ void board_update(juego_t * juego){
             switch(object){
                 case(NADA):
                     shots[n].objeto = object; //antes de cargar el disparo, lo limpio
+                    shots[k].objeto = object;
                     break;
                 case(PLAYER):
-                    /*
                     juego->coordsp.i = i;
                     juego->coordsp.j = j;
-                    juego->coordsp.objeto = object;*/
+                    juego->coordsp.objeto = object;
                     break;
                 case(PSHOT):
                     /*shots[0].i = i;
@@ -405,23 +405,17 @@ void board_update(juego_t * juego){
                     shots[n].j = j; 
                     shots[n].objeto = object;
                     n += 1;
-                    break;/*
+                    break;
                 case(ENEMY):
                 case(ENEMY_2):
                 case(ENEMY_3):
-                    for(n = 1; n < MAX_SHOTS && aux; n++){
-                        if(enemies[n].objeto != ENEMY || enemies[n].objeto != ENEMY_2 || enemies[n].objeto != ENEMY_3){
-                            //eshots[n] = {i, j, object}; 
-                            enemies[n].i = i;
-                            enemies[n].j = j; 
-                            enemies[n].objeto = object;
-                            aux = 0;
-                        }
-                    }
+                    //eshots[n] = {i, j, object}; 
+                    enemies[k].i = i;
+                    enemies[k].j = j; 
+                    enemies[k].objeto = object;
                     break;
                 case(MURO):
                     break;
-                */
             }
         }
     }
