@@ -17,19 +17,19 @@
 #define STATE_PAUSE 5
 //9999
 
-#define GAME_BACKGROUND "../../../res/img/invaders.png"
-#define ENEMY_BMP "../../../res/img/saucer1b.png"
-#define ENEMY2_BMP "../../../res/img/saucer2b.png"
-#define ENEMY3_BMP "../../../res/img/saucer3b.png"
-#define NAVNOD_BMP "../../../res/img/mysteryb.png"
-#define PLAYER_BMP "../../../res/img/baseshipb.png"
+#define GAME_BACKGROUND "res/img/invaders.png"
+#define ENEMY_BMP "res/img/saucer1b.png"
+#define ENEMY2_BMP "res/img/saucer2b.png"
+#define ENEMY3_BMP "res/img/saucer3b.png"
+#define NAVNOD_BMP "res/img/mysteryb.png"
+#define PLAYER_BMP "res/img/baseshipa.png"
 
 
-#define GAME_SOUND "../../../res/audio/
-#define OPTION_SOUND "../../../res/img/invaders.png"
-#define SHOT_SOUND "../../../res/img/invaders.png"
-#define COLLITION_SOUND "../../../res/img/invaders.png"
-#define GAMEOVER_SOUND "../../../res/img/invaders.png"
+#define GAME_SOUND "../../../res/audio/"
+#define OPTION_SOUND "../../../res/audio/"
+#define SHOT_SOUND "../../../res/audio/disparo.wav"
+#define COLLITION_SOUND "../../../res/audio/"
+#define GAMEOVER_SOUND "../../../res/audio/"
 
 
 #define BLACK   al_map_rgb(0,0,0)
@@ -271,28 +271,30 @@ typedef struct GRAPHICS {
 
 GRAPHICS graphics;
 
+
+
 void graphics_init()
 {
     //graphics.menu_background = al_load_bitmap("/home/famolina/Escritorio/Recursos/space-invaders-1978-cabinet-artwork-1/invadbez.png");
-    graphics.menu_background = al_load_bitmap("/home/famolina/Escritorio/Recursos/space-invaders-dlx-cabinet-artwork/invaddx.png");
+    graphics.menu_background = al_load_bitmap(GAME_BACKGROUND);
     must_init(graphics.menu_background, "menu background");
   
-    graphics.game_background = al_load_bitmap("/home/famolina/Escritorio/Recursos/space-invaders-1978-cabinet-artwork-1/invaders.png");
+    graphics.game_background = al_load_bitmap(GAME_BACKGROUND);
     must_init(graphics.game_background, "game background");
     
-    graphics.enemy_bitmap = al_load_bitmap("/home/famolina/Escritorio/Recursos/iconsPNG/saucer1a.png");
+    graphics.enemy_bitmap = al_load_bitmap(ENEMY_BMP);
     must_init(graphics.enemy_bitmap, "enemy bitmap");
     
-    graphics.enemy2_bitmap = al_load_bitmap("/home/famolina/Escritorio/Recursos/iconsPNG/saucer1a.png");
+    graphics.enemy2_bitmap = al_load_bitmap(ENEMY2_BMP);
     must_init(graphics.enemy2_bitmap, "enemy 2 bitmap");
     
-    graphics.enemy3_bitmap = al_load_bitmap("/home/famolina/Escritorio/Recursos/iconsPNG/saucer1a.png");
+    graphics.enemy3_bitmap = al_load_bitmap(ENEMY3_BMP);
     must_init(graphics.enemy3_bitmap, "enemy 3 bitmap");
     
-    graphics.navnod_bitmap = al_load_bitmap("/home/famolina/Escritorio/Recursos/iconsPNG/mysterya.png");
+    graphics.navnod_bitmap = al_load_bitmap(NAVNOD_BMP);
     must_init(graphics.navnod_bitmap, "nave nodriza bitmap");
     
-    graphics.player_bitmap = al_load_bitmap("/home/famolina/Escritorio/Recursos/iconsPNG/baseshipa.png");
+    graphics.player_bitmap = al_load_bitmap(PLAYER_BMP);
     must_init(graphics.player_bitmap, "player bitmap");
 }
 
