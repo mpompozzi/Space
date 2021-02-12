@@ -91,11 +91,11 @@ void getcoordp(juego_t *juego) {
     if (juego == NULL) {
         return;
     }
-    int i;
-    for (i = 0; i < ANCHO; ++i) {
-        if (space[LARGO - 1][i] == PLAYER) {
-            juego->coordsp.i = i;
-            juego->coordsp.j = LARGO - 1;
+    int j;
+    for (j = 0; j < ANCHO; ++j) {
+        if (space[LARGO - 1][j] == PLAYER) {
+            juego->coordsp.i = LARGO-1;
+            juego->coordsp.j = j;
             juego->coordsp.objeto = PLAYER;
         }
     }
