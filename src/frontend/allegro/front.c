@@ -30,9 +30,9 @@
 
 #define GAME_SOUND "../../../res/audio/"
 #define OPTION_SOUND "../../../res/audio/"
-#define SHOT_SOUND "../../../res/audio/disparo.wav"
-#define COLLISION_SOUND "../../../res/audio/"
-#define GAMEOVER_SOUND "../../../res/audio/"
+#define SHOT_SOUND "res/audio/disparo.wav"
+#define COLLISION_SOUND "res/audio/nave impacto.wav"
+#define GAMEOVER_SOUND "res/audio/game over.wav"
 
 int game_states;
 
@@ -272,25 +272,25 @@ GRAPHICS graphics;
 void graphics_init()
 {
     //graphics.menu_background = al_load_bitmap("/home/famolina/Escritorio/Recursos/space-invaders-1978-cabinet-artwork-1/invadbez.png");
-    graphics.menu_background = al_load_bitmap("MENU_BACKGROUND");
+    graphics.menu_background = al_load_bitmap(MENU_BACKGROUND);
     must_init(graphics.menu_background, "menu background");
   
     graphics.game_background = al_load_bitmap(GAME_BACKGROUND);
     must_init(graphics.game_background, "game background");
     
-    graphics.enemy_bitmap = al_load_bitmap("ENEMY_BMP");
+    graphics.enemy_bitmap = al_load_bitmap(ENEMY_BMP);
     must_init(graphics.enemy_bitmap, "enemy bitmap");
     
-    graphics.enemy2_bitmap = al_load_bitmap("ENEMY_BMP");
+    graphics.enemy2_bitmap = al_load_bitmap(ENEMY_BMP);
     must_init(graphics.enemy2_bitmap, "enemy 2 bitmap");
     
-    graphics.enemy3_bitmap = al_load_bitmap("ENEMY_BMP");
+    graphics.enemy3_bitmap = al_load_bitmap(ENEMY_BMP);
     must_init(graphics.enemy3_bitmap, "enemy 3 bitmap");
     
-    graphics.navnod_bitmap = al_load_bitmap("NAVNOD_BMP");
+    graphics.navnod_bitmap = al_load_bitmap(NAVNOD_BMP);
     must_init(graphics.navnod_bitmap, "nave nodriza bitmap");
     
-    graphics.player_bitmap = al_load_bitmap("PLAYER_BMP");
+    graphics.player_bitmap = al_load_bitmap(PLAYER_BMP);
     must_init(graphics.player_bitmap, "player bitmap");
 }
 
