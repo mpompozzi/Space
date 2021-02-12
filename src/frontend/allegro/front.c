@@ -16,6 +16,22 @@
 #define STATE_EXIT  4
 #define STATE_PAUSE 5
 
+
+#define GAME_BACKGROUND "../../../res/img/invaders.png"
+#define ENEMY_BMP "../../../res/img/saucer1b.png"
+#define ENEMY2_BMP "../../../res/img/saucer2b.png"
+#define ENEMY3_BMP "../../../res/img/saucer3b.png"
+#define NAVNOD_BMP "../../../res/img/mysteryb.png"
+#define PLAYER_BMP "../../../res/img/baseshipb.png"
+
+
+#define GAME_SOUND "../../../res/audio/
+#define OPTION_SOUND "../../../res/img/invaders.png"
+#define SHOT_SOUND "../../../res/img/invaders.png"
+#define COLLITION_SOUND "../../../res/img/invaders.png"
+#define GAMEOVER_SOUND "../../../res/img/invaders.png"
+
+
 #define BLACK   al_map_rgb(0,0,0)
 #define WHITE   al_map_rgb(155,155,155)
 #define RED     al_map_rgb(255,0,0)
@@ -97,7 +113,7 @@ void keyboard_update(ALLEGRO_EVENT* event)
         case ALLEGRO_EVENT_TIMER:  
             if(key[ALLEGRO_KEY_RIGHT]) key[ALLEGRO_KEY_RIGHT] &= KEY_SEEN;
             if(key[ALLEGRO_KEY_LEFT]) key[ALLEGRO_KEY_LEFT] &= KEY_SEEN;
-            if(key[ALLEGRO_KEY_D]) key[ALLEGRO_KEY_D] &= KEY_SEEN;
+            if(key[ALLEGRO_KEY_SPACE]) key[ALLEGRO_KEY_SPACE] &= KEY_SEEN;
             break;
     }
 }
