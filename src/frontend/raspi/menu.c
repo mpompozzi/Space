@@ -189,3 +189,14 @@ int get_menu(int i, int j)
     int dato;
     return dato = space[i][j];
 }
+void clrmat (void)
+{
+  int i,j;
+  for(i=0;i<ANCHO;i++)
+    {
+      for (j=0;j<LARGO;j++)
+        {
+          space[i][j]=0;
+        }
+    }
+}
