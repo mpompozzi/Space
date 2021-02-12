@@ -7,7 +7,7 @@
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_image.h>
 
-#include "../../../headers/backend.h"
+#include "../../../headers/backend.h" 
 
 #define STATE_START 0
 #define STATE_MENU  1
@@ -15,22 +15,6 @@
 #define STATE_STATS 3
 #define STATE_EXIT  4
 #define STATE_PAUSE 5
-//9999
-
-#define GAME_BACKGROUND "res/img/invaders.png"
-#define ENEMY_BMP "res/img/saucer1b.png"
-#define ENEMY2_BMP "res/img/saucer2b.png"
-#define ENEMY3_BMP "res/img/saucer3b.png"
-#define NAVNOD_BMP "res/img/mysteryb.png"
-#define PLAYER_BMP "res/img/baseshipa.png"
-
-
-#define GAME_SOUND "../../../res/audio/"
-#define OPTION_SOUND "../../../res/audio/"
-#define SHOT_SOUND "../../../res/audio/disparo.wav"
-#define COLLITION_SOUND "../../../res/audio/"
-#define GAMEOVER_SOUND "../../../res/audio/"
-
 
 #define BLACK   al_map_rgb(0,0,0)
 #define WHITE   al_map_rgb(155,155,155)
@@ -119,8 +103,8 @@ void keyboard_update(ALLEGRO_EVENT* event)
 }
 
 //------------------------
-ALLEGRO_SAMPLE* game_sound;
-ALLEGRO_SAMPLE* option_sound;
+/*ALLEGRO_SAMPLE* game_sound;
+ALLEGRO_SAMPLE* option_sound;*/
 ALLEGRO_SAMPLE* shot_sound;
 ALLEGRO_SAMPLE* collision_sound;
 ALLEGRO_SAMPLE* gameover_sound;
@@ -131,11 +115,11 @@ void audio_init()
     al_init_acodec_addon();
     al_reserve_samples(128);
 
-    game_sound = al_load_sample("shot.flac");
+    /*game_sound = al_load_sample("shot.flac");
     must_init(game_sound, "game sound");
 
     option_sound = al_load_sample("explode2.flac");
-    must_init(option_sound, "option selected sound");
+    must_init(option_sound, "option selected sound");*/
     
     shot_sound = al_load_sample("/home/famolina/Escritorio/Recursos/sonidos_naves/disparo.wav");
     must_init(shot_sound, "shot sound");
@@ -149,8 +133,8 @@ void audio_init()
 
 void audio_deinit()
 {
-    al_destroy_sample(game_sound);
-    al_destroy_sample(option_sound);
+    /*al_destroy_sample(game_sound);
+    al_destroy_sample(option_sound);*/
     al_destroy_sample(shot_sound);
     al_destroy_sample(collision_sound);
     al_destroy_sample(gameover_sound);
@@ -271,30 +255,28 @@ typedef struct GRAPHICS {
 
 GRAPHICS graphics;
 
-
-
 void graphics_init()
 {
     //graphics.menu_background = al_load_bitmap("/home/famolina/Escritorio/Recursos/space-invaders-1978-cabinet-artwork-1/invadbez.png");
-    graphics.menu_background = al_load_bitmap(GAME_BACKGROUND);
+    graphics.menu_background = al_load_bitmap("/home/famolina/Escritorio/Recursos/space-invaders-dlx-cabinet-artwork/invaddx.png");
     must_init(graphics.menu_background, "menu background");
   
-    graphics.game_background = al_load_bitmap(GAME_BACKGROUND);
+    graphics.game_background = al_load_bitmap("/home/famolina/Escritorio/Recursos/space-invaders-1978-cabinet-artwork-1/invaders.png");
     must_init(graphics.game_background, "game background");
     
-    graphics.enemy_bitmap = al_load_bitmap(ENEMY_BMP);
+    graphics.enemy_bitmap = al_load_bitmap("/home/famolina/Escritorio/Recursos/iconsPNG/saucer1a.png");
     must_init(graphics.enemy_bitmap, "enemy bitmap");
     
-    graphics.enemy2_bitmap = al_load_bitmap(ENEMY2_BMP);
+    graphics.enemy2_bitmap = al_load_bitmap("/home/famolina/Escritorio/Recursos/iconsPNG/saucer1a.png");
     must_init(graphics.enemy2_bitmap, "enemy 2 bitmap");
     
-    graphics.enemy3_bitmap = al_load_bitmap(ENEMY3_BMP);
+    graphics.enemy3_bitmap = al_load_bitmap("/home/famolina/Escritorio/Recursos/iconsPNG/saucer1a.png");
     must_init(graphics.enemy3_bitmap, "enemy 3 bitmap");
     
-    graphics.navnod_bitmap = al_load_bitmap(NAVNOD_BMP);
+    graphics.navnod_bitmap = al_load_bitmap("/home/famolina/Escritorio/Recursos/iconsPNG/mysterya.png");
     must_init(graphics.navnod_bitmap, "nave nodriza bitmap");
     
-    graphics.player_bitmap = al_load_bitmap(PLAYER_BMP);
+    graphics.player_bitmap = al_load_bitmap("/home/famolina/Escritorio/Recursos/iconsPNG/baseshipa.png");
     must_init(graphics.player_bitmap, "player bitmap");
 }
 
@@ -338,13 +320,13 @@ coord_t disparo;
 #define SHOOT_LEFT  5
 
 void move_player(ALLEGRO_EVENT ev){ //no me reconoce dos teclas presionadas al mismo tiempo //UPDATE: se soluciono con los else if 
-    if(key[ALLEGRO_KEY_D] && key[ALLEGRO_KEY_RIGHT]){
+    if(key[ALLEGRO_KEY_SPACE] && key[ALLEGRO_KEY_RIGHT]){
         juego.mov = SHOOT_RIGHT;
     }  
-    else if(key[ALLEGRO_KEY_D] && key[ALLEGRO_KEY_LEFT]){
+    else if(key[ALLEGRO_KEY_SPACE] && key[ALLEGRO_KEY_LEFT]){
         juego.mov = SHOOT_LEFT;
     }  
-    else if(key[ALLEGRO_KEY_D]){
+    else if(key[ALLEGRO_KEY_SPACE]){
         juego.mov = SHOOT;
     }   
     else if(key[ALLEGRO_KEY_RIGHT]){
@@ -360,14 +342,98 @@ void game_update(ALLEGRO_EVENT ev){
     move_player(ev);
     getcoordp(&juego);
     pmov(&juego);
+    
     //printf("%d \n", juego.coordsp.j);
     //printf("%d \n", juego.coordsp.i);
-    
-    getcoordp(&juego);
+    /*
+    getcoordp(&juego, PSHOT);
     if(juego.coordsp.objeto == PSHOT){
         ciclodisp(&juego, juego.coordsp.i, juego.coordsp.j);
         //printf("%d \n", juego.coordsp.objeto);
+    }*/
+}
+
+#define MAX_SHOTS   30
+#define MAX_ENEMIES 30
+//coord_t pshot;
+coord_t shots [MAX_SHOTS]; //el primero es el del jugador 
+coord_t enemies [MAX_ENEMIES];        
+
+int frontboard[LARGO + 2][ANCHO + 2];
+
+void board_update(juego_t * juego){
+    int i, j, n, object, aux;
+    aux = 1;
+    n = 0;
+    //frontboard[1][1] = juego->tablero;
+    for (i = 0; i < LARGO ; i++) {
+        for (j = 0; j < ANCHO; j++){
+            object = getmat(i, j);
+            //object = * (juego->tablero * i + j);
+            switch(object){
+                case(NADA):
+                    shots[n].objeto = object; //antes de cargar el disparo, lo limpio
+                    break;
+                case(PLAYER):
+                    /*
+                    juego->coordsp.i = i;
+                    juego->coordsp.j = j;
+                    juego->coordsp.objeto = object;*/
+                    break;
+                case(PSHOT):
+                    /*shots[0].i = i;
+                    shots[0].j = j; 
+                    shots[0].objeto = object;
+                    break;*/
+                case(ESHOT):
+                    //eshots[n] = {i, j, object}; 
+                    shots[n].i = i;
+                    shots[n].j = j; 
+                    shots[n].objeto = object;
+                    n += 1;
+                    break;/*
+                case(ENEMY):
+                case(ENEMY_2):
+                case(ENEMY_3):
+                    for(n = 1; n < MAX_SHOTS && aux; n++){
+                        if(enemies[n].objeto != ENEMY || enemies[n].objeto != ENEMY_2 || enemies[n].objeto != ENEMY_3){
+                            //eshots[n] = {i, j, object}; 
+                            enemies[n].i = i;
+                            enemies[n].j = j; 
+                            enemies[n].objeto = object;
+                            aux = 0;
+                        }
+                    }
+                    break;
+                case(MURO):
+                    break;
+                */
+            }
+        }
     }
+}
+
+void shots_update(ALLEGRO_EVENT ev){
+    int n, aux;
+    coord_t evento;
+    for(n = 0; n < MAX_SHOTS && aux; n++){
+        if(shots[n].objeto == PSHOT || shots[n].objeto == ESHOT){
+            evento = ciclodisp(&juego, shots[n].i, shots[n].j);
+        }
+        else aux = 0;                         
+    } 
+    /*
+    int i, j;
+    for (i = 0; i < LARGO; i++) {
+        for (j = 0; j < ANCHO; j++){
+            evento = ciclodisp(&juego, i, j);
+        }
+    }
+    evento = ciclodisp(&juego, i, j);
+    if(pshot.i == LARGO - 2){
+        al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+     */
 }
 
 int button_update(ALLEGRO_EVENT ev, BUTTON * button){
@@ -567,11 +633,13 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             getcoordp(&juego);
             al_draw_bitmap(graphics.game_background,0,0,0);
             al_draw_bitmap(graphics.player_bitmap, juego.coordsp.j - CELL/2, juego.coordsp.i - CELL, 0);
-            getcoordp(&juego);
-            if(juego.coordsp.objeto == PSHOT){
-                al_draw_line(juego.coordsp.j, juego.coordsp.i - 5, juego.coordsp.j, juego.coordsp.i + 5, RED, 2);
-                al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-            }
+            
+            /*if(ev.timer.source == timer_shot){
+                if(juego.coordsp.objeto == PSHOT){
+                    al_draw_line(juego.coordsp.j, juego.coordsp.i - 5, juego.coordsp.j, juego.coordsp.i + 5, RED, 2);
+                    //al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                }
+            }*/
             hud_draw(vidas, puntaje, buttons[1][0].font);
             break;
             
@@ -594,6 +662,22 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             }
             break;
     }
+}    
+
+void shots_draw(ALLEGRO_EVENT ev){
+    int n, aux;
+    for(n = 0; n < MAX_SHOTS && aux; n++){
+        if(shots[n].objeto == PSHOT){
+            al_draw_line(shots[n].j, shots[n].i - 5, shots[n].j, shots[n].i + 5, RED, 4);
+            if(shots[n].i > LARGO - 5) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        }
+        else if(shots[n].objeto == ESHOT){
+            al_draw_line(shots[n].j, shots[n].i - 5, shots[n].j, shots[n].i + 5, RED, 4);
+        }
+        else aux = 0;                         
+    }
+}
+   
     /* MOUSE INTERACTION
     switch(game_states){
             case(STATE_START):
@@ -633,7 +717,7 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                 }
                 break;
     }*/
-}
+
     /*
     if(!(menu[0].pressed && menu[1].pressed && menu[2].pressed)){
         
@@ -659,6 +743,7 @@ void update(ALLEGRO_EVENT ev){
 }
 */
 
+
 int main(void){
     
     must_init(al_init(), "allegro");
@@ -672,8 +757,8 @@ int main(void){
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
     must_init(timer, "timer");
     
-    /*ALLEGRO_TIMER* seconds_timer = al_create_timer(1);
-    must_init(seconds_timer, "seconds timer");*/
+    ALLEGRO_TIMER* timer_shot = al_create_timer(1 / 120.0);
+    must_init(timer_shot, "timer_shot");
 
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
     must_init(queue, "queue");
@@ -685,7 +770,7 @@ int main(void){
     must_init(al_init_image_addon(), "image");
     
     disp_init();
-    //audio_init();
+    audio_init();
     //hud_init();
     keyboard_init();
     
@@ -698,7 +783,7 @@ int main(void){
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_display_event_source(disp));
     al_register_event_source(queue, al_get_timer_event_source(timer));
-    //al_register_event_source(queue, al_get_timer_event_source(seconds_timer));
+    al_register_event_source(queue, al_get_timer_event_source(timer_shot));
     al_register_event_source(queue, al_get_mouse_event_source());
     
     BUTTON buttons_menu [] = {{310,300,100,25, "START", font, 0},
@@ -741,7 +826,7 @@ int main(void){
     ALLEGRO_EVENT event;
     
     al_start_timer(timer);
-    //al_start_timer(seconds_timer);
+    al_start_timer(timer_shot);
     
     while(!done){
         
@@ -750,6 +835,9 @@ int main(void){
         if(redraw && al_is_event_queue_empty(queue)){
             disp_pre_draw();
             menu_draw(event, buttons);
+            if(game_states == STATE_PLAY){
+                shots_draw(event);
+            }
             disp_post_draw();
             redraw = false;
         }
@@ -768,6 +856,14 @@ int main(void){
                     if(game_states == STATE_PLAY)
                         game_update(event);
                 }
+                
+                
+                if(event.timer.source == timer_shot){
+                    if(game_states == STATE_PLAY){
+                        board_update(&juego);
+                        shots_update(event);
+                    }   
+                }   
                 break;
             
             case ALLEGRO_EVENT_KEY_DOWN:
@@ -793,9 +889,9 @@ int main(void){
     al_destroy_font(font);
     graphics_deinit();
     //hud_deinit();
-    //audio_deinit();
+    audio_deinit();
     al_destroy_timer(timer);
-    //al_destroy_timer(seconds_timer);
+    al_destroy_timer(timer_shot);
     al_destroy_event_queue(queue);
     
     return 0;
