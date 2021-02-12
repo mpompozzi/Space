@@ -413,6 +413,7 @@ void board_update(juego_t * juego){
                     enemies[k].i = i;
                     enemies[k].j = j; 
                     enemies[k].objeto = object;
+                    k += 1;
                     break;
                 case(MURO):
                     break;
