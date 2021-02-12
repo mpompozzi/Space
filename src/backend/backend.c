@@ -219,9 +219,7 @@ coord_t ciclodisp(juego_t *juego, int i, int j) {//mueve los disparos y cambia p
     }
     evento.i = i;
     evento.j = j;
-    printf("Backend: i= %d j= %d \n",i,j);
-    printf("Back, evento: %d \n",space[i][j]);
-    
+        
     if (space[i][j] == ESHOT) {//si hay un disparo enemigo
         mov = ABAJO;
         if (i == (LARGO - 1)) {//si estoy en la ultima fila lo desaparezco
