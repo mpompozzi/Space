@@ -257,7 +257,7 @@ int main (void)
           quit_game= pause_menu();
           rasprint(MENU);
           sleep(2);
-          clearmat(MENU);
+          clrmat();
           menu(JUGAR);
           while (joy_get_switch () == J_NOPRESS)
             {
