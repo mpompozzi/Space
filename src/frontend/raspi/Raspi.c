@@ -122,6 +122,8 @@ int main (void)
           //ACA QUIERO HACER QUE PARPADEE UN PAR DE VECES PARA QUE QUEDE LINDO NOMAS
           rasprint(GAME);
           usleep(200);
+          clrmat();
+          rasprint(MENU);
           usleep(200);
           rasprint(GAME);
         }
