@@ -135,7 +135,7 @@ int ciclonaves(void) {//mueva las naves en la matriz
             mov = DER;
             for (i = (LARGO - 2); i >= 0; --i) {
                 for (j = (ANCHO - 1); j >= 0; --j) {
-                    if ((space[i][j] >= 1)&&(space[i][j] <= 5)) {//si hay nave
+                    if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave
                         movmat(i, j, mov);
                         if ((space[i][ANCHO - 1] >= 1)&&(space[i][ANCHO - 1] <= 4)) {//si hay algo en la ultima col
                             direccion = IZQ; //invierto direccion
@@ -148,7 +148,7 @@ int ciclonaves(void) {//mueva las naves en la matriz
             mov = IZQ;
             for (i = (LARGO - 2); i >= 0; --i) {
                 for (j = 0; j < ANCHO; ++j) {
-                    if ((space[i][j] >= 1)&&(space[i][j] <= 5)) {//si hay nave                       
+                    if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave                       
                         movmat(i, j, mov);
                         if ((space[i][0] >= 1)&&(space[i][0] <= 4)) {//si hay algo en la primer col
                             direccion = DER; //invuerto direccion
@@ -162,13 +162,13 @@ int ciclonaves(void) {//mueva las naves en la matriz
         mov = ABAJO;
         for (i = (LARGO - 2); i >= 0; --i) {
             for (j = 0; j < ANCHO; ++j) {
-                if ((space[i][j] >= 1)&&(space[i][j] <= 5)) {//si hay nave                           
+                if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave                           
                     movmat(i, j, mov);
                 }
             }
         }
         for (i = (LARGO - 1), j = 0; j < ANCHO; ++j) {
-            if ((space[i][j] >= 1)&&(space[i][j] <= 5)) {//si hay nave 
+            if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave 
                 exit = 1; //marco salir
             }
         }
