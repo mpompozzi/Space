@@ -213,7 +213,7 @@ int nav_nod(void) { //spawnea nave nod y mueve nave nod
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 
-coord_t ciclodisp(juego_t *juego, int i, int j) {//mueve los disparos y cambia puntaje y vidas
+coord_t ciclodispp(juego_t *juego, int i, int j) {//mueve los disparos y cambia puntaje y vidas
     int mov;
     coord_t evento;
     if (juego == NULL) {
@@ -223,28 +223,7 @@ coord_t ciclodisp(juego_t *juego, int i, int j) {//mueve los disparos y cambia p
     evento.i = i;
     evento.j = j;
         
-    if (space[i][j] == ESHOT) {//si hay un disparo enemigo
-        mov = ABAJO;
-        if (i == (LARGO - 1)) {//si estoy en la ultima fila lo desaparezco
-            space[i][j] = 0;
-        } else {//si estoy en otra fila
-            if (space[i + 1][j] == 0) {//si adelante del disparo no hay nada
-                movmat(i, j, mov);
-            } else {//hay algo
-                if (space[i + 1][j] == PLAYER) {//si es el jugador
-                    space[i][j] = 0;
-                    juego->vidas -= 1; //pierde una vida
-                    evento.objeto = JUGADOR;
-                    return evento;
-                } else {//si es un escudo
-                    space[i][j] = 0;
-                    space[i + 1][j] = 0; //rompe el escudo
-                    evento.objeto = ESCUDO;
-                    return evento;
-                }
-            }
-        }
-    }
+    
     if (space[i][j] == PSHOT) {//si hay un disparo de jugador
         mov = UP;
         if (i == 0) {//estoy en la primer fil 
@@ -276,6 +255,42 @@ coord_t ciclodisp(juego_t *juego, int i, int j) {//mueve los disparos y cambia p
                 } else {//si es un escudo
                     space[i][j] = 0;
                     space[i - 1][j] = 0; //rompe el escudo
+                    evento.objeto = ESCUDO;
+                    return evento;
+                }
+            }
+        }
+    }
+    evento.objeto = NADA;
+    return evento;
+}
+//////////////////////////////////////////////////////////////////////////////////////
+coord_t ciclodispe(juego_t*juego,int i,int j){//mueve disparos del player y el enemigo
+        int mov;
+    coord_t evento;
+    if (juego == NULL) {
+        evento.objeto = WARNING;
+        return evento;
+    }
+    evento.i = i;
+    evento.j = j;
+     
+if (space[i][j] == ESHOT) {//si hay un disparo enemigo
+        mov = ABAJO;
+        if (i == (LARGO - 1)) {//si estoy en la ultima fila lo desaparezco
+            space[i][j] = 0;
+        } else {//si estoy en otra fila
+            if (space[i + 1][j] == 0) {//si adelante del disparo no hay nada
+                movmat(i, j, mov);
+            } else {//hay algo
+                if (space[i + 1][j] == PLAYER) {//si es el jugador
+                    space[i][j] = 0;
+                    juego->vidas -= 1; //pierde una vida
+                    evento.objeto = JUGADOR;
+                    return evento;
+                } else {//si es un escudo
+                    space[i][j] = 0;
+                    space[i + 1][j] = 0; //rompe el escudo
                     evento.objeto = ESCUDO;
                     return evento;
                 }

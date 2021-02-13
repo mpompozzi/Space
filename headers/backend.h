@@ -77,7 +77,8 @@ void inimat (void);//inicializa la matriz en 0
 void printmat (void);//imprime la matriz (testeo)
 void ininiv(int);//se fija en que nivel estas y carga cierto patron de naves, pone los escudos y la nave del player
 int ciclonaves (void);//mueve las naves enemigas
-coord_t ciclodisp(juego_t*,int,int);//mueve disparos del player y el enemigo
+coord_t ciclodispp(juego_t*,int,int);//mueve disparos del player y el enemigo
+coord_t ciclodispe(juego_t*,int,int);//mueve disparos del player y el enemigo
 void verparams(juego_t*);//se fija si pasaste de nivel, cambia las naves para que puedas disparar
 void navdisp(void );//decide si dispara las naves, y spawnea nave nodriza
 void pmov(juego_t*); //recibe el input del jugador y mueve o dispara, o se mueve en el menu /pone pausa al juego
