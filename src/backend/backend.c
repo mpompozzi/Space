@@ -291,7 +291,7 @@ void verparams(juego_t *juego) {//se fija si pasaste al siguiente nivel y de act
     static int prom = 1; //1 si tengo q promover una nave para q dispare
     for (i = 0; i < LARGO; ++i) {
         for (j = 0; j < ANCHO; ++j) {
-            if ((space[i][j] >= 1)&&(space[i][j] <= 5)) {//si hay naves
+            if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay naves
 //                vacio = 1; //marco q no incremento el nivel
                 juego->naves += 1; //cuento las naves
             }
@@ -305,7 +305,7 @@ void verparams(juego_t *juego) {//se fija si pasaste al siguiente nivel y de act
             }
             if ((space[j][i] == ENEMY) || (space[j][i] == ENEMY_2) || (space[j][i] == ENEMY_3)) {//cambiar si agrego mas tipos de enemigos
                 if (prom == 1) {//si no encontre ninguna nave q dispara antes q esta
-                    juego->puntaje -= (ENEMYSHOT - space[i][j])*10;
+                    juego->puntaje -= (ENEMYSHOT - space[j][i])*10;
                     space[j][i] = ENEMYSHOT; //promuevo esa nave para q dispare                    
                     prom = 0; //ya no necesito promover otra
                 }
@@ -450,6 +450,7 @@ void crear_enemigo(int nivel) {
 
 void crear_muro(void) {
     int i, j;
+#ifdef RASPI
     for (i = 13; i < 15; ++i) {
         for (j = 1; j < ANCHO; j += 3) {//seteo defensas
             space[i][j] = MURO;
@@ -459,7 +460,9 @@ void crear_muro(void) {
             space[i][j] = MURO;
         }
     }
-
+#elif ALLEGRO
+    
+#endif
 }
 //////////////////////////////////////////////////////////////////////////////
 
