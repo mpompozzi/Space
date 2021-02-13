@@ -330,7 +330,7 @@ void game_update(ALLEGRO_EVENT ev, juego_t * juego){
 }
 
 #define MAX_SHOTS   20
-#define MAX_ENEMIES 20
+#define MAX_ENEMIES 50
 coord_t player;
 coord_t shots [MAX_SHOTS]; //el primero es el del jugador 
        
@@ -380,7 +380,7 @@ void board_update(juego_t * juego){
                 case(ENEMY):
                 case(ENEMY_2):
                 case(ENEMY_3):
-                    //eshots[n] = {i, j, object}; 
+                case(ENEMYSHOT):
                     enemy_logic.cell[k].i = i;
                     enemy_logic.cell[k].j = j; 
                     enemy_logic.cell[k].objeto = frontboard[i][j];
@@ -672,9 +672,8 @@ void enemies_draw(void){
     aux = 1;
     for(n = 0; n < MAX_ENEMIES && aux == 1; n++){
         //printf("ENEMY %d %d %d \n", enemies[n].objeto, enemies[n].i, enemies[n].j);
-        if(enemy_logic.cell[n].objeto == ENEMY){
+        if((enemy_logic.cell[n].objeto == ENEMY) || (enemy_logic.cell[n].objeto == ENEMYSHOT)){
             al_draw_bitmap(graphics.enemy_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
-            
         }
         else if(enemy_logic.cell[n].objeto == ENEMY_2){
             al_draw_bitmap(graphics.enemy2_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
