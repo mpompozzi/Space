@@ -369,30 +369,32 @@ void game_update(ALLEGRO_EVENT ev){
 
 #define MAX_SHOTS   30
 #define MAX_ENEMIES 50
-//coord_t pshot;
+coord_t player;
 coord_t shots [MAX_SHOTS]; //el primero es el del jugador 
 coord_t enemies [MAX_ENEMIES];        
 
 int frontboard[LARGO + 2][ANCHO + 2];
 
 void board_update(juego_t * juego){
-    int i, j, n, object, k;
+    int i, j, n, object, k;         
     n = 0;
     k = 0;
     //frontboard[1][1] = juego->tablero;
     for (i = 0; i < LARGO ; i++) {
         for (j = 0; j < ANCHO; j++){
-            object = getmat(i, j);
+            frontboard[i + 1][j + 1] = getmat(i, j);
             //object = * (juego->tablero * i + j);
-            switch(object){
+            switch(frontboard[i + 1][j + 1]){
                 case(NADA):
-                    shots[n].objeto = object; //antes de cargar el disparo, lo limpio
-                    enemies[k].objeto = object;
+                    shots[n].objeto = frontboard[i + 1][j + 1]; //antes de cargar el disparo, lo limpio
+                    enemies[k].objeto = frontboard[i + 1][j + 1];
                     break;
                 case(PLAYER):
-                    juego->coordsp.i = i;
-                    juego->coordsp.j = j;
-                    juego->coordsp.objeto = object;
+                    if(frontboard[i][j+1] == NADA && frontboard[i + 1][j] == NADA){
+                        player.i = i;
+                        player.j = j;
+                        player.objeto = frontboard[i + 1][j + 1];
+                    }
                     break;
                 case(PSHOT):
                     /*shots[0].i = i;
@@ -403,17 +405,16 @@ void board_update(juego_t * juego){
                     //eshots[n] = {i, j, object}; 
                     shots[n].i = i;
                     shots[n].j = j; 
-                    shots[n].objeto = object;
+                    shots[n].objeto = frontboard[i + 1][j + 1];
                     n += 1;
                     break;
                 case(ENEMY):
                 //case(ENEMY_2):
                 //case(ENEMY_3):
                     //eshots[n] = {i, j, object}; 
-                    al_draw_bitmap(graphics.enemy_bitmap, SCALE* j - CELL/2, SCALE * i - CELL, 0);
                     enemies[k].i = i;
                     enemies[k].j = j; 
-                    enemies[k].objeto = object;
+                    enemies[k].objeto = frontboard[i + 1][j + 1];
                     k += 1;
                    
                     break;
@@ -616,7 +617,7 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             break;
     }*/
 
-#define SCALE 2
+#define SCALE 20
 
 void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
     
@@ -641,10 +642,10 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             break;
         case(STATE_PLAY):
             al_clear_to_color(al_map_rgb(0,0,0));
-            getcoordp(&juego);
             al_draw_bitmap(graphics.game_background,0,0,0);
+            getcoordp(&juego);
             al_draw_bitmap(graphics.player_bitmap, SCALE*juego.coordsp.j - CELL/2, SCALE*juego.coordsp.i - CELL, 0);
-            
+            //al_draw_bitmap(graphics.player_bitmap, SCALE * player.j, SCALE * player.i, 0);
             /*if(ev.timer.source == timer_shot){
                 if(juego.coordsp.objeto == PSHOT){
                     al_draw_line(juego.coordsp.j, juego.coordsp.i - 5, juego.coordsp.j, juego.coordsp.i + 5, RED, 2);
