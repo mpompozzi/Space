@@ -331,13 +331,14 @@ void game_update(ALLEGRO_EVENT ev, juego_t * juego){
 
 #define MAX_SHOTS   20
 #define MAX_ENEMIES 50
-coord_t player;
-coord_t shots [MAX_SHOTS]; //el primero es el del jugador 
+coord_t pshot;
+ //el primero es el del jugador 
        
 
 typedef struct {
   ALLEGRO_TIMER * timers  [10];
   coord_t cell [MAX_ENEMIES]; 
+  coord_t shot [MAX_SHOTS];
 } enemylogic_t; 
 
 enemylogic_t enemy_logic;
@@ -358,7 +359,7 @@ void board_update(juego_t * juego){
             frontboard[i][j] = getmat(i, j);
             switch(frontboard[i][j]){
                 case(NADA):
-                    shots[n].objeto = frontboard[i + 1][j + 1]; //antes de cargar el disparo, lo limpio
+                    enemy_logic.shot[n].objeto = frontboard[i][j]; //antes de cargar el disparo, lo limpio
                     enemy_logic.cell[k].objeto = frontboard[i][j];
                     juego->naves = k;
                     break;
@@ -371,10 +372,14 @@ void board_update(juego_t * juego){
                     }*/
                     break;
                 case(PSHOT):
+                    pshot.i = i;
+                    pshot.j = j; 
+                    pshot.objeto = frontboard[i][j];
+                    break;
                 case(ESHOT):
-                    shots[n].i = i;
-                    shots[n].j = j; 
-                    shots[n].objeto = frontboard[i][j];
+                    enemy_logic.shot[n].i = i;
+                    enemy_logic.shot[n].j = j; 
+                    enemy_logic.shot[n].objeto = frontboard[i][j];
                     n += 1;
                     break;
                 case(ENEMY):
@@ -399,10 +404,14 @@ void board_update(juego_t * juego){
 
 void shots_update(ALLEGRO_EVENT ev){
     int n, aux;
-    coord_t evento;
+    coord_t eventoe, eventop;
+    if(pshot.objeto == PSHOT){
+        eventop = ciclodispp(&juego, pshot.i, pshot.j);
+        if(eventop.objeto != NADA || pshot.i == 0) pshot.objeto = NADA;
+    }
     for(n = 0; n < MAX_SHOTS && aux; n++){
-        if(shots[n].objeto == PSHOT || shots[n].objeto == ESHOT){
-            evento = ciclodisp(&juego, shots[n].i, shots[n].j);
+        if(enemy_logic.shot[n].objeto == ESHOT){
+            eventoe = ciclodispe(&juego, enemy_logic.shot[n].i, enemy_logic.shot[n].j);
         }
         else aux = 0;                         
     } 
@@ -689,12 +698,12 @@ void shots_draw(ALLEGRO_EVENT ev){
     int n, aux;
     aux = 1;
     for(n = 0; n < MAX_SHOTS && aux == 1; n++){
-        if(shots[n].objeto == PSHOT){
-            al_draw_line(SCALE * shots[n].j, SCALE * shots[n].i - 5, SCALE * shots[n].j, SCALE * shots[n].i + 5, RED, 4);
-            if(shots[n].i > LARGO - 5) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        if(pshot.objeto == PSHOT){
+            al_draw_line(SCALE * pshot.j, SCALE * pshot.i - 5, SCALE * pshot.j, SCALE * pshot.i + 5, RED, 4);
+            if(pshot.i > LARGO - 5) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         }
-        else if(shots[n].objeto == ESHOT){
-            al_draw_line(SCALE * shots[n].j, SCALE * shots[n].i - 5, SCALE * shots[n].j, SCALE * shots[n].i + 5, RED, 4);
+        else if(enemy_logic.shot[n].objeto == ESHOT){
+            al_draw_line(SCALE * enemy_logic.shot[n].j, SCALE * enemy_logic.shot[n].i - 5, SCALE * enemy_logic.shot[n].j, SCALE * enemy_logic.shot[n].i + 5, RED, 4);
         }
         else aux = 0;                         
     }
