@@ -15,6 +15,7 @@
 #define STATE_STATS 3
 #define STATE_EXIT  4
 #define STATE_PAUSE 5
+#define STATE_GAMEOVER    6
 
 #define BLACK   al_map_rgb(0,0,0)
 #define WHITE   al_map_rgb(155,155,155)
@@ -55,8 +56,7 @@ void must_init(bool test, const char *description)
 ALLEGRO_DISPLAY* disp;
 ALLEGRO_BITMAP* buffer;
 
-void disp_init()
-{
+void disp_init(){
     al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
     al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
 
@@ -67,19 +67,16 @@ void disp_init()
     must_init(buffer, "bitmap buffer");
 }
 
-void disp_deinit()
-{
+void disp_deinit(){
     al_destroy_bitmap(buffer);
     al_destroy_display(disp);
 }
 
-void disp_pre_draw()
-{
+void disp_pre_draw(){
     al_set_target_bitmap(buffer);
 }
 
-void disp_post_draw()
-{
+void disp_post_draw(){
     al_set_target_backbuffer(disp);
     al_draw_scaled_bitmap(buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, DISP_W, DISP_H, 0);
 
@@ -93,13 +90,11 @@ void disp_post_draw()
 #define KEY_RELEASED 2
 unsigned char key[ALLEGRO_KEY_MAX];
 
-void keyboard_init()
-{
+void keyboard_init(){
     memset(key, 0, sizeof(key));
 }
 
-void keyboard_update(ALLEGRO_EVENT* event)
-{
+void keyboard_update(ALLEGRO_EVENT* event){
     switch(event->type)
     {
         case ALLEGRO_EVENT_KEY_DOWN:
@@ -116,15 +111,15 @@ void keyboard_update(ALLEGRO_EVENT* event)
     }
 }
 
-//------------------------
+//------sonido------------
+
 /*ALLEGRO_SAMPLE* game_sound;
 ALLEGRO_SAMPLE* option_sound;*/
 ALLEGRO_SAMPLE* shot_sound;
 ALLEGRO_SAMPLE* collision_sound;
 ALLEGRO_SAMPLE* gameover_sound;
 
-void audio_init()
-{
+void audio_init(){
     al_install_audio();
     al_init_acodec_addon();
     al_reserve_samples(128);
@@ -145,8 +140,7 @@ void audio_init()
     must_init(gameover_sound, "game over sound");
 }
 
-void audio_deinit()
-{
+void audio_deinit(){
     /*al_destroy_sample(game_sound);
     al_destroy_sample(option_sound);*/
     al_destroy_sample(shot_sound);
@@ -158,53 +152,25 @@ void audio_deinit()
 
 ALLEGRO_FONT* font;
 long score_display;
-/*
-void hud_init()
-{
+
+void hud_init(){
     font = al_create_builtin_font();
     must_init(font, "font");
 
     score_display = 0;
 }
 
-void hud_deinit()
-{
+void hud_deinit(){
     al_destroy_font(font);
-}*/
-/*
-void hud_update()
-{
-    if(frames % 2)
-        return;
+}
 
-    for(long i = 5; i > 0; i--)
-    {
-        long diff = 1 << i;
-        if(score_display <= (score - diff))
-            score_display += diff;
-    }
-}*/
-
-void hud_draw(int vidas, int puntaje, ALLEGRO_FONT * font)
-{
-    
+void hud_draw(juego_t * juego){
     char puntaje_str[10];
-    sprintf(puntaje_str, "%i", puntaje);
+    sprintf(puntaje_str, "%i", juego->puntaje);
     al_draw_text(font, WHITE, 1, 1, 0, puntaje_str);
 
-    //int spacing = LIFE_W + 1;
-    for(int i = 0; i < vidas; i++)
-        //al_draw_bitmap(sprites.life, 1 + (i * spacing), 10, 0);
+    for(int i = 0; i < juego->vidas; i++)
         al_draw_filled_circle(10 + i*10, 14, 5, WHITE);
-
-    if(vidas < 0)
-        al_draw_text(
-            font,
-            al_map_rgb_f(1,1,1),
-            BUFFER_W / 2, BUFFER_H / 2,
-            ALLEGRO_ALIGN_CENTER,
-            "G A M E  O V E R"
-        );
 }
 
 //-------------------------------------
@@ -281,10 +247,10 @@ void graphics_init()
     graphics.enemy_bitmap = al_load_bitmap(ENEMY_BMP);
     must_init(graphics.enemy_bitmap, "enemy bitmap");
     
-    graphics.enemy2_bitmap = al_load_bitmap(ENEMY_BMP);
+    graphics.enemy2_bitmap = al_load_bitmap(ENEMY2_BMP);
     must_init(graphics.enemy2_bitmap, "enemy 2 bitmap");
     
-    graphics.enemy3_bitmap = al_load_bitmap(ENEMY_BMP);
+    graphics.enemy3_bitmap = al_load_bitmap(ENEMY3_BMP);
     must_init(graphics.enemy3_bitmap, "enemy 3 bitmap");
     
     graphics.navnod_bitmap = al_load_bitmap(NAVNOD_BMP);
@@ -308,18 +274,17 @@ void graphics_deinit()
 //------------------------
 
 typedef struct BUTTON {
-    int x;
     int y;
-    int w; 
     int h;
     const char * text;
     ALLEGRO_FONT * font;
     int keyboard; //flag de posicion sobre boton de menu
 } BUTTON; 
 
-
+/*****************************************************
+*--------------- LOGICA DE JUEGO----------------------
+**************************************************** */
 juego_t juego;
-coord_t disparo;
 
 #define MOUSE       0
 #define KEYBOARD    1
@@ -333,7 +298,8 @@ coord_t disparo;
 #define SHOOT_RIGHT 4
 #define SHOOT_LEFT  5
 
-void move_player(ALLEGRO_EVENT ev){ //no me reconoce dos teclas presionadas al mismo tiempo //UPDATE: se soluciono con los else if 
+//-------- lee teclado e indica movimiento de jugador --------
+void move_player(ALLEGRO_EVENT ev){ 
     if(key[ALLEGRO_KEY_SPACE] && key[ALLEGRO_KEY_RIGHT]){
         juego.mov = SHOOT_RIGHT;
     }  
@@ -351,71 +317,76 @@ void move_player(ALLEGRO_EVENT ev){ //no me reconoce dos teclas presionadas al m
     }
 }
 
-void game_update(ALLEGRO_EVENT ev){
+//-------- actualiza juego (hasta ahora enemigos y disparo por separado, luego ver timers) --------
+
+void game_update(ALLEGRO_EVENT ev, juego_t * juego){
     keyboard_update(&ev);
     move_player(ev);
-    getcoordp(&juego);
-    pmov(&juego);
-    
-    //printf("%d \n", juego.coordsp.j);
-    //printf("%d \n", juego.coordsp.i);
-    /*
-    getcoordp(&juego, PSHOT);
-    if(juego.coordsp.objeto == PSHOT){
-        ciclodisp(&juego, juego.coordsp.i, juego.coordsp.j);
-        //printf("%d \n", juego.coordsp.objeto);
-    }*/
+    getcoordp(juego);
+    pmov(juego);
+    if(juego->naves == 0){
+        ininiv(juego->nivel);
+    }
 }
 
-#define MAX_SHOTS   30
-#define MAX_ENEMIES 50
-//coord_t pshot;
+#define MAX_SHOTS   20
+#define MAX_ENEMIES 20
+coord_t player;
 coord_t shots [MAX_SHOTS]; //el primero es el del jugador 
-coord_t enemies [MAX_ENEMIES];        
+       
 
-int frontboard[LARGO + 2][ANCHO + 2];
+typedef struct {
+  ALLEGRO_TIMER * timers  [10];
+  coord_t cell [MAX_ENEMIES]; 
+} enemylogic_t; 
+
+enemylogic_t enemy_logic;
+
+//int frontboard[LARGO + 2][ANCHO + 2]; para caso de varias celdas
+
+int frontboard[LARGO][ANCHO];
+
+//-------- lee tablero y guarda informacion --------
 
 void board_update(juego_t * juego){
-    int i, j, n, object, k;
+    int i, j, n, k;         
     n = 0;
     k = 0;
     //frontboard[1][1] = juego->tablero;
     for (i = 0; i < LARGO ; i++) {
         for (j = 0; j < ANCHO; j++){
-            object = getmat(i, j);
-            //object = * (juego->tablero * i + j);
-            switch(object){
+            frontboard[i][j] = getmat(i, j);
+            switch(frontboard[i][j]){
                 case(NADA):
-                    shots[n].objeto = object; //antes de cargar el disparo, lo limpio
-                    enemies[k].objeto = object;
+                    shots[n].objeto = frontboard[i + 1][j + 1]; //antes de cargar el disparo, lo limpio
+                    enemy_logic.cell[k].objeto = frontboard[i][j];
+                    juego->naves = k;
                     break;
                 case(PLAYER):
-                    juego->coordsp.i = i;
-                    juego->coordsp.j = j;
-                    juego->coordsp.objeto = object;
+                    //CASO DE VARIAS CELDAS
+                    /*if(frontboard[i][j+1] == NADA && frontboard[i + 1][j] == NADA){
+                        player.i = i;
+                        player.j = j;
+                        player.objeto = frontboard[i + 1][j + 1];
+                    }*/
                     break;
                 case(PSHOT):
-                    /*shots[0].i = i;
-                    shots[0].j = j; 
-                    shots[0].objeto = object;
-                    break;*/
                 case(ESHOT):
-                    //eshots[n] = {i, j, object}; 
                     shots[n].i = i;
                     shots[n].j = j; 
-                    shots[n].objeto = object;
+                    shots[n].objeto = frontboard[i][j];
                     n += 1;
                     break;
                 case(ENEMY):
-                //case(ENEMY_2):
-                //case(ENEMY_3):
+                case(ENEMY_2):
+                case(ENEMY_3):
                     //eshots[n] = {i, j, object}; 
-                    al_draw_bitmap(graphics.enemy_bitmap, SCALE* j - CELL/2, SCALE * i - CELL, 0);
-                    enemies[k].i = i;
-                    enemies[k].j = j; 
-                    enemies[k].objeto = object;
+                    enemy_logic.cell[k].i = i;
+                    enemy_logic.cell[k].j = j; 
+                    enemy_logic.cell[k].objeto = frontboard[i][j];
                     k += 1;
-                   
+                    break;
+                case(NAVNOD):
                     break;
                 case(MURO):
                     break;
@@ -423,6 +394,8 @@ void board_update(juego_t * juego){
         }
     }
 }
+
+//-------- movimiento de disparos --------
 
 void shots_update(ALLEGRO_EVENT ev){
     int n, aux;
@@ -433,28 +406,18 @@ void shots_update(ALLEGRO_EVENT ev){
         }
         else aux = 0;                         
     } 
-    /*
-    int i, j;
-    for (i = 0; i < LARGO; i++) {
-        for (j = 0; j < ANCHO; j++){
-            evento = ciclodisp(&juego, i, j);
-        }
-    }
-    evento = ciclodisp(&juego, i, j);
-    if(pshot.i == LARGO - 2){
-        al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-    }
-     */
 }
 
-int button_update(ALLEGRO_EVENT ev, BUTTON * button){
-    if((mouse.x >= button->x && mouse.y >= button->y && mouse.x < (button->x + button->w) && mouse.y < (button->y + button->h))){
-        if(al_mouse_button_down(&mouse, 1))
-            return 1;
-        else 
-            return 2;
-    }
+//-------- movimiento y disparo de enemigos --------
+
+void enemies_update(juego_t * juego){ //va a manejar timers de enemigos segun nivel
+    navdisp();
+    if(ciclonaves()) juego->vidas = 0;
 }
+
+/*****************************************************
+*------------------CONTROL DE MENU--------------------
+******************************************************/
 
 void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
     /*if(ev.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
@@ -477,65 +440,57 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
                     game_states = STATE_PLAY; //habria que poner un break adentro para evitar presionar otro boton rapido??
                     buttons[0][0].keyboard = 0;
-                    break;
                 }
-                if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
                     buttons[0][2].keyboard = 1;
                     buttons[0][0].keyboard = 0;
-                    break;
                 }
-                if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
                     buttons[0][1].keyboard = 1;
                     buttons[0][0].keyboard = 0;
-                    break;
                 }
             } 
-            if(buttons[0][1].keyboard){
+            else if(buttons[0][1].keyboard){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
                     game_states = STATE_STATS;
                     buttons[1][0].keyboard = 1;
                     buttons[0][1].keyboard = 0;
-                    break;
                 }
-                if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
                     buttons[0][0].keyboard = 1;
                     buttons[0][1].keyboard = 0;
-                    break;
                 }
-                if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
                     buttons[0][2].keyboard = 1;
                     buttons[0][1].keyboard = 0;
-                    break;
                 }
             } 
-            if(buttons[0][2].keyboard){
+            else if(buttons[0][2].keyboard){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
                     game_states = STATE_EXIT;
                     buttons[0][2].keyboard = 0;
-                    break;
                 }
-                if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
                     buttons[0][1].keyboard = 1;
                     buttons[0][2].keyboard = 0;
-                    break;
                 }
-                if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
                     buttons[0][0].keyboard = 1;
                     buttons[0][2].keyboard = 0;
-                    break;
                 }
             }          
-            //keyboard_update(&ev);
             break;   
             
         case(STATE_PLAY):
             if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
-                game_states = STATE_PAUSE;
+                game_states = STATE_PAUSE;         
                 buttons[2][0].keyboard = 1;
             }
-            //keyboard_update(&ev);
+            else if(juego.vidas == 0){
+                game_states = STATE_GAMEOVER;
+                buttons[4][0].keyboard = 1;
+            }
             break;
-            
         case(STATE_STATS):
             if(buttons[1][0].keyboard){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
@@ -543,48 +498,71 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                     buttons[0][0].keyboard = 1;
                     buttons[1][0].keyboard = 0;
                 }
-                //keyboard_update(&ev);
             }
-            break;
-          
+            break; 
         case(STATE_PAUSE):
             if(buttons[2][0].keyboard){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
                     game_states = STATE_PLAY;
                     buttons[2][0].keyboard = 0;
-                    break;
                 }
-                if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
                     buttons[2][1].keyboard = 1;
                     buttons[2][0].keyboard = 0;
                     break;
                 }
-                if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
                     buttons[2][1].keyboard = 1;
                     buttons[2][0].keyboard = 0;
-                    break;
                 }
-                //keyboard_update(&ev);
             }
-            if(buttons[2][1].keyboard){
+            else if(buttons[2][1].keyboard){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
                     game_states = STATE_MENU;
                     buttons[0][0].keyboard = 1;
                     buttons[2][1].keyboard = 0;
-                    break;
                 }
-                if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
                     buttons[2][0].keyboard = 1;
                     buttons[2][1].keyboard = 0;
-                    break;
                 }
-                if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
                     buttons[2][0].keyboard = 1;
                     buttons[2][1].keyboard = 0;
-                    break;
                 }
-                //keyboard_update(&ev);
             }
+            break;
+        case(STATE_GAMEOVER):
+            if(buttons[4][0].keyboard){
+                if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
+                    game_states = STATE_STATS;
+                    buttons[1][0].keyboard = 0;
+                }
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
+                    buttons[4][1].keyboard = 1;
+                    buttons[4][0].keyboard = 0;
+                }
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
+                    buttons[4][1].keyboard = 1;
+                    buttons[4][0].keyboard = 0;
+                }
+            }
+            else if(buttons[4][1].keyboard){
+                if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
+                    game_states = STATE_MENU;
+                    buttons[0][0].keyboard = 1;
+                    buttons[4][1].keyboard = 0;
+                }
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
+                    buttons[4][0].keyboard = 1;
+                    buttons[4][1].keyboard = 0;
+                }
+                else if(ev.keyboard.keycode == ALLEGRO_KEY_DOWN){
+                    buttons[4][0].keyboard = 1;
+                    buttons[4][1].keyboard = 0;
+                }
+            }
+            break;
     }
 } 
     
@@ -614,70 +592,104 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             if(button_update(ev, &buttons[2][0]) == 1) {game_states = STATE_PLAY;}
             if(button_update(ev, &buttons[2][1]) == 1) {game_states = STATE_MENU;}
             break;
-    }*/
+    }
+     
+//interaccion con mouse
+          
+int button_update(ALLEGRO_EVENT ev, BUTTON * button){
+    if((mouse.x >= button->x && mouse.y >= button->y && mouse.x < (button->x + button->w) && mouse.y < (button->y + button->h))){
+        if(al_mouse_button_down(&mouse, 1))
+            return 1;
+        else 
+            return 2;
+    }
+}
+     */
 
-#define SCALE 2
+#define SCALE 20
 
 void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
-    
-    int vidas = 2;
-    int puntaje = 300;
-    //puntaje = 300;
     switch(game_states){
         case(STATE_START):
             al_clear_to_color(BLACK);
             al_draw_bitmap(graphics.menu_background,0,0,0);
-            al_draw_text(buttons[3][0].font, WHITE, buttons[3][0].x, buttons[3][0].y, 0, buttons[3][0].text);
+            al_draw_text(buttons[3][0].font, WHITE, DISP_W / 2, buttons[3][0].y, ALLEGRO_ALIGN_CENTER, buttons[3][0].text);
+            //al_draw_text(buttons[3][0].font, WHITE, buttons[3][0].x, buttons[3][0].y, ALLEGRO_ALIGN_CENTER, buttons[3][0].text);
             break;
         case(STATE_MENU):
             al_clear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics.menu_background,0,0,0);
             for(int i=0; i<3; i++){
                 if(buttons[0][i].keyboard)
-                    al_draw_text(buttons[0][i].font, RED, buttons[0][i].x, buttons[0][i].y, 0, buttons[0][i].text);
+                    al_draw_text(buttons[0][i].font, RED, DISP_W / 2, buttons[0][i].y, ALLEGRO_ALIGN_CENTER, buttons[0][i].text);
                 else
-                    al_draw_text(buttons[0][i].font, WHITE, buttons[0][i].x, buttons[0][i].y, 0, buttons[0][i].text);
+                    al_draw_text(buttons[0][i].font, WHITE, DISP_W / 2, buttons[0][i].y, ALLEGRO_ALIGN_CENTER, buttons[0][i].text);
             }
             break;
         case(STATE_PLAY):
             al_clear_to_color(al_map_rgb(0,0,0));
-            getcoordp(&juego);
             al_draw_bitmap(graphics.game_background,0,0,0);
-            al_draw_bitmap(graphics.player_bitmap, SCALE*juego.coordsp.j - CELL/2, SCALE*juego.coordsp.i - CELL, 0);
+            getcoordp(&juego);
+            al_draw_bitmap(graphics.player_bitmap, SCALE*juego.coordsp.j - CELL/2, SCALE*juego.coordsp.i - CELL/2, 0);
+            //al_draw_bitmap(graphics.player_bitmap, SCALE * player.j, SCALE * player.i, 0);
+            hud_draw(&juego);
+            break;
             
-            /*if(ev.timer.source == timer_shot){
-                if(juego.coordsp.objeto == PSHOT){
-                    al_draw_line(juego.coordsp.j, juego.coordsp.i - 5, juego.coordsp.j, juego.coordsp.i + 5, RED, 2);
-                    //al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-                }
-            }*/
-            hud_draw(vidas, puntaje, buttons[1][0].font);
+        case(STATE_GAMEOVER):
+            al_clear_to_color(al_map_rgb(0,0,0));
+            al_draw_text(buttons[4][0].font, WHITE, DISP_W / 2, buttons[4][0].y - 100, ALLEGRO_ALIGN_CENTER, "G A M E  O V E R");
+            for(int i=0; i<2; i++){
+                if(buttons[4][i].keyboard)
+                    al_draw_text(buttons[4][i].font, RED, DISP_W / 2, buttons[4][i].y, ALLEGRO_ALIGN_CENTER, buttons[4][i].text);
+                else
+                    al_draw_text(buttons[4][i].font, WHITE, DISP_W / 2, buttons[4][i].y, ALLEGRO_ALIGN_CENTER, buttons[4][i].text);
+            }
             break;
             
         case(STATE_STATS):
             al_clear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics.menu_background,0,0,0);
             if(buttons[1][0].keyboard)
-                al_draw_text(buttons[1][0].font, RED, buttons[1][0].x, buttons[1][0].y, 0, buttons[1][0].text);
+                al_draw_text(buttons[1][0].font, RED, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTER, buttons[1][0].text);
             else
-                al_draw_text(buttons[1][0].font, WHITE, buttons[1][0].x, buttons[1][0].y, 0, buttons[1][0].text);
+                al_draw_text(buttons[1][0].font, WHITE, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTER, buttons[1][0].text);
             break;
         case(STATE_PAUSE):
             al_clear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics.game_background,0,0,0);
             for(int i=0; i<2; i++){
                 if(buttons[2][i].keyboard)
-                    al_draw_text(buttons[2][i].font, RED, buttons[2][i].x, buttons[2][i].y, 0, buttons[2][i].text);
+                    al_draw_text(buttons[2][i].font, RED, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTER, buttons[2][i].text);
                 else
-                    al_draw_text(buttons[2][i].font, WHITE, buttons[2][i].x, buttons[2][i].y, 0, buttons[2][i].text);
+                    al_draw_text(buttons[2][i].font, WHITE, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTER, buttons[2][i].text);
             }
             break;
     }
 }    
 
+void enemies_draw(void){
+    int n, aux;
+    aux = 1;
+    for(n = 0; n < MAX_ENEMIES && aux == 1; n++){
+        //printf("ENEMY %d %d %d \n", enemies[n].objeto, enemies[n].i, enemies[n].j);
+        if(enemy_logic.cell[n].objeto == ENEMY){
+            al_draw_bitmap(graphics.enemy_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+            
+        }
+        else if(enemy_logic.cell[n].objeto == ENEMY_2){
+            al_draw_bitmap(graphics.enemy2_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+        }
+        else if(enemy_logic.cell[n].objeto == ENEMY_3){
+            al_draw_bitmap(graphics.enemy3_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+        }
+        else aux = 0;                         
+    }
+}
+
 void shots_draw(ALLEGRO_EVENT ev){
     int n, aux;
-    for(n = 0; n < MAX_SHOTS && aux; n++){
+    aux = 1;
+    for(n = 0; n < MAX_SHOTS && aux == 1; n++){
         if(shots[n].objeto == PSHOT){
             al_draw_line(SCALE * shots[n].j, SCALE * shots[n].i - 5, SCALE * shots[n].j, SCALE * shots[n].i + 5, RED, 4);
             if(shots[n].i > LARGO - 5) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
@@ -688,7 +700,7 @@ void shots_draw(ALLEGRO_EVENT ev){
         else aux = 0;                         
     }
 }
-   
+
     /* MOUSE INTERACTION
     switch(game_states){
             case(STATE_START):
@@ -755,6 +767,8 @@ void update(ALLEGRO_EVENT ev){
 */
 
 
+
+
 int main(void){
     
     must_init(al_init(), "allegro");
@@ -768,65 +782,54 @@ int main(void){
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
     must_init(timer, "timer");
     
-    ALLEGRO_TIMER* timer_shot = al_create_timer(1 / 120.0);
+    ALLEGRO_TIMER* timer_shot = al_create_timer(1 / 100.0);
     must_init(timer_shot, "timer_shot");
 
+    enemy_logic.timers[0] = al_create_timer(1 / 1.0);
+    must_init(enemy_logic.timers[0], "timer_enemy");
+    
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
     must_init(queue, "queue");
     
     ALLEGRO_FONT * font = al_create_builtin_font();
     must_init(font, "font");
     
-    
     must_init(al_init_image_addon(), "image");
     
     disp_init();
     audio_init();
-    //hud_init();
+    hud_init();
     keyboard_init();
-    
-    //GRAPHICS graphics;
-    
     graphics_init();
-    
-    //Inicializar display, fuentes, etc.
-    
+
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_display_event_source(disp));
     al_register_event_source(queue, al_get_timer_event_source(timer));
     al_register_event_source(queue, al_get_timer_event_source(timer_shot));
+    al_register_event_source(queue, al_get_timer_event_source(enemy_logic.timers[0]));
     al_register_event_source(queue, al_get_mouse_event_source());
     
-    BUTTON buttons_menu [] = {{310,300,100,25, "START", font, 0},
-                        {310,350,100,25, "STATS", font, 0},
-                        {310,400,100,25, "EXIT", font, 0}};
+    BUTTON buttons_menu [] = {{300,25, "START", font, 0},
+                        {350,25, "STATS", font, 0},
+                        {400,25, "EXIT", font, 0}};
     
-    BUTTON buttons_stats [] = {{310,450,100,25, "BACK", font, 0}};
+    BUTTON buttons_stats [] = {{450,25, "BACK", font, 0}};
     
-    BUTTON buttons_pause [] = {{310,300,100,25, "BACK", font, 0}, {310,400,100,25, "EXIT", font, 0}};
+    BUTTON buttons_pause [] = {{300,25, "BACK", font, 0}, {400,25, "EXIT", font, 0}};
     
-    BUTTON buttons_start [] = {{290,350,100,25, "PRESS ENTER", font, 1}};
+    BUTTON buttons_gameover [] = {{300,25, "STATS", font, 0}, {400,25, "EXIT", font, 0}};
     
-    /*BUTTON * pbuttons_menu = buttons_menu;
-    BUTTON * pbuttons_stats = buttons_stats;*/
+    BUTTON buttons_start [] = {{350,25, "PRESS ENTER", font, 1}};
     
-    BUTTON * buttons[4];
+    BUTTON * buttons[5];
     
     buttons[0] = buttons_menu;
     buttons[1] = buttons_stats;
     buttons[2] = buttons_pause;
     buttons[3] = buttons_start;
+    buttons[4] = buttons_gameover;
    
-    
     inigame(&juego, 1);
-    
-    
-    //typedef struct BUTTON ARR_BUTTON [];
-    
-    //BUTTON (*buttons[2])[3] = {&buttons_menu, &buttons_stats};
-    
-   /* buttons[0] = &buttons_menu[0];
-    buttons[1] = &buttons_stats[0];*/
     
     bool redraw = true;
     
@@ -838,6 +841,7 @@ int main(void){
     
     al_start_timer(timer);
     al_start_timer(timer_shot);
+    al_start_timer(enemy_logic.timers[0]);
     
     while(!done){
         
@@ -847,6 +851,7 @@ int main(void){
             disp_pre_draw();
             menu_draw(event, buttons);
             if(game_states == STATE_PLAY){
+                enemies_draw();
                 shots_draw(event);
             }
             disp_post_draw();
@@ -864,25 +869,26 @@ int main(void){
                     redraw = true;
                     if(game_states == STATE_EXIT)
                         done = true;
-                    if(game_states == STATE_PLAY)
-                        game_update(event);
+                    if(game_states == STATE_PLAY){
+                        game_update(event, &juego);
+                    }
                 }
-                
-                
                 if(event.timer.source == timer_shot){
                     if(game_states == STATE_PLAY){
                         board_update(&juego);
                         shots_update(event);
                     }   
                 }   
+                if(event.timer.source == enemy_logic.timers[0]){
+                    if(game_states == STATE_PLAY){
+                        enemies_update(&juego);
+                    }
+                }
+                
                 break;
-            
             case ALLEGRO_EVENT_KEY_DOWN:
                 menu_update(event, buttons);
                 break;
-                
-                
-                
             
             /*case ALLEGRO_EVENT_KEY_CHAR:
                 if(event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
@@ -899,10 +905,11 @@ int main(void){
     disp_deinit();
     al_destroy_font(font);
     graphics_deinit();
-    //hud_deinit();
+    hud_deinit();
     audio_deinit();
     al_destroy_timer(timer);
     al_destroy_timer(timer_shot);
+    al_destroy_timer(enemy_logic.timers[0]);
     al_destroy_event_queue(queue);
     
     return 0;

@@ -183,7 +183,7 @@ int nav_nod(void) { //spawnea nave nod y mueve nave nod
     static int haynavenod=0;
     int i, j;
     int mov = DER;
-    for (j = 0; j < ANCHO; ++j) {//me fijo si hay una nave nod en juego
+    for (j = 0; (j < ANCHO)&&(haynavenod==0); ++j) {//me fijo si hay una nave nod en juego
         if (space[0][j] == NAVNOD) {
             haynavenod = 1; //marco que hay nave nod
         } else {
@@ -204,6 +204,7 @@ int nav_nod(void) { //spawnea nave nod y mueve nave nod
                     haynavenod=0;
                 } else {
                     movmat(i, j, mov);
+                    haynavenod=1;
                 }
             }
         }
