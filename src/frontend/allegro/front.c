@@ -368,7 +368,7 @@ void game_update(ALLEGRO_EVENT ev){
 }
 
 #define MAX_SHOTS   30
-#define MAX_ENEMIES 30
+#define MAX_ENEMIES 50
 //coord_t pshot;
 coord_t shots [MAX_SHOTS]; //el primero es el del jugador 
 coord_t enemies [MAX_ENEMIES];        
@@ -387,7 +387,7 @@ void board_update(juego_t * juego){
             switch(object){
                 case(NADA):
                     shots[n].objeto = object; //antes de cargar el disparo, lo limpio
-                    shots[k].objeto = object;
+                    enemies[k].objeto = object;
                     break;
                 case(PLAYER):
                     juego->coordsp.i = i;
@@ -407,13 +407,15 @@ void board_update(juego_t * juego){
                     n += 1;
                     break;
                 case(ENEMY):
-                case(ENEMY_2):
-                case(ENEMY_3):
+                //case(ENEMY_2):
+                //case(ENEMY_3):
                     //eshots[n] = {i, j, object}; 
+                    al_draw_bitmap(graphics.enemy_bitmap, SCALE* j - CELL/2, SCALE * i - CELL, 0);
                     enemies[k].i = i;
                     enemies[k].j = j; 
                     enemies[k].objeto = object;
                     k += 1;
+                   
                     break;
                 case(MURO):
                     break;
@@ -614,7 +616,7 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             break;
     }*/
 
-
+#define SCALE 2
 
 void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
     
@@ -641,7 +643,7 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             al_clear_to_color(al_map_rgb(0,0,0));
             getcoordp(&juego);
             al_draw_bitmap(graphics.game_background,0,0,0);
-            al_draw_bitmap(graphics.player_bitmap, juego.coordsp.j - CELL/2, juego.coordsp.i - CELL, 0);
+            al_draw_bitmap(graphics.player_bitmap, SCALE*juego.coordsp.j - CELL/2, SCALE*juego.coordsp.i - CELL, 0);
             
             /*if(ev.timer.source == timer_shot){
                 if(juego.coordsp.objeto == PSHOT){
@@ -677,11 +679,11 @@ void shots_draw(ALLEGRO_EVENT ev){
     int n, aux;
     for(n = 0; n < MAX_SHOTS && aux; n++){
         if(shots[n].objeto == PSHOT){
-            al_draw_line(shots[n].j, shots[n].i - 5, shots[n].j, shots[n].i + 5, RED, 4);
+            al_draw_line(SCALE * shots[n].j, SCALE * shots[n].i - 5, SCALE * shots[n].j, SCALE * shots[n].i + 5, RED, 4);
             if(shots[n].i > LARGO - 5) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         }
         else if(shots[n].objeto == ESHOT){
-            al_draw_line(shots[n].j, shots[n].i - 5, shots[n].j, shots[n].i + 5, RED, 4);
+            al_draw_line(SCALE * shots[n].j, SCALE * shots[n].i - 5, SCALE * shots[n].j, SCALE * shots[n].i + 5, RED, 4);
         }
         else aux = 0;                         
     }
@@ -799,11 +801,11 @@ int main(void){
                         {310,350,100,25, "STATS", font, 0},
                         {310,400,100,25, "EXIT", font, 0}};
     
-    BUTTON buttons_stats [] = {310,450,100,25, "BACK", font, 0};
+    BUTTON buttons_stats [] = {{310,450,100,25, "BACK", font, 0}};
     
     BUTTON buttons_pause [] = {{310,300,100,25, "BACK", font, 0}, {310,400,100,25, "EXIT", font, 0}};
     
-    BUTTON buttons_start [] = {290,350,100,25, "PRESS ENTER", font, 1};
+    BUTTON buttons_start [] = {{290,350,100,25, "PRESS ENTER", font, 1}};
     
     /*BUTTON * pbuttons_menu = buttons_menu;
     BUTTON * pbuttons_stats = buttons_stats;*/
