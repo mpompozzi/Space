@@ -98,6 +98,7 @@ int main (void)
 
   //Creo e inicializo las variables a utilizar
   int i, conta = 0, ciclos = 1;
+  int estado=MENU;  //Inicio en el menu
   int quit_game = 0;
   int nmadre = 0;
   int random;
@@ -247,6 +248,7 @@ int main (void)
         {
           printscore (componentes.puntaje);
           rasprint (MENU);
+          printmat();
           usleep(500);
           
           ciclos = 0;
