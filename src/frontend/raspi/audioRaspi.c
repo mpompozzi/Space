@@ -29,8 +29,11 @@ void shortDummyFun(void);
     
 
     /* Play music and a sound */
-    playMusic(HIGHLANDS, SDL_MIX_MAXVOLUME);    //ESTO ES LO QUE TENEMOS QUE CAMBIAR Y LA FUNCION QUE SE LLAMA DESDE EL FRONT PARA LA MUSICA DE FONDO
-    playSound(DOOR1, SDL_MIX_MAXVOLUME / 2);    //SONIDOS DE EXPLOSIONES Y DEMAS
+//    playMusic(HIGHLANDS, SDL_MIX_MAXVOLUME);    //ESTO ES LO QUE TENEMOS QUE CAMBIAR Y LA FUNCION QUE SE LLAMA DESDE EL FRONT PARA LA MUSICA DE FONDO
+  
+
+//  playSound(DISP, SDL_MIX_MAXVOLUME / 2);    //SONIDOS DE EXPLOSIONES Y DEMAS
+
 
 //    /* While using delay for showcase, don't actually do this in your project */
 //    printf("Delay showcase\n");
@@ -40,46 +43,50 @@ void shortDummyFun(void);
 //    }
 //    
     //SDL_Delay(5000);
-    shortDummyFun();
-    printf("End delay\n");
+  //  shortDummyFun();
+  //  printf("End delay\n");
 
     /* Override music, play another sound */
     //playMusic(ROAD, SDL_MIX_MAXVOLUME);
     //SDL_Delay(1000);
 
     /* Pause audio test */
-    printf("Pausing and waiting 1 second\n");
-    pauseAudio();
-    if ( musicStatus() == PAUSED )
-    {
-        printf("Music paused.\n");
-    }
+//    printf("Pausing and waiting 1 second\n");
+    
+    //pauseAudio();
+    
+//    if ( musicStatus() == PAUSED )
+//    {
+//        printf("Music paused.\n");
+//    }
 
-    SDL_Delay(1000);
-    printf("Continuing...\n");
-    unpauseAudio();
-    if ( musicStatus() == PLAYING )
-    {
-        printf("Music unpaused.\n");
-    }
+//    SDL_Delay(1000);
+//    printf("Continuing...\n");
+    
+   // unpauseAudio();
+    
+//    if ( musicStatus() == PLAYING )
+//    {
+//        printf("Music unpaused.\n");
+//    }
 
-    playSound(DOOR2, SDL_MIX_MAXVOLUME / 2);
-    SDL_Delay(2000);
+//    playSound(DOOR2, SDL_MIX_MAXVOLUME / 2);
+//    SDL_Delay(2000);
 
     /* Caching sound example, create, play from Memory, clear */
 
-    Audio * sound = createAudio(DOOR1, 0, SDL_MIX_MAXVOLUME / 2);
+    Audio * sound = createAudio(DISP, 0, SDL_MIX_MAXVOLUME / 2);
     playSoundFromMemory(sound, SDL_MIX_MAXVOLUME);
     SDL_Delay(2000);
 
-    Audio * music = createAudio(ROAD, 1, SDL_MIX_MAXVOLUME);
-    playMusicFromMemory(music, SDL_MIX_MAXVOLUME);
-    dummyFun();
+//    Audio * music = createAudio(ROAD, 1, SDL_MIX_MAXVOLUME);
+//    playMusicFromMemory(music, SDL_MIX_MAXVOLUME);
+//    dummyFun();
 
-    if ( musicStatus() == PLAYING )
-    {
-        printf("Music unpaused.\n");
-    }
+//    if ( musicStatus() == PLAYING )
+//    {
+//        printf("Music unpaused.\n");
+//    }
 
     
 
@@ -92,7 +99,7 @@ void shortDummyFun(void);
 
 
 
-void dummyFun(void)
+void disp_sound(void)
 {
     int i = 1;
 
@@ -107,26 +114,26 @@ void dummyFun(void)
         }
 
         SDL_Delay(1000);
-
+        
     }
     putchar('\n');
 }
 
-void shortDummyFun(void)
-{
-    int i;
-    for (i = 1; i < S2WAIT/12; i++)
-    {
-        printf("%d ",i);
-        fflush(stdout);
-        if (i % 5 == 0)
-        {
-            printf("Door\n");
-            playSound(DOOR1, SDL_MIX_MAXVOLUME / 2);
-        }
-
-        SDL_Delay(1000);
-
-    }
-    putchar('\n');
-}
+//void shortDummyFun(void)
+//{
+//    int i;
+//    for (i = 1; i < S2WAIT/12; i++)
+//    {
+//        printf("%d ",i);
+//        fflush(stdout);
+//        if (i % 5 == 0)
+//        {
+//            printf("DISP\n");
+//            playSound(DISP, SDL_MIX_MAXVOLUME / 2);
+//        }
+//
+//        SDL_Delay(1000);
+//
+//    }
+//    putchar('\n');
+//}
