@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug_RPI configuration
 CND_PLATFORM_Debug_RPI=GNU-Linux
 CND_ARTIFACT_DIR_Debug_RPI=dist/Debug_RPI/GNU-Linux
-CND_ARTIFACT_NAME_Debug_RPI=este_space_si
-CND_ARTIFACT_PATH_Debug_RPI=dist/Debug_RPI/GNU-Linux/este_space_si
+CND_ARTIFACT_NAME_Debug_RPI=space
+CND_ARTIFACT_PATH_Debug_RPI=dist/Debug_RPI/GNU-Linux/space
 CND_PACKAGE_DIR_Debug_RPI=dist/Debug_RPI/GNU-Linux/package
-CND_PACKAGE_NAME_Debug_RPI=estespacesi.tar
-CND_PACKAGE_PATH_Debug_RPI=dist/Debug_RPI/GNU-Linux/package/estespacesi.tar
+CND_PACKAGE_NAME_Debug_RPI=space.tar
+CND_PACKAGE_PATH_Debug_RPI=dist/Debug_RPI/GNU-Linux/package/space.tar
 # Debug_ALLEGRO configuration
 CND_PLATFORM_Debug_ALLEGRO=GNU-Linux
 CND_ARTIFACT_DIR_Debug_ALLEGRO=dist/Debug_ALLEGRO/GNU-Linux
-CND_ARTIFACT_NAME_Debug_ALLEGRO=este_space_si
-CND_ARTIFACT_PATH_Debug_ALLEGRO=dist/Debug_ALLEGRO/GNU-Linux/este_space_si
+CND_ARTIFACT_NAME_Debug_ALLEGRO=space
+CND_ARTIFACT_PATH_Debug_ALLEGRO=dist/Debug_ALLEGRO/GNU-Linux/space
 CND_PACKAGE_DIR_Debug_ALLEGRO=dist/Debug_ALLEGRO/GNU-Linux/package
-CND_PACKAGE_NAME_Debug_ALLEGRO=estespacesi.tar
-CND_PACKAGE_PATH_Debug_ALLEGRO=dist/Debug_ALLEGRO/GNU-Linux/package/estespacesi.tar
+CND_PACKAGE_NAME_Debug_ALLEGRO=space.tar
+CND_PACKAGE_PATH_Debug_ALLEGRO=dist/Debug_ALLEGRO/GNU-Linux/package/space.tar
 #
 # include compiler specific variables
 #

@@ -264,6 +264,7 @@ coord_t ciclodispp(juego_t *juego, int i, int j) {//mueve los disparos y cambia 
     evento.objeto = NADA;
     return evento;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////
 coord_t ciclodispe(juego_t*juego,int i,int j){//mueve disparos del player y el enemigo
         int mov;

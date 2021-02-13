@@ -23,9 +23,9 @@
 
 #define MENU_BACKGROUND "res/img/invaddx.png"
 #define GAME_BACKGROUND "res/img/invaders.png"
-#define ENEMY_BMP "res/img/saucer1b.png"
-#define ENEMY2_BMP "res/img/saucer2b.png"
-#define ENEMY3_BMP "res/img/saucer3b.png"
+#define ENEMY_BMP "res/img/saucer1a.png"
+#define ENEMY2_BMP "res/img/saucer2a.png"
+#define ENEMY3_BMP "res/img/saucer3a.png"
 #define NAVNOD_BMP "res/img/mysteryb.png"
 #define PLAYER_BMP "res/img/baseshipa.png"
 
@@ -289,7 +289,7 @@ juego_t juego;
 #define MOUSE       0
 #define KEYBOARD    1
 
-#define CELL  48
+#define CELL  20
 
 #define STAY    0
 #define RIGHT   1
@@ -324,6 +324,7 @@ void game_update(ALLEGRO_EVENT ev, juego_t * juego){
     move_player(ev);
     getcoordp(juego);
     pmov(juego);
+    verparams(juego);
     if(juego->naves == 0){
         ininiv(juego->nivel);
     }
@@ -361,7 +362,7 @@ void board_update(juego_t * juego){
                 case(NADA):
                     enemy_logic.shot[n].objeto = frontboard[i][j]; //antes de cargar el disparo, lo limpio
                     enemy_logic.cell[k].objeto = frontboard[i][j];
-                    juego->naves = k;
+                    //juego->naves = k;
                     break;
                 case(PLAYER):
                     //CASO DE VARIAS CELDAS
