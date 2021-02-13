@@ -160,6 +160,7 @@ int ciclonaves(void) {//mueva las naves en la matriz
         }
     } else {//tiene q bajar
         mov = ABAJO;
+        bajar=0;
         for (i = (LARGO - 2); i >= 0; --i) {
             for (j = 0; j < ANCHO; ++j) {
                 if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave                           
