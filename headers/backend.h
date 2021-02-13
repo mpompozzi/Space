@@ -25,8 +25,8 @@ extern "C" {
 #elif ALLEGRO 
 #define LARGO 32 //el largo de la matriz
 #define ANCHO 32
-#define SEPARACION 9 // Separacion entre enemegios por fila para allegro
-#define CELL    0
+#define SEPARACION 4 // Separacion entre enemegios por fila para allegro
+//#define CELL    0
 #endif
 
 #define ENEMY 1 //despues agrego mas tipos de naves

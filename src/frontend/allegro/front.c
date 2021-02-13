@@ -409,14 +409,14 @@ void board_update(juego_t * juego){
                     n += 1;
                     break;
                 case(ENEMY):
-                //case(ENEMY_2):
-                //case(ENEMY_3):
+                case(ENEMY_2):
+                case(ENEMY_3):
                     //eshots[n] = {i, j, object}; 
                     enemies[k].i = i;
                     enemies[k].j = j; 
                     enemies[k].objeto = frontboard[i + 1][j + 1];
+                    //printf("BOARD %d \n", enemies[k].objeto);
                     k += 1;
-                   
                     break;
                 case(MURO):
                     break;
@@ -676,6 +676,24 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
     }
 }    
 
+void enemies_draw(void){
+    int n;
+    for(n = 0; n < MAX_ENEMIES; n++){
+        printf("HOLA %d %d %d \n", enemies[n].objeto, enemies[n].i, enemies[n].j);
+        if(enemies[n].objeto == ENEMY){
+            al_draw_bitmap(graphics.enemy_bitmap, SCALE*enemies[n].j - CELL/2, SCALE*enemies[n].i - CELL/2, 0);
+            
+        }
+        else if(enemies[n].objeto == ENEMY_2){
+            al_draw_bitmap(graphics.enemy2_bitmap, SCALE*enemies[n].j - CELL/2, SCALE*enemies[n].i - CELL/2, 0);
+        }
+        else if(enemies[n].objeto == ENEMY_3){
+            al_draw_bitmap(graphics.enemy3_bitmap, SCALE*enemies[n].j - CELL/2, SCALE*enemies[n].i - CELL/2, 0);
+        }
+        //else aux = 0;                         
+    }
+}
+
 void shots_draw(ALLEGRO_EVENT ev){
     int n, aux;
     for(n = 0; n < MAX_SHOTS && aux; n++){
@@ -848,6 +866,7 @@ int main(void){
             disp_pre_draw();
             menu_draw(event, buttons);
             if(game_states == STATE_PLAY){
+                enemies_draw();
                 shots_draw(event);
             }
             disp_post_draw();
