@@ -305,9 +305,10 @@ if (space[i][j] == ESHOT) {//si hay un disparo enemigo
 
 void verparams(juego_t *juego) {//se fija si pasaste al siguiente nivel y de actualizar las naves q disparan
     int i, j;
+    int enemy=0;
     juego->naves = 0; //pongo que hay 0 naves
 //    int vacio = 0; //1 si hay naves 0 si no
-    static int prom = 1; //1 si tengo q promover una nave para q dispare
+    int prom = 0; //1 si tengo q promover una nave para q dispare
     for (i = 0; i < LARGO; ++i) {
         for (j = 0; j < ANCHO; ++j) {
             if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay naves
@@ -318,19 +319,28 @@ void verparams(juego_t *juego) {//se fija si pasaste al siguiente nivel y de act
     }
     //ojo aca q me manejo con cols primero y despues fils
     for (i = 0; i < ANCHO; ++i) {
-        for (j = (LARGO - 2); j >= 0; --j) {
+        for (j = (LARGO - 2); (j >= 0) && (enemy != 2) && (enemy != 1); --j) {
             if (space[j][i] == ENEMYSHOT) {//si hay un enemigo q dispara en esa col
                 prom = 0; //no necesito promover a otro para q dispare
+                enemy=2;
             }
-            if ((space[j][i] == ENEMY) || (space[j][i] == ENEMY_2) || (space[j][i] == ENEMY_3)) {//cambiar si agrego mas tipos de enemigos
-                if (prom == 1) {//si no encontre ninguna nave q dispara antes q esta
-                    juego->puntaje -= (ENEMYSHOT - space[j][i])*10;
-                    space[j][i] = ENEMYSHOT; //promuevo esa nave para q dispare                    
-                    prom = 0; //ya no necesito promover otra
+            else 
+              {
+                prom=1;
+              if ((space[j][i] == ENEMY) || (space[j][i] == ENEMY_2) || (space[j][i] == ENEMY_3)) {//cambiar si agrego mas tipos de enemigos
+                enemy=1;
                 }
+//                if (prom == 1) {//si no encontre ninguna nave q dispara antes q esta
+//                    juego->puntaje -= (ENEMYSHOT - space[j][i])*10;
+//                    space[j][i] = ENEMYSHOT; //promuevo esa nave para q dispare                    
+//                    prom = 0; //ya no necesito promover otra
+//                }
             }
         }
-        prom = 1; //parto diciendo q en esa col hay naves q necesiten ser promovidas
+        if(prom == 1) //parto diciendo q en esa col hay naves q necesiten ser promovidas
+          {
+            space[j][i]=ENEMYSHOT;
+          }
     }
 }
 //////////////////////////////////////////////////////////////////////////////
