@@ -163,14 +163,14 @@ int ciclonaves(juego_t *juego) {//mueva las naves en la matriz
         } else {//tiene q bajar
             mov = ABAJO;
             bajar=0;
-            for (i = (LARGO - 2); i >= 0; --i) {
+            for (i = (LARGO - 3); i >= 0; --i) {
                 for (j = 0; j < ANCHO; ++j) {
                     if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave                           
                         movmat(i, j, mov);
                     }
                 }
             }
-            for (i = (LARGO - 1), j = 0; j < ANCHO; ++j) {
+            for (i = (LARGO - 2), j = 0; j < ANCHO; ++j) {
                 if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave 
                     exit = 1; //marco salir
                     juego->omit=1;
