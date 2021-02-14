@@ -329,7 +329,7 @@ void verparams(juego_t *juego) {//se fija si pasaste al siguiente nivel y de act
     }
     //ojo aca q me manejo con cols primero y despues fils
     for (i = 0; i < ANCHO; ++i) {
-        for (j = (LARGO - 2); (j > 0) && (enemy != 2) && (enemy != 1); --j) {
+        for (j = (LARGO - 2); (j >= 0) && (enemy != 2) && (enemy != 1); --j) {
             if (space[j][i] == ENEMYSHOT) {//si hay un enemigo q dispara en esa col
                 prom = 0; //no necesito promover a otro para q dispare
                 enemy=2;
@@ -347,7 +347,7 @@ void verparams(juego_t *juego) {//se fija si pasaste al siguiente nivel y de act
 //                }
             }
         }
-        if(prom == 1) //parto diciendo q en esa col hay naves q necesiten ser promovidas
+        if(prom == 1 && j>=0) //parto diciendo q en esa col hay naves q necesiten ser promovidas
           {
             space[j][i]=ENEMYSHOT;
           }
@@ -488,7 +488,7 @@ void crear_enemigo(int nivel) {
 /////////////////////////////////////////////////////////////////////////////
 
 void crear_muro(void) {
-    int i, j,a;
+    int i, j;
 #ifdef RASPI
     for (i = 13; i < 15; ++i) {
         for (j = 1; j < ANCHO; j += 3) {//seteo defensas
@@ -500,6 +500,7 @@ void crear_muro(void) {
         }
     }
 #elif ALLEGRO
+    int a;
     for(i=LARGO-5;i<LARGO-1;++i){
         for(j=1;j<ANCHO;j+=6){
             a=j;
