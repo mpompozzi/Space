@@ -70,13 +70,14 @@ typedef struct{
     int *tablero;
     int naves;
     int mov;
+    int omit;
 }juego_t;
 ///////////////////////////////////////////
 void getcoordp(juego_t*);
 void inimat (void);//inicializa la matriz en 0
 void printmat (void);//imprime la matriz (testeo)
 void ininiv(int);//se fija en que nivel estas y carga cierto patron de naves, pone los escudos y la nave del player
-int ciclonaves (void);//mueve las naves enemigas
+int ciclonaves (juego_t *);//mueve las naves enemigas
 coord_t ciclodispp(juego_t*,int,int);//mueve disparos del player y el enemigo
 coord_t ciclodispe(juego_t*,int,int);//mueve disparos del player y el enemigo
 void verparams(juego_t*);//se fija si pasaste de nivel, cambia las naves para que puedas disparar
