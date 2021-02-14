@@ -74,6 +74,7 @@ void inigame(juego_t *juego, int nivel_inicial) {
     juego->puntaje = 0;
     juego->vidas = 3;
     juego->tablero = &space[0][0];
+    juego->omit =0;
 }
 /////////////////////////////////////
 
@@ -125,55 +126,60 @@ void ininiv(int nivel) {//inicializa las naves enemigas y la del jugador
 }
 ///////////////////////////////////////////////////////////////////////////////////
 
-int ciclonaves(void) {//mueva las naves en la matriz
-    int mov, i, j;
-    int exit = 0;
-    static int direccion = DER;
-    static int bajar = 0; //defino si bajo o no 1 para si
-    if (bajar == 0) {//si no tiene q bajar
-        if (direccion == DER) {//muevo las naves a la derecha
-            mov = DER;
-            for (i = (LARGO - 2); i >= 0; --i) {
-                for (j = (ANCHO - 1); j >= 0; --j) {
-                    if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave
-                        movmat(i, j, mov);
-                        if ((space[i][ANCHO - 1] >= 1)&&(space[i][ANCHO - 1] <= 4)) {//si hay algo en la ultima col
-                            direccion = IZQ; //invierto direccion
-                            bajar = 1; //indico q tengo q bajar
+int ciclonaves(juego_t *juego) {//mueva las naves en la matriz
+    int mov, i, j,exit;
+    if(juego->omit==0){
+        exit = 0;
+        static int direccion = DER;
+        static int bajar = 0; //defino si bajo o no 1 para si
+        if (bajar == 0) {//si no tiene q bajar
+            if (direccion == DER) {//muevo las naves a la derecha
+                mov = DER;
+                for (i = (LARGO - 2); i >= 0; --i) {
+                    for (j = (ANCHO - 1); j >= 0; --j) {
+                        if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave
+                            movmat(i, j, mov);
+                            if ((space[i][ANCHO - 1] >= 1)&&(space[i][ANCHO - 1] <= 4)) {//si hay algo en la ultima col
+                                direccion = IZQ; //invierto direccion
+                                bajar = 1; //indico q tengo q bajar
+                            }
+                        }
+                    }
+                }
+            } else {//muevo las naves a la izquierda
+                mov = IZQ;
+                for (i = (LARGO - 2); i >= 0; --i) {
+                    for (j = 0; j < ANCHO; ++j) {
+                        if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave                       
+                            movmat(i, j, mov);
+                            if ((space[i][0] >= 1)&&(space[i][0] <= 4)) {//si hay algo en la primer col
+                                direccion = DER; //invuerto direccion
+                                bajar = 1; //indico q tengo q bajar
+                            }
                         }
                     }
                 }
             }
-        } else {//muevo las naves a la izquierda
-            mov = IZQ;
+        } else {//tiene q bajar
+            mov = ABAJO;
+            bajar=0;
             for (i = (LARGO - 2); i >= 0; --i) {
                 for (j = 0; j < ANCHO; ++j) {
-                    if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave                       
+                    if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave                           
                         movmat(i, j, mov);
-                        if ((space[i][0] >= 1)&&(space[i][0] <= 4)) {//si hay algo en la primer col
-                            direccion = DER; //invuerto direccion
-                            bajar = 1; //indico q tengo q bajar
-                        }
                     }
                 }
             }
-        }
-    } else {//tiene q bajar
-        mov = ABAJO;
-        bajar=0;
-        for (i = (LARGO - 2); i >= 0; --i) {
-            for (j = 0; j < ANCHO; ++j) {
-                if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave                           
-                    movmat(i, j, mov);
+            for (i = (LARGO - 1), j = 0; j < ANCHO; ++j) {
+                if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave 
+                    exit = 1; //marco salir
+                    juego->omit=1;
                 }
             }
+            bajar=0;
         }
-        for (i = (LARGO - 1), j = 0; j < ANCHO; ++j) {
-            if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave 
-                exit = 1; //marco salir
-            }
-        }
-        bajar=0;
+    }else{
+        exit=1;
     }
     return exit;
 }
