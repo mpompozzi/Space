@@ -61,7 +61,11 @@ static int space[LARGO][ANCHO];
  *******************************************************************************
  ******************************************************************************/
 void inigame(juego_t *juego, int nivel_inicial) {
-    srand(time(NULL));
+  int a=0;
+  if(a==0){
+        srand(time(NULL));  //lo ejecuto una vez nomas
+        a++;
+    }
     if (juego == NULL) {
         return;
     }
@@ -325,7 +329,7 @@ void verparams(juego_t *juego) {//se fija si pasaste al siguiente nivel y de act
     }
     //ojo aca q me manejo con cols primero y despues fils
     for (i = 0; i < ANCHO; ++i) {
-        for (j = (LARGO - 2); (j >= 0) && (enemy != 2) && (enemy != 1); --j) {
+        for (j = (LARGO - 2); (j > 0) && (enemy != 2) && (enemy != 1); --j) {
             if (space[j][i] == ENEMYSHOT) {//si hay un enemigo q dispara en esa col
                 prom = 0; //no necesito promover a otro para q dispare
                 enemy=2;
