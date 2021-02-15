@@ -107,7 +107,20 @@ void audio_init(){
 }
 
 void audio_deinit(){
-    /*al_destroy_sample(game_sound);
+    /*al_destroy_sampvoid call_nod(void){// funcion que genera el llamado aleatorio para la nave nodriza.
+  static int nav=0;
+  static int random=0;
+  if(nav == 0){ //si no hay nave nodriza en el juego, que busque crearla cuando coincida los rangos que emite rand.
+      random = (rand () % 10) ; //numero entre 25 y 35
+      if((random >=5)&& (random<=7)){
+          nav=nav_nod();
+          random=0;
+        }
+    }
+  else{
+      nav=nav_nod();//cuando ya hay nave, solamente la mueve.
+    }
+}le(game_sound);
     al_destroy_sample(option_sound);*/
     al_destroy_sample(shot_sound);
     al_destroy_sample(collision_sound);
@@ -549,7 +562,23 @@ void enemies_draw(void){
 
 void navnod_draw(void){
     if(enemy_logic.navnod.objeto == NAVNOD){
-        al_draw_bitmap(graphics.navnod1_bitmap, enemy_logic.navnod.j - CELL/2, SCALE * enemy_logic.navnod.i - CELL/2, 0);
+        al_draw_bitmap(graphics.navnod1_bitmap, SCALE *enemy_logic.navnod.j - CELL/2, SCALE * enemy_logic.navnod.i - CELL/2, 0);
+    }
+    
+}
+
+void call_nod(void){// funcion que genera el llamado aleatorio para la nave nodriza.
+  static int nav=0;
+  static int random=0;
+  if(nav == 0){ //si no hay nave nodriza en el juego, que busque crearla cuando coincida los rangos que emite rand.
+      random = (rand () % 15) ; //numero entre 25 y 35
+      if((random >=5)&& (random<=7)){
+          nav=nav_nod();
+          random=0;
+        }
+    }
+  else{
+      nav=nav_nod();//cuando ya hay nave, solamente la mueve.
     }
 }
 
@@ -579,7 +608,7 @@ void muro_draw(void){
 
 
 int main(void){
-    
+   
     must_init(al_init(), "allegro");
     must_init(al_install_keyboard(), "keyboard");
     must_init(al_install_mouse(), "mouse");
@@ -594,7 +623,7 @@ int main(void){
     ALLEGRO_TIMER* timer_shot = al_create_timer(1 / 30.0);
     must_init(timer_shot, "timer_shot");
     
-    ALLEGRO_TIMER* timer_nod = al_create_timer(1 / 10.0);
+    ALLEGRO_TIMER* timer_nod = al_create_timer(1 / 6.0);
     must_init(timer_nod, "timer_nod");
 
     enemy_logic.timers[0] = al_create_timer(1 / 1.0);
@@ -653,7 +682,7 @@ int main(void){
     al_start_timer(timer);
     al_start_timer(timer_shot);
     al_start_timer(enemy_logic.timers[0]);
-    
+    al_start_timer(timer_nod);
     while(!done){
         
         al_wait_for_event(queue, &event);
@@ -662,6 +691,7 @@ int main(void){
             disp_pre_draw();
             menu_draw(event, buttons);
             if(game_states == STATE_PLAY){
+                
                 enemies_draw();
                 shots_draw(event);
                 muro_draw();
@@ -679,7 +709,7 @@ int main(void){
                     if(game_states == STATE_EXIT)
                         done = true;
                     if(game_states == STATE_PLAY){
-                        game_update(event, &juego);
+                        game_update(event, &juego);                     
                     }
                 }
                 if(event.timer.source == timer_shot){
@@ -691,9 +721,14 @@ int main(void){
                 if(event.timer.source == enemy_logic.timers[0]){
                     if(game_states == STATE_PLAY){
                         enemies_update(&juego);
+                        
                     }
                 }
-                
+                if(event.timer.source == timer_nod){
+                    if(game_states == STATE_PLAY){
+                        call_nod();
+                    }   
+                }   
                 break;
             case ALLEGRO_EVENT_KEY_DOWN:
                 menu_update(event, buttons);

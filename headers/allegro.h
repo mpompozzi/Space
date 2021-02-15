@@ -57,7 +57,7 @@ extern "C" {
 #define ENEMY_BMP "res/img/saucer1a.png"
 #define ENEMY2_BMP "res/img/saucer2a.png"
 #define ENEMY3_BMP "res/img/saucer3a.png"
-#define NAVNOD1_BMP "res/img/mysterya.png"
+#define NAVNOD1_BMP "res/img/mysteryb.png"
 #define NAVNOD2_BMP "res/img/mysterya.png"
 #define PLAYER_BMP "res/img/baseshipa.png"
 #define MURO_BMP "res/img/muro.png"
