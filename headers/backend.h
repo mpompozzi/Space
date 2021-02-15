@@ -70,8 +70,8 @@ typedef struct{
     int nivel;
     coord_t coordsp;
     int *tablero;
-    int naves;
-    int mov;
+    int naves; //cantidad de naves
+    int mov; //tipo de movimiento
     int omit;
 }juego_t;
 ///////////////////////////////////////////

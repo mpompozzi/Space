@@ -30,6 +30,7 @@
         <itemPath>res/img/baseshipb.png</itemPath>
         <itemPath>res/img/invaddx.png</itemPath>
         <itemPath>res/img/invaders.png</itemPath>
+        <itemPath>res/img/muro.png</itemPath>
         <itemPath>res/img/mysterya.png</itemPath>
         <itemPath>res/img/mysteryb.png</itemPath>
         <itemPath>res/img/saucer1a.png</itemPath>
@@ -131,6 +132,8 @@
       </item>
       <item path="res/audio/ufo_lowpitch.wav" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="res/img/muro.png" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/backend/backend.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/frontend/raspi/Raspi.c" ex="false" tool="0" flavor2="0">
@@ -195,6 +198,8 @@
       <item path="res/img/invaddx.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/invaders.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/muro.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/mysterya.png" ex="false" tool="3" flavor2="0">
       </item>
