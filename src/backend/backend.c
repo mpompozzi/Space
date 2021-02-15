@@ -242,7 +242,7 @@ coord_t ciclodispp(juego_t *juego, int i, int j) {//mueve los disparos y cambia 
             if (space[i - 1][j] == 0) {//si adelante del disparo no hay nada
                 movmat(i, j, mov);
             } else {//hay algo
-                if ((space[i-1][j] >= ENEMYSHOT1)&&(space[i-1][j] <= ENEMY3)||(space[i-1][j]==NAVNOD)) {//si es enemigo cambiar si se agregan mas tipos de nemigos
+                if (((space[i-1][j] >= ENEMYSHOT1)&&(space[i-1][j] <= ENEMY3))||(space[i-1][j]==NAVNOD)) {//si es enemigo cambiar si se agregan mas tipos de nemigos
                     juego->puntaje += ((space[i - 1][j])*10);
                     if (space[i - 1][j] == NAVNOD) {//si es la nave nod
                         juego->puntaje += ((rand() % 5 + 1)*10); //genero un num random entre 1 y 50
