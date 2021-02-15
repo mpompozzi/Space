@@ -333,7 +333,7 @@ void game_update(ALLEGRO_EVENT ev, juego_t * juego){
 
 #define MAX_SHOTS       20
 #define MAX_ENEMIES     30
-#define MAX_MURO    10  
+#define MAX_MURO        50  
 
 
 coord_t pshot;
@@ -398,9 +398,9 @@ void board_init(juego_t * juego){
 }
 
 void board_update(juego_t * juego){
-    int i, j, a, b; 
+    int i, j, a, b, c; 
     //frontboard[1][1] = juego->tablero;
-    for (i = 0, a = 0, b = 0; i < LARGO ; i++) {
+    for (i = 0, a = 0, b = 0, c = 0; i < LARGO ; i++) {
         for (j = 0; j < ANCHO; j++){  
             frontboard[i][j] = getmat(i, j);
             switch(frontboard[i][j]){
@@ -408,6 +408,7 @@ void board_update(juego_t * juego){
                     if(enemy_logic.cell[b].objeto == NADA){
                         b += 1;
                     }
+                    muro[c].objeto = NADA;  //limpio antes
                     break;
                 case(PLAYER):
                     //CASO DE VARIAS CELDAS
@@ -442,6 +443,10 @@ void board_update(juego_t * juego){
                     j += 1;
                     break;
                 case(MURO):
+                    muro[c].i = i;
+                    muro[c].j = j;
+                    muro[c].objeto = frontboard[i][j];
+                    c += 1;
                     break;
             }
         }
@@ -466,13 +471,13 @@ void shots_update(ALLEGRO_EVENT ev){
                     } 
                 }
             }
-            if(eventop.objeto == ESCUDO){
+            /*if(eventop.objeto == ESCUDO){
                 for (n = 0; n < MAX_MURO; n++){
                     if(muro[n].i == pshot.i - 1 && muro[n].j == pshot.j){
                         muro[n].objeto = NADA;
                     } 
                 }
-            }
+            }*/
         }
     }
     aux = 1;
@@ -794,10 +799,7 @@ void muro_draw(void){
         if(muro[n].objeto == MURO){
             al_draw_bitmap(graphics.player_bitmap, SCALE*muro[n].j - CELL/2, SCALE*muro[n].i - CELL/2, 0);
         }
-        else if(muro[n].objeto == MURO){
-            
-        }
-          
+        else if(muro[n].objeto == MURO){}          
         else aux = 0;
     }                        
 }
