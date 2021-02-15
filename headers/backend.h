@@ -29,15 +29,17 @@ extern "C" {
 //#define CELL    0
 #endif
 
-#define ENEMY 1 //despues agrego mas tipos de naves
-#define ENEMY_2 2 
-#define ENEMY_3 3
-#define ENEMYSHOT 4//tipos de naves entre 1 a 5 el 2 es el q dispara
-#define NAVNOD 5//siempre se mueve de izq a der, ocupa 2 bloques
-#define PSHOT 7   
-#define ESHOT 6
-#define PLAYER 9
-#define MURO 8
+#define ENEMY1 1 //despues agrego mas tipos de naves
+#define ENEMY2 2 
+#define ENEMY3 3
+#define ENEMYSHOT1 4//tipos de naves entre 1 a 6 es el q dispara
+#define ENEMYSHOT2 5
+#define ENEMYSHOT3 6
+#define NAVNOD 7//siempre se mueve de izq a der, ocupa 2 bloques
+#define PSHOT 8   
+#define ESHOT 9
+#define PLAYER 10
+#define MURO 11
 #define DER 1
 #define IZQ 2
 #define UP 3
