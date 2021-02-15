@@ -324,23 +324,29 @@ void game_update(ALLEGRO_EVENT ev, juego_t * juego){
     move_player(ev);
     getcoordp(juego);
     pmov(juego);
+    juego->vidas = 20;
     verparams(juego);
     if(juego->naves == 0){
         ininiv(juego->nivel);
     }
 }
 
-#define MAX_SHOTS   20
-#define MAX_ENEMIES 50
+#define MAX_SHOTS       20
+#define MAX_ENEMIES     30
+#define MAX_MURO    10  
+
+
 coord_t pshot;
- //el primero es el del jugador 
-       
+coord_t muro[MAX_MURO];
 
 typedef struct {
   ALLEGRO_TIMER * timers  [10];
   coord_t cell [MAX_ENEMIES]; 
   coord_t shot [MAX_SHOTS];
-} enemylogic_t; 
+  coord_t navnod;
+  int   max_shots;
+  int   max_enemies;
+} enemylogic_t;
 
 enemylogic_t enemy_logic;
 
@@ -350,19 +356,58 @@ int frontboard[LARGO][ANCHO];
 
 //-------- lee tablero y guarda informacion --------
 
-void board_update(juego_t * juego){
-    int i, j, n, k;         
-    n = 0;
-    k = 0;
-    //frontboard[1][1] = juego->tablero;
-    for (i = 0; i < LARGO ; i++) {
+void board_init(juego_t * juego){
+    int i, j, a, b, c; 
+    for (i = 0, a = 0, b = 0, c = 0; i < LARGO ; i++) {
         for (j = 0; j < ANCHO; j++){
             frontboard[i][j] = getmat(i, j);
             switch(frontboard[i][j]){
                 case(NADA):
-                    enemy_logic.shot[n].objeto = frontboard[i][j]; //antes de cargar el disparo, lo limpio
-                    enemy_logic.cell[k].objeto = frontboard[i][j];
-                    //juego->naves = k;
+                    break;
+                case(PLAYER):
+                    break;
+                case(PSHOT):
+                    pshot.objeto = frontboard[i][j];
+                    break;
+                case(ESHOT):
+                    enemy_logic.shot[a].objeto = frontboard[i][j];
+                    a += 1;
+                    break;
+                case(ENEMY):
+                case(ENEMY_2):
+                case(ENEMY_3):
+                case(ENEMYSHOT):
+                    enemy_logic.cell[b].objeto = frontboard[i][j];
+                    b += 1;
+                    break;
+                case(NAVNOD):
+                    enemy_logic.navnod.objeto = frontboard[i][j];
+                    j += 1;
+                    break;
+                case(MURO):
+                    muro[c].i = i;
+                    muro[c].j = j;
+                    muro[c].objeto = frontboard[i][j];
+                    c += 1;
+                    break;
+            }
+        }
+    }
+    //juego->naves = b;
+    enemy_logic.max_enemies = b;
+}
+
+void board_update(juego_t * juego){
+    int i, j, a, b; 
+    //frontboard[1][1] = juego->tablero;
+    for (i = 0, a = 0, b = 0; i < LARGO ; i++) {
+        for (j = 0; j < ANCHO; j++){  
+            frontboard[i][j] = getmat(i, j);
+            switch(frontboard[i][j]){
+                case(NADA):
+                    if(enemy_logic.cell[b].objeto == NADA){
+                        b += 1;
+                    }
                     break;
                 case(PLAYER):
                     //CASO DE VARIAS CELDAS
@@ -378,27 +423,31 @@ void board_update(juego_t * juego){
                     pshot.objeto = frontboard[i][j];
                     break;
                 case(ESHOT):
-                    enemy_logic.shot[n].i = i;
-                    enemy_logic.shot[n].j = j; 
-                    enemy_logic.shot[n].objeto = frontboard[i][j];
-                    n += 1;
+                    enemy_logic.shot[a].i = i;
+                    enemy_logic.shot[a].j = j; 
+                    enemy_logic.shot[a].objeto = frontboard[i][j];
+                    a += 1;
                     break;
                 case(ENEMY):
                 case(ENEMY_2):
                 case(ENEMY_3):
                 case(ENEMYSHOT):
-                    enemy_logic.cell[k].i = i;
-                    enemy_logic.cell[k].j = j; 
-                    enemy_logic.cell[k].objeto = frontboard[i][j];
-                    k += 1;
+                    enemy_logic.cell[b].i = i;
+                    enemy_logic.cell[b].j = j; 
+                    b += 1;
                     break;
                 case(NAVNOD):
+                    enemy_logic.navnod.i = i;
+                    enemy_logic.navnod.j = j; 
+                    j += 1;
                     break;
                 case(MURO):
                     break;
             }
         }
     }
+    enemy_logic.max_shots = a;
+    //juego->naves = b;
 }
 
 //-------- movimiento de disparos --------
@@ -408,21 +457,41 @@ void shots_update(ALLEGRO_EVENT ev){
     coord_t eventoe, eventop;
     if(pshot.objeto == PSHOT){
         eventop = ciclodispp(&juego, pshot.i, pshot.j);
-        if(eventop.objeto != NADA || pshot.i == 0) pshot.objeto = NADA;
+        if(eventop.objeto != NADA || pshot.i == 0){ 
+            pshot.objeto = NADA;
+            if(eventop.objeto == NAVE_ENEMIGA){
+                for (n = 0; n < MAX_ENEMIES; n++){
+                    if(enemy_logic.cell[n].i == pshot.i - 1 && enemy_logic.cell[n].j == pshot.j){
+                        enemy_logic.cell[n].objeto = NADA;
+                    } 
+                }
+            }
+            if(eventop.objeto == ESCUDO){
+                for (n = 0; n < MAX_MURO; n++){
+                    if(muro[n].i == pshot.i - 1 && muro[n].j == pshot.j){
+                        muro[n].objeto = NADA;
+                    } 
+                }
+            }
+        }
     }
-    for(n = 0; n < MAX_SHOTS && aux; n++){
+    aux = 1;
+    for(n = enemy_logic.max_shots; n > 0 && aux; n--){
         if(enemy_logic.shot[n].objeto == ESHOT){
             eventoe = ciclodispe(&juego, enemy_logic.shot[n].i, enemy_logic.shot[n].j);
+            if(eventoe.objeto != NADA || enemy_logic.shot[n].i == LARGO){
+                enemy_logic.shot[n].objeto = NADA;
+            }
+        else aux = 0;
         }
-        else aux = 0;                         
     } 
 }
 
 //-------- movimiento y disparo de enemigos --------
 
 void enemies_update(juego_t * juego){ //va a manejar timers de enemigos segun nivel
-    navdisp();
-    if(ciclonaves()) juego->vidas = 0;
+    //navdisp();
+    if(ciclonaves(juego)) juego->vidas = 0;
 }
 
 /*****************************************************
@@ -450,6 +519,8 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
                     game_states = STATE_PLAY; //habria que poner un break adentro para evitar presionar otro boton rapido??
                     buttons[0][0].keyboard = 0;
+                    inigame(&juego, 1);
+                    board_init(&juego);
                 }
                 else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
                     buttons[0][2].keyboard = 1;
@@ -546,7 +617,8 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             if(buttons[4][0].keyboard){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
                     game_states = STATE_STATS;
-                    buttons[1][0].keyboard = 0;
+                    buttons[1][0].keyboard = 1;
+                    buttons[4][0].keyboard = 0;
                 }
                 else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
                     buttons[4][1].keyboard = 1;
@@ -679,26 +751,30 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
 
 void enemies_draw(void){
     int n, aux;
-    aux = 1;
-    for(n = 0; n < MAX_ENEMIES && aux == 1; n++){
-        //printf("ENEMY %d %d %d \n", enemies[n].objeto, enemies[n].i, enemies[n].j);
-        if((enemy_logic.cell[n].objeto == ENEMY) || (enemy_logic.cell[n].objeto == ENEMYSHOT)){
-            al_draw_bitmap(graphics.enemy_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
-        }
-        else if(enemy_logic.cell[n].objeto == ENEMY_2){
-            al_draw_bitmap(graphics.enemy2_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
-        }
-        else if(enemy_logic.cell[n].objeto == ENEMY_3){
-            al_draw_bitmap(graphics.enemy3_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
-        }
-        else aux = 0;                         
+    for(n = 0, aux = 1; n < enemy_logic.max_enemies && aux == 1; n++){
+        switch(enemy_logic.cell[n].objeto){
+            case(ENEMY):
+            case(ENEMYSHOT):
+                al_draw_bitmap(graphics.enemy_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+                break;
+            case(ENEMY_2):
+                al_draw_bitmap(graphics.enemy2_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+                break;    
+            case(ENEMY_3):
+                al_draw_bitmap(graphics.enemy3_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+                break;
+            case(NADA):
+                break;
+            default:
+                aux = 0;
+                break;
+        }                        
     }
 }
 
 void shots_draw(ALLEGRO_EVENT ev){
     int n, aux;
-    aux = 1;
-    for(n = 0; n < MAX_SHOTS && aux == 1; n++){
+    for(n = 0, aux = 1; n < MAX_SHOTS && aux == 1; n++){
         if(pshot.objeto == PSHOT){
             al_draw_line(SCALE * pshot.j, SCALE * pshot.i - 5, SCALE * pshot.j, SCALE * pshot.i + 5, RED, 4);
             if(pshot.i > LARGO - 5) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
@@ -706,8 +782,24 @@ void shots_draw(ALLEGRO_EVENT ev){
         else if(enemy_logic.shot[n].objeto == ESHOT){
             al_draw_line(SCALE * enemy_logic.shot[n].j, SCALE * enemy_logic.shot[n].i - 5, SCALE * enemy_logic.shot[n].j, SCALE * enemy_logic.shot[n].i + 5, RED, 4);
         }
+        else if(enemy_logic.shot[n].objeto == NADA){}
         else aux = 0;                         
     }
+}
+
+
+void muro_draw(void){
+    int n, aux;
+    for(n = 0, aux = 1; n < MAX_MURO && aux == 1; n++){
+        if(muro[n].objeto == MURO){
+            al_draw_bitmap(graphics.player_bitmap, SCALE*muro[n].j - CELL/2, SCALE*muro[n].i - CELL/2, 0);
+        }
+        else if(muro[n].objeto == MURO){
+            
+        }
+          
+        else aux = 0;
+    }                        
 }
 
     /* MOUSE INTERACTION
@@ -791,7 +883,7 @@ int main(void){
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
     must_init(timer, "timer");
     
-    ALLEGRO_TIMER* timer_shot = al_create_timer(1 / 100.0);
+    ALLEGRO_TIMER* timer_shot = al_create_timer(1 / 60.0);
     must_init(timer_shot, "timer_shot");
 
     enemy_logic.timers[0] = al_create_timer(1 / 1.0);
@@ -838,7 +930,7 @@ int main(void){
     buttons[3] = buttons_start;
     buttons[4] = buttons_gameover;
    
-    inigame(&juego, 1);
+    //inigame(&juego, 1);
     
     bool redraw = true;
     
@@ -862,6 +954,7 @@ int main(void){
             if(game_states == STATE_PLAY){
                 enemies_draw();
                 shots_draw(event);
+                muro_draw();
             }
             disp_post_draw();
             redraw = false;
