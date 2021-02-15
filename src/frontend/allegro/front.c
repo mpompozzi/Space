@@ -20,14 +20,17 @@
 #define BLACK   al_map_rgb(0,0,0)
 #define WHITE   al_map_rgb(155,155,155)
 #define RED     al_map_rgb(255,0,0)
+#define GREEN     al_map_rgb(0,155,0)
 
 #define MENU_BACKGROUND "res/img/invaddx.png"
 #define GAME_BACKGROUND "res/img/invaders.png"
 #define ENEMY_BMP "res/img/saucer1a.png"
 #define ENEMY2_BMP "res/img/saucer2a.png"
 #define ENEMY3_BMP "res/img/saucer3a.png"
-#define NAVNOD_BMP "res/img/mysteryb.png"
+#define NAVNOD1_BMP "res/img/mysterya1.png"
+#define NAVNOD2_BMP "res/img/mysterya2.png"
 #define PLAYER_BMP "res/img/baseshipa.png"
+#define MURO_BMP "res/img/muro.png"
 
 #define GAME_SOUND "../../../res/audio/"
 #define OPTION_SOUND "../../../res/audio/"
@@ -49,7 +52,7 @@ void must_init(bool test, const char *description)
 
 #define BUFFER_W 640
 #define BUFFER_H 640
-#define DISP_SCALE 1
+#define DISP_SCALE 1.2
 #define DISP_W (BUFFER_W * DISP_SCALE)
 #define DISP_H (BUFFER_H * DISP_SCALE)
 
@@ -229,8 +232,10 @@ typedef struct GRAPHICS {
     ALLEGRO_BITMAP* enemy_bitmap;
     ALLEGRO_BITMAP* enemy2_bitmap;
     ALLEGRO_BITMAP* enemy3_bitmap;
-    ALLEGRO_BITMAP* navnod_bitmap;
+    ALLEGRO_BITMAP* navnod1_bitmap;
+    ALLEGRO_BITMAP* navnod2_bitmap;
     ALLEGRO_BITMAP* player_bitmap;
+    ALLEGRO_BITMAP* muro_bitmap;
 } GRAPHICS;
 
 GRAPHICS graphics;
@@ -253,11 +258,17 @@ void graphics_init()
     graphics.enemy3_bitmap = al_load_bitmap(ENEMY3_BMP);
     must_init(graphics.enemy3_bitmap, "enemy 3 bitmap");
     
-    graphics.navnod_bitmap = al_load_bitmap(NAVNOD_BMP);
-    must_init(graphics.navnod_bitmap, "nave nodriza bitmap");
+    graphics.navnod1_bitmap = al_load_bitmap(NAVNOD1_BMP);
+    must_init(graphics.navnod1_bitmap, "nave nodriza 1 bitmap");
+    
+    graphics.navnod2_bitmap = al_load_bitmap(NAVNOD2_BMP);
+    must_init(graphics.navnod2_bitmap, "nave nodriza 2 bitmap");
     
     graphics.player_bitmap = al_load_bitmap(PLAYER_BMP);
     must_init(graphics.player_bitmap, "player bitmap");
+    
+     graphics.muro_bitmap = al_load_bitmap(MURO_BMP);
+    must_init(graphics.muro_bitmap, "muro bitmap");
 }
 
 void graphics_deinit()
@@ -267,7 +278,8 @@ void graphics_deinit()
     al_destroy_bitmap(graphics.enemy_bitmap);
     al_destroy_bitmap(graphics.enemy2_bitmap);
     al_destroy_bitmap(graphics.enemy3_bitmap);
-    al_destroy_bitmap(graphics.navnod_bitmap);
+    al_destroy_bitmap(graphics.navnod1_bitmap);
+    al_destroy_bitmap(graphics.navnod2_bitmap);
     al_destroy_bitmap(graphics.player_bitmap);
 }
 
@@ -373,10 +385,12 @@ void board_init(juego_t * juego){
                     enemy_logic.shot[a].objeto = frontboard[i][j];
                     a += 1;
                     break;
-                case(ENEMY):
-                case(ENEMY_2):
-                case(ENEMY_3):
-                case(ENEMYSHOT):
+                case(ENEMY1):
+                case(ENEMY2):
+                case(ENEMY3):
+                case(ENEMYSHOT1):
+                case(ENEMYSHOT2):
+                case(ENEMYSHOT3):  
                     enemy_logic.cell[b].objeto = frontboard[i][j];
                     b += 1;
                     break;
@@ -429,10 +443,12 @@ void board_update(juego_t * juego){
                     enemy_logic.shot[a].objeto = frontboard[i][j];
                     a += 1;
                     break;
-                case(ENEMY):
-                case(ENEMY_2):
-                case(ENEMY_3):
-                case(ENEMYSHOT):
+                case(ENEMY1):
+                case(ENEMY2):
+                case(ENEMY3):
+                case(ENEMYSHOT1):
+                case(ENEMYSHOT2):
+                case(ENEMYSHOT3): 
                     enemy_logic.cell[b].i = i;
                     enemy_logic.cell[b].j = j; 
                     b += 1;
@@ -495,7 +511,7 @@ void shots_update(ALLEGRO_EVENT ev){
 //-------- movimiento y disparo de enemigos --------
 
 void enemies_update(juego_t * juego){ //va a manejar timers de enemigos segun nivel
-    //navdisp();
+    navdisp();
     if(ciclonaves(juego)) juego->vidas = 0;
 }
 
@@ -758,23 +774,39 @@ void enemies_draw(void){
     int n, aux;
     for(n = 0, aux = 1; n < enemy_logic.max_enemies && aux == 1; n++){
         switch(enemy_logic.cell[n].objeto){
-            case(ENEMY):
-            case(ENEMYSHOT):
-                al_draw_bitmap(graphics.enemy_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+             case(ENEMY1):
+             case(ENEMYSHOT1):
+                al_draw_bitmap(graphics.enemy_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2  ,SCALE*enemy_logic.cell[n].i - CELL/2, 0);
                 break;
-            case(ENEMY_2):
-                al_draw_bitmap(graphics.enemy2_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+             case(ENEMY2):
+             case(ENEMYSHOT2):
+                al_draw_bitmap(graphics.enemy2_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2 , SCALE*enemy_logic.cell[n].i - CELL/2, 0);
                 break;    
-            case(ENEMY_3):
+             case(ENEMY3):
+             case(ENEMYSHOT3):
                 al_draw_bitmap(graphics.enemy3_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
                 break;
-            case(NADA):
+             case(NADA):
                 break;
-            default:
+             default:
                 aux = 0;
                 break;
         }                        
     }
+}
+
+void nod_draw(void){
+  int n, aux, flag;
+    for(n = 0, aux = 1; n < enemy_logic.max_enemies && aux == 1; n++){
+        if(enemy_logic.cell[n].objeto == NAVNOD && flag == 1){
+            al_draw_bitmap(graphics.navnod1_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+            flag=0;
+        }
+        else{
+            al_draw_bitmap(graphics.navnod2_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+            flag=1;
+          }
+      }
 }
 
 void shots_draw(ALLEGRO_EVENT ev){
@@ -785,7 +817,7 @@ void shots_draw(ALLEGRO_EVENT ev){
             if(pshot.i > LARGO - 5) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         }
         else if(enemy_logic.shot[n].objeto == ESHOT){
-            al_draw_line(SCALE * enemy_logic.shot[n].j, SCALE * enemy_logic.shot[n].i - 5, SCALE * enemy_logic.shot[n].j, SCALE * enemy_logic.shot[n].i + 5, RED, 4);
+            al_draw_line(SCALE * enemy_logic.shot[n].j, SCALE * enemy_logic.shot[n].i - 5, SCALE * enemy_logic.shot[n].j, SCALE * enemy_logic.shot[n].i + 5, GREEN, 4);
         }
         else if(enemy_logic.shot[n].objeto == NADA){}
         else aux = 0;                         
@@ -797,7 +829,7 @@ void muro_draw(void){
     int n, aux;
     for(n = 0, aux = 1; n < MAX_MURO && aux == 1; n++){
         if(muro[n].objeto == MURO){
-            al_draw_bitmap(graphics.player_bitmap, SCALE*muro[n].j - CELL/2, SCALE*muro[n].i - CELL/2, 0);
+            al_draw_bitmap(graphics.muro_bitmap, SCALE*muro[n].j - CELL/2, SCALE*muro[n].i - CELL/2, 0);
         }
         else if(muro[n].objeto == MURO){}          
         else aux = 0;
@@ -858,7 +890,7 @@ void muro_draw(void){
         al_draw_text(menu[1].font, color, menu[1].x, menu[1].y + 150, 0, "Holis 2");
         menu[1].pressed = 0;
     }
-/*
+
 void update(ALLEGRO_EVENT ev){
     switch(MenuStates){
         case PLAY:
@@ -882,11 +914,14 @@ int main(void){
     must_init(al_reserve_samples(16), "reserve samples");
     must_init(al_init_primitives_addon(), "primitives");
 
-    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 40.0);
     must_init(timer, "timer");
     
-    ALLEGRO_TIMER* timer_shot = al_create_timer(1 / 60.0);
+    ALLEGRO_TIMER* timer_shot = al_create_timer(1 / 20.0);
     must_init(timer_shot, "timer_shot");
+    
+    ALLEGRO_TIMER* timer_nod = al_create_timer(1 / 10.0);
+    must_init(timer_nod, "timer_nod");
 
     enemy_logic.timers[0] = al_create_timer(1 / 1.0);
     must_init(enemy_logic.timers[0], "timer_enemy");
@@ -904,10 +939,17 @@ int main(void){
     hud_init();
     keyboard_init();
     graphics_init();
-
+    
+    
+/*    int random = 0;
+    random = (rand () % 10) + 26; //numero entre 25 y 35*/
+    
+    
+    
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_display_event_source(disp));
     al_register_event_source(queue, al_get_timer_event_source(timer));
+    al_register_event_source(queue, al_get_timer_event_source(timer_nod));
     al_register_event_source(queue, al_get_timer_event_source(timer_shot));
     al_register_event_source(queue, al_get_timer_event_source(enemy_logic.timers[0]));
     al_register_event_source(queue, al_get_mouse_event_source());
