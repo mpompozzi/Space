@@ -141,9 +141,9 @@ int ciclonaves(juego_t *juego) {//mueva las naves en la matriz
                 mov = DER;
                 for (i = (LARGO - 2); i >= 0; --i) {
                     for (j = (ANCHO - 1); j >= 0; --j) {
-                        if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave
+                        if ((space[i][j] >= ENEMY1)&&(space[i][j] <= ENEMYSHOT3)) {//si hay nave
                             movmat(i, j, mov);
-                            if ((space[i][ANCHO - 1] >= 1)&&(space[i][ANCHO - 1] <= 4)) {//si hay algo en la ultima col
+                            if ((space[i][ANCHO - 1] >= ENEMY1)&&(space[i][ANCHO - 1] <= ENEMYSHOT3)) {//si hay algo en la ultima col
                                 direccion = IZQ; //invierto direccion
                                 bajar = 1; //indico q tengo q bajar
                             }
@@ -154,9 +154,9 @@ int ciclonaves(juego_t *juego) {//mueva las naves en la matriz
                 mov = IZQ;
                 for (i = (LARGO - 2); i >= 0; --i) {
                     for (j = 0; j < ANCHO; ++j) {
-                        if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave                       
+                        if ((space[i][j] >= ENEMY1)&&(space[i][j] <= ENEMYSHOT3)) {//si hay nave                       
                             movmat(i, j, mov);
-                            if ((space[i][0] >= 1)&&(space[i][0] <= 4)) {//si hay algo en la primer col
+                            if ((space[i][0] >= ENEMY1)&&(space[i][0] <= ENEMYSHOT3)) {//si hay algo en la primer col
                                 direccion = DER; //invuerto direccion
                                 bajar = 1; //indico q tengo q bajar
                             }
@@ -169,13 +169,13 @@ int ciclonaves(juego_t *juego) {//mueva las naves en la matriz
             bajar=0;
             for (i = (LARGO - 3); i >= 0; --i) {
                 for (j = 0; j < ANCHO; ++j) {
-                    if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave                           
+                    if ((space[i][j] >= ENEMY1)&&(space[i][j] <= ENEMYSHOT3)) {//si hay nave                           
                         movmat(i, j, mov);
                     }
                 }
             }
             for (i = (LARGO - 2), j = 0; j < ANCHO; ++j) {
-                if ((space[i][j] >= 1)&&(space[i][j] <= 4)) {//si hay nave 
+                if ((space[i][j] >= ENEMY1)&&(space[i][j] <= ENEMYSHOT3)) {//si hay nave 
                     exit = 1; //marco salir
                     juego->omit=1;
                 }
@@ -242,7 +242,7 @@ coord_t ciclodispp(juego_t *juego, int i, int j) {//mueve los disparos y cambia 
             if (space[i - 1][j] == 0) {//si adelante del disparo no hay nada
                 movmat(i, j, mov);
             } else {//hay algo
-                if ((space[i - 1][j] == ENEMY) || (space[i - 1][j] == ENEMYSHOT) || (space[i - 1][j] == NAVNOD) || (space[i - 1][j] == ENEMY_2) || (space[i - 1][j] == ENEMY_3)) {//si es enemigo cambiar si se agregan mas tipos de nemigos
+                if ((space[i-1][j] >= ENEMY1)&&(space[i-1][j] <= ENEMYSHOT3)) {//si es enemigo cambiar si se agregan mas tipos de nemigos
                     juego->puntaje += ((space[i - 1][j])*10);
                     if (space[i - 1][j] == NAVNOD) {//si es la nave nod
                         if (space[i - 1][j - 1] == NAVNOD) {//me fijo donde esta la otra parte de la nave nod
@@ -312,15 +312,14 @@ if (space[i][j] == ESHOT) {//si hay un disparo enemigo
     return evento;
 }
 ////////////////////////////////////////////////////////////////////////////////////
+
 void verparams(juego_t *juego){//se fija si pasaste al siguiente nivel y de actualizar las naves q disparan
     int i,j;
     juego->naves=0;//pongo que hay 0 naves
-    int vacio =0;//1 si hay naves 0 si no
     int prom=1;//1 si tengo q promover una nave para q dispare
     for(i=0;i<LARGO;++i){
         for(j=0;j<ANCHO;++j){
-            if((space[i][j]>=1)&&(space[i][j]<=5)){//si hay naves
-                vacio=1;//marco q no incremento el nivel
+            if((space[i][j]>=ENEMY1)&&(space[i][j]<=ENEMYSHOT3)){//si hay naves
                 juego->naves+=1;//cuento las naves
             }
         }
@@ -328,12 +327,24 @@ void verparams(juego_t *juego){//se fija si pasaste al siguiente nivel y de actu
     //ojo aca q me manejo con cols primero y despues fils
     for(i=0;i<ANCHO;++i){
         for(j=(LARGO-2);j>=0;--j){
-            if(space[j][i]==ENEMYSHOT){//si hay un enemigo q dispara en esa col
+            if((space[j][i]==ENEMYSHOT1)||(space[j][i]==ENEMYSHOT2)||(space[j][i]==ENEMYSHOT3)){//si hay un enemigo q dispara en esa col
                 prom=0;//no necesito promover a otro para q dispare
             }
-            if( (space[j][i]==ENEMY) || (space[j][i]==ENEMY_2) || (space[j][i]==ENEMY_3)){//cambiar si agrego mas tipos de enemigos
+            if( (space[j][i]==ENEMY1) || (space[j][i]==ENEMY2) || (space[j][i]==ENEMY3)){//cambiar si agrego mas tipos de enemigos
                 if(prom==1){//si no encontre ninguna nave q dispara antes q esta
-                    space[j][i]=ENEMYSHOT; //promuevo esa nave para q dispare                    
+                    switch(space[j][i]){
+                      case ENEMY1:
+                        space[j][i]=ENEMYSHOT1;
+                        break;
+                      case ENEMY2:
+                        space[j][i]=ENEMYSHOT2;
+                        break;
+                      case ENEMY3:
+                        space[j][i]=ENEMYSHOT3;
+                        break;
+                      default:
+                        break;
+                      }                   
                     prom=0;//ya no necesito promover otra
                 }
             }
@@ -341,7 +352,6 @@ void verparams(juego_t *juego){//se fija si pasaste al siguiente nivel y de actu
         prom=1;//parto diciendo q en esa col hay naves q necesiten ser promovidas
     }
 }
-
 //////////////////////////////////////////////////////////////////////////////
 
 void navdisp(void) {//determina cuando las naves disparan y cuando aparece la nave nodriza
@@ -349,7 +359,7 @@ void navdisp(void) {//determina cuando las naves disparan y cuando aparece la na
     int num = 0; //numero random
     for (i = 0; i < LARGO; ++i) {
         for (j = 0; j < ANCHO; ++j) {
-            if (space[i][j] == ENEMYSHOT) {
+            if ((space[i][j] == ENEMYSHOT1)||(space[i][j] == ENEMYSHOT2)||(space[i][j] == ENEMYSHOT3)) {
                 num = rand() % 100 + 1; //genero un num random entre 1 y 100
                 if (num <= 20) {//20% de q dispare
                     space[i + 1][j] = ESHOT; //spawneo un disparo                   
@@ -430,7 +440,7 @@ void playerdisp(int i, int j, int disparo) {
     }
 }
 /////////////////////////////////////////////////////////////////////////////////
-#define TESTE
+#define TESTEO
 #ifdef TESTEO
 
 void printmat(void) {//para testeo
@@ -456,13 +466,13 @@ void crear_enemigo(int nivel) {
     for (i = nivel; i < (nivel + 3); i += 2) {
         for (j = 1; j < ANCHO; j += SEPARACION) {//seteo enemigos
             if (i == nivel) {
-                space[i][j] = ENEMY_3;
+                space[i][j] = ENEMY3;
             } else {
                 if (i == (nivel + 2)) {
                     if (nivel > 2) {
-                        space[i][j] = ENEMY_2;
+                        space[i][j] = ENEMY2;
                     } else {
-                        space[i][j] = ENEMY;
+                        space[i][j] = ENEMY1;
                     }
                 }
             }
@@ -470,14 +480,14 @@ void crear_enemigo(int nivel) {
     }
     for (i = (nivel + 4); i < (nivel + 5); ++i) {
         for (j = 1; j < ANCHO; j += SEPARACION) {
-            space[i][j] = ENEMYSHOT;
+            space[i][j] = ENEMYSHOT1;
         }
     }
 }
 /////////////////////////////////////////////////////////////////////////////
 
 void crear_muro(void) {
-    int i, j,a;
+    int i, j;
 #ifdef RASPI
     for (i = 13; i < 15; ++i) {
         for (j = 1; j < ANCHO; j += 3) {//seteo defensas
@@ -489,7 +499,8 @@ void crear_muro(void) {
         }
     }
 #elif ALLEGRO
-    for(i=LARGO-5;i<LARGO-1;++i){
+    int a;
+    for(i=LARGO-3;i<LARGO-1;++i){
         for(j=1;j<ANCHO;j+=6){
             a=j;
             for(j;j<a+6;++j){
