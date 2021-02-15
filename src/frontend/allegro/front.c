@@ -35,8 +35,8 @@
 #define GAME_SOUND "../../../res/audio/"
 #define OPTION_SOUND "../../../res/audio/"
 #define SHOT_SOUND "res/audio/disparo.wav"
-#define COLLISION_SOUND "res/audio/nave impacto.wav"
-#define GAMEOVER_SOUND "res/audio/game over.wav"
+#define COLLISION_SOUND "res/audio/naveImpacto.wav"
+#define GAMEOVER_SOUND "res/audio/gameOver.wav"
 
 int game_states;
 
