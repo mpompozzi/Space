@@ -248,14 +248,14 @@ coord_t ciclodispp(juego_t *juego, int i, int j) {//mueve los disparos y cambia 
                         if (space[i - 1][j - 1] == NAVNOD) {//me fijo donde esta la otra parte de la nave nod
                             space[i][j] = 0;
                             space[i - 1][j] = 0; //mato al enemigo
-                            space[i - 1][j - 1] = 0; //mato la otra parte de la nav nodNADA = 0,NAVE_ENEMIGA,NAVE_NODRIZA, ESCUDO, JUGADOR,
-                            evento.objeto = NAVE_NODRIZA;
-                            return evento;
+                            space[i - 1][j - 1] = 0; //mato la otra parte de la nav nodNADA = 0,NAVE_ENEMIGA,NAVE_NODRIZA, ESCUDO, JUGADOR,                         
                         } else {
                             space[i][j] = 0;
                             space[i - 1][j] = 0; //mato al enemigo
                             space[i - 1][j + 1] = 0; //mato la otra parte de la nav nod
                         }
+                        evento.objeto = NAVE_NODRIZA;
+                        return evento;
                     } else {//si es otra nave
                         space[i][j] = 0;
                         space[i - 1][j] = 0; //mato al enemigo
