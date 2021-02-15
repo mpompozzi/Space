@@ -501,7 +501,7 @@ void crear_muro(void) {
     }
 #elif ALLEGRO
     int a;
-    for(i=LARGO-5;i<LARGO-1;++i){
+    for(i=LARGO-3;i<LARGO-1;++i){
         for(j=1;j<ANCHO;j+=6){
             a=j;
             for(j;j<a+6;++j){
