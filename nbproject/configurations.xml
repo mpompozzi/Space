@@ -20,6 +20,9 @@
         <itemPath>res/audio/disparo.wav</itemPath>
         <itemPath>res/audio/gameOver.wav</itemPath>
         <itemPath>res/audio/invaderkilled.wav</itemPath>
+        <itemPath>res/audio/lvlup.wav</itemPath>
+        <itemPath>res/audio/masvidas.wav</itemPath>
+        <itemPath>res/audio/menosvida.wav</itemPath>
         <itemPath>res/audio/naveImpacto.wav</itemPath>
         <itemPath>res/audio/shoot.wav</itemPath>
         <itemPath>res/audio/ufo_highpitch.wav</itemPath>
@@ -124,6 +127,12 @@
       </item>
       <item path="res/audio/invaderkilled.wav" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="res/audio/lvlup.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/masvidas.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/menosvida.wav" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="res/audio/naveImpacto.wav" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/audio/shoot.wav" ex="false" tool="3" flavor2="0">
@@ -182,6 +191,12 @@
       <item path="res/audio/gameOver.wav" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/audio/invaderkilled.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/lvlup.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/masvidas.wav" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/audio/menosvida.wav" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/audio/naveImpacto.wav" ex="false" tool="3" flavor2="0">
       </item>
