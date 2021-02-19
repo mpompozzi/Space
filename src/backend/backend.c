@@ -362,7 +362,7 @@ void navdisp(void) {//determina cuando las naves disparan y cuando aparece la na
         for (j = 0; j < ANCHO; ++j) {
             if ((space[i][j] == ENEMYSHOT1)||(space[i][j] == ENEMYSHOT2)||(space[i][j] == ENEMYSHOT3)) {
                 num = rand() % 100 + 1; //genero un num random entre 1 y 100
-                if (num <= 20) {//20% de q dispare
+                if (num <= 15) {//20% de q dispare
                     space[i + 1][j] = ESHOT; //spawneo un disparo                   
                 }
             }

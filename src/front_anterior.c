@@ -702,7 +702,7 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
 int button_update(ALLEGRO_EVENT ev, BUTTON * button){
     if((mouse.x >= button->x && mouse.y >= button->y && mouse.x < (button->x + button->w) && mouse.y < (button->y + button->h))){
         if(al_mouse_button_down(&mouse, 1))
-            return 1;
+            return 1;guren no yumiya sub español
         else 
             return 2;
     }
@@ -758,7 +758,7 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                 al_draw_text(buttons[1][0].font, WHITE, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTER, buttons[1][0].text);
             break;
         case(STATE_PAUSE):
-            al_clear_to_color(al_map_rgb(0,0,0));
+            al_cl@cear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics.game_background,0,0,0);
             for(int i=0; i<2; i++){
                 if(buttons[2][i].keyboard)
