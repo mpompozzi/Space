@@ -232,7 +232,8 @@ void game_update(ALLEGRO_EVENT ev, juego_t * juego){
     pmov(juego);
     verparams(juego);
     if(juego->naves == 0){
-        ininiv(juego->nivel);
+        //agregar secuencia de level up
+        ininiv(juego->nivel+1 );
     }
 }
 
@@ -351,7 +352,7 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
                     game_states = STATE_PLAY; //habria que poner un break adentro para evitar presionar otro boton rapido??
                     buttons[0][0].keyboard = 0;
-                    inigame(&juego, 1);
+                    inigame(&juego, 5);
                     //board_init(&juego);
                 }
                 else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
@@ -485,16 +486,17 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
         case(STATE_START):
             al_clear_to_color(BLACK);
             al_draw_bitmap(graphics.menu_background,0,0,0);
-            al_draw_text(buttons[3][0].font, WHITE, DISP_W / 2, buttons[3][0].y, ALLEGRO_ALIGN_CENTER, buttons[3][0].text);
+            
+            al_draw_text(buttons[3][0].font, WHITE, (float) DISP_W / 2, (float) buttons[3][0].y, ALLEGRO_ALIGN_CENTRE, buttons[3][0].text);
             break;
         case(STATE_MENU):
             al_clear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics.menu_background,0,0,0);
             for(int i=0; i<3; i++){
-                if(buttons[0][i].keyboard)
-                    al_draw_text(buttons[0][i].font, RED, DISP_W / 2, buttons[0][i].y, ALLEGRO_ALIGN_CENTER, buttons[0][i].text);
+                if(buttons[0][i].keyboard)//
+                    al_draw_text(buttons[0][i].font, RED, DISP_W / 2, buttons[0][i].y, ALLEGRO_ALIGN_CENTRE, buttons[0][i].text);
                 else
-                    al_draw_text(buttons[0][i].font, WHITE, DISP_W / 2, buttons[0][i].y, ALLEGRO_ALIGN_CENTER, buttons[0][i].text);
+                    al_draw_text(buttons[0][i].font, WHITE, DISP_W / 2, buttons[0][i].y, ALLEGRO_ALIGN_CENTRE, buttons[0][i].text);
             }
             break;
         case(STATE_PLAY):
@@ -507,12 +509,12 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             
         case(STATE_GAMEOVER):
             al_clear_to_color(al_map_rgb(0,0,0));
-            al_draw_text(buttons[4][0].font, WHITE, DISP_W / 2, buttons[4][0].y - 100, ALLEGRO_ALIGN_CENTER, "G A M E  O V E R");
+            al_draw_text(buttons[4][0].font, WHITE, DISP_W / 2, buttons[4][0].y - 100, ALLEGRO_ALIGN_CENTRE, "G A M E  O V E R");
             for(int i=0; i<2; i++){
                 if(buttons[4][i].keyboard)
-                    al_draw_text(buttons[4][i].font, RED, DISP_W / 2, buttons[4][i].y, ALLEGRO_ALIGN_CENTER, buttons[4][i].text);
+                    al_draw_text(buttons[4][i].font, RED, DISP_W / 2, buttons[4][i].y, ALLEGRO_ALIGN_LEFT, buttons[4][i].text);
                 else
-                    al_draw_text(buttons[4][i].font, WHITE, DISP_W / 2, buttons[4][i].y, ALLEGRO_ALIGN_CENTER, buttons[4][i].text);
+                    al_draw_text(buttons[4][i].font, WHITE, DISP_W / 2, buttons[4][i].y, ALLEGRO_ALIGN_CENTRE, buttons[4][i].text);
             }
             break;
             
@@ -520,18 +522,18 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             al_clear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics.menu_background,0,0,0);
             if(buttons[1][0].keyboard)
-                al_draw_text(buttons[1][0].font, RED, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTER, buttons[1][0].text);
+                al_draw_text(buttons[1][0].font, RED, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTRE, buttons[1][0].text);
             else
-                al_draw_text(buttons[1][0].font, WHITE, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTER, buttons[1][0].text);
+                al_draw_text(buttons[1][0].font, WHITE, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTRE, buttons[1][0].text);
             break;
         case(STATE_PAUSE):
             al_clear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics.game_background,0,0,0);
             for(int i=0; i<2; i++){
                 if(buttons[2][i].keyboard)
-                    al_draw_text(buttons[2][i].font, RED, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTER, buttons[2][i].text);
+                    al_draw_text(buttons[2][i].font, RED, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTRE, buttons[2][i].text);
                 else
-                    al_draw_text(buttons[2][i].font, WHITE, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTER, buttons[2][i].text);
+                    al_draw_text(buttons[2][i].font, WHITE, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTRE, buttons[2][i].text);
             }
             break;
     }
@@ -571,8 +573,8 @@ void call_nod(void){// funcion que genera el llamado aleatorio para la nave nodr
   static int nav=0;
   static int random=0;
   if(nav == 0){ //si no hay nave nodriza en el juego, que busque crearla cuando coincida los rangos que emite rand.
-      random = (rand () % 15) ; //numero entre 25 y 35
-      if((random >=5)&& (random<=7)){
+      random = (rand () % 100) ; //numero entre 25 y 35
+      if((random >=5)&&(random<=7)){
           nav=nav_nod();
           random=0;
         }
@@ -606,9 +608,46 @@ void muro_draw(void){
 }
 
 
+void vel_nod(){
+  
+      if(juego.naves <= 24)
+           al_set_timer_speed(enemy_logic.timers[0] , (1/ 0.5));
+      
+      if(juego.naves <= 22)
+           al_set_timer_speed(enemy_logic.timers[0] , (1/ 0.8));
+      
+      if(juego.naves <= 20)
+         al_set_timer_speed(enemy_logic.timers[0] , (1 / 1.4));
+      
+      if(juego.naves <= 18)
+         al_set_timer_speed(enemy_logic.timers[0] , (1 / 1.8));
+      
+      if(juego.naves <= 16)
+         al_set_timer_speed(enemy_logic.timers[0] ,(1/ 2.2));
+      
+      if(juego.naves <= 14)
+         al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.4));
+      
+      if(juego.naves <= 12)
+         al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.4));
+      
+      if(juego.naves <= 10)
+         al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.8));
+      
+      if(juego.naves <= 8)
+         al_set_timer_speed(enemy_logic.timers[0] , (1/3.2));
+      
+      if(juego.naves <= 4)
+        al_set_timer_speed(enemy_logic.timers[0] , (1/5.2));
+      
+
+   }
+
+
 
 int main(void){
    
+     
     must_init(al_init(), "allegro");
     must_init(al_install_keyboard(), "keyboard");
     must_init(al_install_mouse(), "mouse");
@@ -620,13 +659,13 @@ int main(void){
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 40.0);
     must_init(timer, "timer");
     
-    ALLEGRO_TIMER* timer_shot = al_create_timer(1 / 30.0);
+    ALLEGRO_TIMER* timer_shot = al_create_timer(1.0 / 40.0);
     must_init(timer_shot, "timer_shot");
     
-    ALLEGRO_TIMER* timer_nod = al_create_timer(1 / 6.0);
+    ALLEGRO_TIMER* timer_nod = al_create_timer(1.0/ 6.0);
     must_init(timer_nod, "timer_nod");
 
-    enemy_logic.timers[0] = al_create_timer(1 / 1.0);
+    enemy_logic.timers[0] = al_create_timer(1.0);
     must_init(enemy_logic.timers[0], "timer_enemy");
     
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
@@ -649,8 +688,7 @@ int main(void){
     al_register_event_source(queue, al_get_timer_event_source(timer_nod));
     al_register_event_source(queue, al_get_timer_event_source(timer_shot));
     al_register_event_source(queue, al_get_timer_event_source(enemy_logic.timers[0]));
-    al_register_event_source(queue, al_get_mouse_event_source());
-    
+
     BUTTON buttons_menu [] = {{300,25, "START", font, 0},
                         {350,25, "STATS", font, 0},
                         {400,25, "EXIT", font, 0}};
@@ -691,7 +729,7 @@ int main(void){
             disp_pre_draw();
             menu_draw(event, buttons);
             if(game_states == STATE_PLAY){
-                
+                vel_nod();
                 enemies_draw();
                 shots_draw(event);
                 muro_draw();
