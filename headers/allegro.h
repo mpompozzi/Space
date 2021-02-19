@@ -61,6 +61,7 @@ extern "C" {
 #define NAVNOD2_BMP "res/img/mysterya.png"
 #define PLAYER_BMP "res/img/baseshipa.png"
 #define MURO_BMP "res/img/muro.png"
+#define LEVEL_UP_BMP "res/img/muro.png"
 
 // --- audio ---
 #define GAME_SOUND "../../../res/audio/"
