@@ -6,7 +6,6 @@
                    projectFiles="true">
       <itemPath>headers/allegro.h</itemPath>
       <itemPath>headers/audio.h</itemPath>
-      <itemPath>headers/audioRaspi.h</itemPath>
       <itemPath>headers/backend.h</itemPath>
       <itemPath>headers/disdrv.h</itemPath>
       <itemPath>headers/joydrv.h</itemPath>
@@ -58,7 +57,6 @@
         </logicalFolder>
         <logicalFolder name="f2" displayName="Raspi" projectFiles="true">
           <itemPath>src/frontend/raspi/Raspi.c</itemPath>
-          <itemPath>src/frontend/raspi/audioRaspi.c</itemPath>
           <itemPath>src/frontend/raspi/menu.c</itemPath>
         </logicalFolder>
       </logicalFolder>
@@ -111,8 +109,6 @@
       <item path="headers/allegro.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/audio.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="headers/audioRaspi.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/backend.h" ex="false" tool="3" flavor2="0">
       </item>

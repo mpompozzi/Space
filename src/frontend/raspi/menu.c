@@ -10,22 +10,33 @@
 #include <stdint.h>
 #include "../../../headers/menu.h"
 
+//El largo y ancho son los mismos que la raspi
 #define LARGO 16 
 #define ANCHO 16
 
+//Creo la matriz donde se van a escribir los elementos del menu
 static int space[LARGO][ANCHO];
 
-/*
- * 
- */
-void
-menu (int opcion)
+
+
+///////////////////////////////////////////////////////////
+//                   LOCAL FUNCTIONS                     //
+///////////////////////////////////////////////////////////
+void letters (char what, int where);
+void printnum (int num, int digit[]);
+
+
+///////////////////////////////////////////////////////////
+//                     FUNCTIONS                         //
+///////////////////////////////////////////////////////////
+
+void menu (int opcion)
 {//para allegro hacer otra cosa, escribe el simbolo de play o end
   if (opcion != 5 && opcion != 12)
     {
       return;
     }
-
+  //Escribe el simbolo de play
   space[3][6] = 1;
   space[4][6] = space[4][7] = 1;
   space[5][6] = space[5][7] = space[5][8] = 1;
@@ -40,13 +51,10 @@ menu (int opcion)
 
 
   space[opcion][0] = space[opcion][1] = 1; //escribo el puntero en 5 o 12 segun corresponda
-
-
 }
 
-void
-del_pointer (int opcion)
-{
+void del_pointer (int opcion)
+{//Borra el puntero de la opcion anterior
   if (opcion != 5 && opcion != 12)
     {
       return;
@@ -55,8 +63,7 @@ del_pointer (int opcion)
 
 }
 
-void
-matniv (void)
+void matniv (void)
 {// escribe LV UP
   int i = 0;
   for (i = 4; i < 8; ++i)
@@ -83,9 +90,8 @@ matniv (void)
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 
-void
-printnum (int num, int digit[])
-{//imprimi un digito en la pos correspondiente
+void printnum (int num, int digit[])
+{//imprime un digito en la pos correspondiente
   int a, b, c, d;
   a = digit[0];
   b = digit[1];
@@ -151,8 +157,7 @@ printnum (int num, int digit[])
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void
-printscore (int puntaje)
+void printscore (int puntaje)
 {//imprime el puntaje
   int num = 0; //aisla digitos para pasar a matriz
   int auxmat [4]; //para determinar que cols usar degun el digito
@@ -213,16 +218,14 @@ printscore (int puntaje)
     }
 }
 
-int
-get_menu (int i, int j)
-{
+int get_menu (int i, int j)
+{//Devuelve si debe prender o no el led de esa posicion
   int dato;
   return dato = space[i][j];
 }
 
-void
-clrmat (void)
-{
+void clrmat (void)
+{//Vacia la matriz
   int i, j;
   for (i = 0; i < ANCHO; i++)
     {
@@ -232,3 +235,146 @@ clrmat (void)
         }
     }
 }
+
+void spaceinvaders (void)
+{//Imprime SPACE INVADERS en la raspi de a 3 letras
+  
+  char invaders[] = "SPACE INVADERS";
+  static int conta = 0;
+  int where=0,i;  
+
+  for (i = 0; i < 3; i++) //para las 3 letras
+    {
+      letters (invaders[conta], where);
+      if (invaders[conta] == 'S' || invaders[conta] == 'P' || invaders[conta] == 'A' || invaders[conta] == 'C' || invaders[conta] == 'E' || invaders[conta] == 'D' || invaders[conta] == 'R')
+        {
+          where += 5; //le sumo la cantidad de espacios que ocupa cada letra mas uno, para escribir la siguiente
+        }
+      else if (invaders[conta] == 'N' || invaders[conta] == 'V')
+        {
+          where += 6;
+        }
+      else if (invaders[conta] == 'I')
+        {
+          where += 4;
+        }
+      else if (invaders[conta] == ' ')
+        {
+          where += 3;
+        }
+      conta++; //para ver a que posicion del arreglo estoy apuntando
+    }
+}
+
+void letters (char what, int where)
+{//Encuentra la letra y la imprime en la posicion que corresponda
+  switch (what)
+    {
+    case 'S':
+      {//Escribe la letra S
+        space[5][1 + where] = space[5][2 + where] = space[5][3 + where] = space[5][4 + where] = 1;
+        space[6][1 + where] = 1;
+        space[7][1 + where]=space[7][2 + where] = space[7][3 + where] = space[7][4 + where] = 1;
+        space[8][4 + where] = 1;
+        space[9][4 + where] = 1;
+        space[10][1 + where] = space[10][2 + where] = space[10][3 + where] = space[10][4 + where] = 1;
+      }
+      break;
+    case 'P':
+      {
+        space[5][1 + where] = space[5][2 + where] = space[5][3 + where] = space[5][4 + where] = 1;
+        space[6][1 + where] = space[6][4 + where] = 1;
+        space[7][1 + where] = space[7][4 + where] = 1;
+        space[8][1 + where] = space[8][2 + where] = space[8][3 + where] = space[8][4 + where] = 1;
+        space[9][1 + where] = 1;
+        space[10][1 + where] = 1;
+
+      }
+      break;
+    case 'A':
+      {
+        space[5][1 + where] = space[5][2 + where] = space[5][3 + where] = space[5][4 + where] = 1;
+        space[6][1 + where] = space[6][4 + where] = 1;
+        space[7][1 + where] = space[7][4 + where] = 1;
+        space[8][1 + where]=space[8][2 + where] = space[8][3 + where] = space[8][4 + where] = 1;
+        space[9][1 + where] = space[9][4 + where] = 1;
+        space[10][1 + where] = space[10][4 + where] = 1;
+      }
+      break;
+    case 'C':
+      {
+        space[5][1 + where] = space[5][2 + where] = space[5][3 + where] = space[5][4 + where] = 1;
+        space[6][1 + where] = 1;
+        space[7][1 + where] = 1;
+        space[8][1 + where] = 1;
+        space[9][1 + where] = 1;
+        space[10][1 + where] = space[10][2 + where] = space[10][3 + where] = space[10][4 + where] = 1;
+
+      }
+      break;
+    case 'E':
+      {
+        space[5][1 + where] = space[5][2 + where] = space[5][3 + where] = space[5][4 + where] = 1;
+        space[6][1 + where] = 1;
+        space[7][1 + where] = space[7][2 + where] = space[7][3 + where] = 1;
+        space[8][1 + where] = 1;
+        space[9][1 + where] = 1;
+        space[10][1 + where] = space[10][2 + where] = space[10][3 + where] = space[10][4 + where] = 1;
+
+      }
+      break;
+    case 'I':
+      {
+        space[5][1 + where] = space[5][2 + where] = space[5][3 + where] = 1;
+        space[6][2 + where] = 1;
+        space[7][2 + where] = 1;
+        space[8][2 + where] = 1;
+        space[9][2 + where] = 1;
+        space[10][1 + where] = space[10][2 + where] = space[10][3 + where] = 1;
+      }
+      break;
+    case 'N':
+      {
+        space[5][1 + where] = space[5][5 + where] = 1;
+        space[6][1 + where] = space[6][2 + where] = space[6][5 + where] = 1;
+        space[7][1 + where] = space[7][3 + where] = space[7][5 + where] = 1;
+        space[8][1 + where] = space[8][4 + where] = space[8][5 + where] = 1;
+        space[9][5 + where] = 1;
+        space[10][1 + where] = space[10][5 + where] = 1;
+      }
+      break;
+    case 'V':
+      {
+        space[5][1 + where] = space[5][5 + where] = 1;
+        space[6][1 + where] = space[6][5 + where] = 1;
+        space[7][1 + where] = space[7][5 + where] = 1;
+        space[8][1 + where] = space[8][5 + where] = 1;
+        space[9][2 + where] = space[9][4 + where] = 1;
+        space[10][3 + where] = 1;
+      }
+      break;
+    case 'R':
+    {
+        space[5][1 + where] = space[5][2 + where] = space[5][3 + where] = space[5][4 + where] = 1;
+        space[6][1 + where] = space[6][4 + where] = 1;
+        space[7][1 + where] = space[7][4 + where] = 1;
+        space[8][1 + where] = space[8][2 + where] = space[8][3 + where] = space[8][4 + where] = 1;
+        space[9][1 + where] = space[9][3 + where] = 1;
+        space[10][1 + where] = space[10][4 + where] = 1;
+    }break;
+    case 'D':
+      {
+        space[5][1 + where] = space[5][2 + where] = space[5][3 + where] = 1;
+        space[6][1 + where] = space[6][4 + where] = 1;
+        space[7][1 + where] = space[7][4 + where] = 1;
+        space[8][1 + where] = space[8][4 + where] = 1;
+        space[9][1 + where] = space[9][4 + where] = 1;
+        space[10][1 + where] = space[10][2 + where] = space[10][3 + where] = 1;
+      }
+      break;
+
+
+    }
+}
+
+
