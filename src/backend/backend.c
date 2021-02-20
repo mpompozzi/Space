@@ -460,6 +460,7 @@ void printmat(void) {//para testeo
 
 void crear_enemigo(int nivel) {
     int i, j;
+#ifdef RASPI
     if (nivel > 5) { // limita la cantidad de niveles a 5 para evitar desbordamientos del stack
         nivel = 5;
     }
@@ -485,6 +486,43 @@ void crear_enemigo(int nivel) {
         }
     }
 }
+#elif ALLEGRO
+
+if (nivel > 5) { // limita la cantidad de niveles a 5 para evitar desbordamientos del stack
+        nivel = 5;
+    }
+
+    for (i = nivel; i < (nivel + 7); i += 2) {
+        for (j = 1; j < ANCHO; j += SEPARACION) {//seteo enemigos
+            if (i == nivel) {
+                space[i][j] = ENEMY3;
+            } else {
+                if (i == (nivel + 2)) {
+                    if (nivel > 2) {
+                        space[i][j] = ENEMY2;
+                    } else {
+                        space[i][j] = ENEMY1;
+                    }
+                }
+                else{
+                    if(i == nivel +4){
+                        space[i][j] = ENEMY2;
+                      }
+                    else{
+                        space[i][j] = ENEMY1;
+                      }
+                    
+                  }
+            }
+        }
+    }
+    for (i = (nivel + 8); i < (nivel + 9); ++i) {
+        for (j = 1; j < ANCHO; j += SEPARACION) {
+            space[i][j] = ENEMYSHOT1;
+        }
+    }
+}
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
 void crear_muro(void) {
