@@ -31,11 +31,15 @@
       <logicalFolder name="f2" displayName="Imagenes" projectFiles="true">
         <itemPath>res/img/baseshipa.png</itemPath>
         <itemPath>res/img/baseshipb.png</itemPath>
+        <itemPath>res/img/block.png</itemPath>
+        <itemPath>res/img/enemykilled.png</itemPath>
         <itemPath>res/img/invaddx.png</itemPath>
         <itemPath>res/img/invaders.png</itemPath>
         <itemPath>res/img/muro.png</itemPath>
         <itemPath>res/img/mysterya.png</itemPath>
         <itemPath>res/img/mysteryb.png</itemPath>
+        <itemPath>res/img/nodkilled.png</itemPath>
+        <itemPath>res/img/playerkilled.png</itemPath>
         <itemPath>res/img/saucer1a.png</itemPath>
         <itemPath>res/img/saucer1b.png</itemPath>
         <itemPath>res/img/saucer2a.png</itemPath>
@@ -43,6 +47,7 @@
         <itemPath>res/img/saucer3a.png</itemPath>
         <itemPath>res/img/saucer3b.png</itemPath>
       </logicalFolder>
+      <itemPath>res/img/life.png</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -142,11 +147,23 @@
       </item>
       <item path="res/audio/ufo_lowpitch.wav" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="res/img/block.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/enemykilled.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/life.png" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="res/img/muro.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/mysterya.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/nodkilled.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/playerkilled.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/backend/backend.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="src/front_anterior.c" ex="false" tool="0" flavor2="0">
+      <item path="src/frontend/allegro/front.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/frontend/raspi/Raspi.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -215,15 +232,25 @@
       </item>
       <item path="res/img/baseshipb.png" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="res/img/block.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/enemykilled.png" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="res/img/invaddx.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/invaders.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/life.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/muro.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/mysterya.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/mysteryb.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/nodkilled.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/playerkilled.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/saucer1a.png" ex="false" tool="3" flavor2="0">
       </item>

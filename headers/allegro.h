@@ -57,11 +57,13 @@ extern "C" {
 #define ENEMY_BMP "res/img/saucer1a.png"
 #define ENEMY2_BMP "res/img/saucer2a.png"
 #define ENEMY3_BMP "res/img/saucer3a.png"
-#define NAVNOD1_BMP "res/img/mysteryb.png"
-#define NAVNOD2_BMP "res/img/mysterya.png"
+#define NAVNOD_BMP "res/img/mysterya.png"
 #define PLAYER_BMP "res/img/baseshipa.png"
-#define MURO_BMP "res/img/muro.png"
-#define LEVEL_UP_BMP "res/img/muro.png"
+#define MURO_BMP "res/img/block.png"
+#define PLAYERKILLED_BMP "res/img/playerkilled.png"
+#define ENEMYKILLED_BMP "res/img/enemykilled.png"
+#define NAVNODKILLED_BMP "res/img/nodkilled.png"
+#define LEVELUP_BMP "res/img/level_up2.png" 
 
 // --- audio ---
 #define GAME_SOUND "../../../res/audio/"
@@ -71,15 +73,20 @@ extern "C" {
 #define GAMEOVER_SOUND "res/audio/gameOver.wav"
   
 // --- display ---
-#define BUFFER_W 800
+#define BUFFER_W 820
 #define BUFFER_H 800
 #define DISP_SCALE 1
 #define DISP_W (BUFFER_W * DISP_SCALE)
 #define DISP_H (BUFFER_H * DISP_SCALE)
 
 // --- keyboard ---
-#define KEY_SEEN     1
-#define KEY_RELEASED 2
+// Key detection options
+/// A key has been pressed
+#    define KEY_SEEN            1
+/// The pressed key has been released
+#    define KEY_RELEASED        2
+/// A key has been pressed and released. Actions can be taked
+#    define KEY_READY           ( (KEY_SEEN | KEY_RELEASED) & KEY_RELEASED)
   
 // --- keyboard ---
 #define MOUSE       0
@@ -95,11 +102,12 @@ extern "C" {
 
 // --- board constants ---
 #define MAX_SHOTS       20
-#define MAX_ENEMIES     40
+#define MAX_ENEMIES     50
 #define MAX_MURO        50  
+#define MAX_EXPLOSIONS  10
   
 // --- draw constants ---  
-#define CELL    20
+#define CELL    25
 #define SCALE 25
   
 // --- graphic struct ---
@@ -109,10 +117,12 @@ typedef struct GRAPHICS {
     ALLEGRO_BITMAP* enemy_bitmap;
     ALLEGRO_BITMAP* enemy2_bitmap;
     ALLEGRO_BITMAP* enemy3_bitmap;
-    ALLEGRO_BITMAP* navnod1_bitmap;
-    ALLEGRO_BITMAP* navnod2_bitmap;
+    ALLEGRO_BITMAP* navnod_bitmap;
     ALLEGRO_BITMAP* player_bitmap;
     ALLEGRO_BITMAP* muro_bitmap;
+    ALLEGRO_BITMAP* playerkilled_bitmap;
+    ALLEGRO_BITMAP* enemykilled_bitmap;
+    ALLEGRO_BITMAP* navnodkilled_bitmap;
 } GRAPHICS;
 
 // --- buttons struct ---
@@ -134,10 +144,15 @@ typedef struct {
   int   max_enemies;
 } enemylogic_t;
   
-
+/*
+void game_update(void);
+void move_player(void);
+int keyboard_counter(unsigned char keyName);
+void board_update(juego_t *);
+void menu_update(BUTTON * buttons[]);
+*/
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* ALLEGRO_H */
-

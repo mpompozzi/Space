@@ -36,7 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/backend/backend.o \
-	${OBJECTDIR}/src/front_anterior.o \
+	${OBJECTDIR}/src/frontend/allegro/front.o \
 	${OBJECTDIR}/src/frontend/raspi/Raspi.o \
 	${OBJECTDIR}/src/frontend/raspi/menu.o
 
@@ -59,21 +59,21 @@ LDLIBSOPTIONS=-L/usr/local/lib `pkg-config --libs sdl` `pkg-config --libs sdl2`
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/spaceinvaders
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/spaceinvaders: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/spaceinvaders ${OBJECTFILES} ${LDLIBSOPTIONS} libs/disdrv.o libs/joydrv.o libs/termlib.o
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/space ${OBJECTFILES} ${LDLIBSOPTIONS} libs/disdrv.o libs/joydrv.o libs/termlib.o
 
 ${OBJECTDIR}/src/backend/backend.o: src/backend/backend.c
 	${MKDIR} -p ${OBJECTDIR}/src/backend
 	${RM} "$@.d"
 	$(COMPILE.c) -g -Wall -DRASPI -I/usr/local/include `pkg-config --cflags sdl` `pkg-config --cflags sdl2`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/backend/backend.o src/backend/backend.c
 
-${OBJECTDIR}/src/front_anterior.o: src/front_anterior.c
-	${MKDIR} -p ${OBJECTDIR}/src
+${OBJECTDIR}/src/frontend/allegro/front.o: src/frontend/allegro/front.c
+	${MKDIR} -p ${OBJECTDIR}/src/frontend/allegro
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DRASPI -I/usr/local/include `pkg-config --cflags sdl` `pkg-config --cflags sdl2`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/front_anterior.o src/front_anterior.c
+	$(COMPILE.c) -g -Wall -DRASPI -I/usr/local/include `pkg-config --cflags sdl` `pkg-config --cflags sdl2`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/frontend/allegro/front.o src/frontend/allegro/front.c
 
 ${OBJECTDIR}/src/frontend/raspi/Raspi.o: src/frontend/raspi/Raspi.c
 	${MKDIR} -p ${OBJECTDIR}/src/frontend/raspi
