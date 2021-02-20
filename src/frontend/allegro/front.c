@@ -181,6 +181,9 @@ void graphics_init()
     
     graphics.vida_bitmap = al_load_bitmap(VIDA_BMP);
     must_init(graphics.vida_bitmap, "vida bitmap");
+       
+    graphics.levelup_bitmap = al_load_bitmap(VIDA_BMP);
+    must_init(graphics.levelup_bitmap, "levelup bitmap");
 }
 
 void graphics_deinit()
@@ -196,6 +199,7 @@ void graphics_deinit()
     al_destroy_bitmap(graphics.enemykilled_bitmap);
     al_destroy_bitmap(graphics.navnodkilled_bitmap);
     al_destroy_bitmap(graphics.vida_bitmap);
+    al_destroy_bitmap(graphics.levelup_bitmap);
 }
 
 
@@ -263,6 +267,7 @@ void game_update(juego_t * juego){
     verparams(juego);
     if(juego->naves == 0){
         //agregar secuencia de level up
+        //lvl_up_draw();
         ininiv(juego->nivel );
     }
 }
@@ -338,7 +343,7 @@ void board_update(juego_t * juego){
 //-------- movimiento de disparos --------
 
 void shots_update(void){
-    int n, k, ok;
+    int n, k=0, ok;
     coord_t eventoe, eventop;
     if(pshot.objeto == PSHOT){
         eventop = ciclodispp(&juego, pshot.i, pshot.j);
@@ -379,7 +384,7 @@ void enemies_update(juego_t * juego){ //va a manejar timers de enemigos segun ni
 
 void vel_nod(void){
     if(juego.naves <= 40)
-         al_set_timer_speed(enemy_logic.timers[0] , (1/ 0.5));
+         al_set_timer_speed(enemy_logic.timers[0] , (1/ 10.5));
 
     else if(juego.naves <= 35)
          al_set_timer_speed(enemy_logic.timers[0] , (1/ 0.8));
@@ -688,7 +693,7 @@ void explosion_draw(void){
     for(k = 0; k < MAX_EXPLOSIONS; k++){
         switch(explosion[k].objeto){
             case(PLAYER):
-                al_draw_bitmap(graphics.playerkilled_bitmap, SCALE*explosion[k].j - CELL/2, SCALE*explosion[k].i - CELL/2, 0);
+                al_draw_bitmap(graphics.playerkilled_bitmap, SCALE*explosion[k].j - CELL, SCALE*explosion[k].i - CELL, 0);
                 break;
             case(ENEMY1):
                 al_draw_bitmap(graphics.enemykilled_bitmap, SCALE*explosion[k].j - CELL/2, SCALE*explosion[k].i - CELL/2, 0);
@@ -698,6 +703,12 @@ void explosion_draw(void){
                 break;
         }
     }
+}
+
+void lvl_up_draw(){
+    al_draw_bitmap(graphics.levelup_bitmap, BUFFER_W / 2 ,BUFFER_H/2, 0);
+    sleep(0.5);
+  
 }
 
 
@@ -711,7 +722,7 @@ int main(void){
     must_init(al_reserve_samples(16), "reserve samples");
     must_init(al_init_primitives_addon(), "primitives");
 
-    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 40.0);
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
     must_init(timer, "timer");
     
     ALLEGRO_TIMER* timer_shot = al_create_timer(1.0 / 40.0);
@@ -723,7 +734,7 @@ int main(void){
     ALLEGRO_TIMER* timer_explosion = al_create_timer(0.8 / 1.0);
     must_init(timer_explosion, "timer_explosion");
 
-    enemy_logic.timers[0] = al_create_timer(1.0/10);
+    enemy_logic.timers[0] = al_create_timer(1.0/40);
     must_init(enemy_logic.timers[0], "timer_enemy");
     
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();

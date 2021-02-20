@@ -65,7 +65,8 @@ extern "C" {
 #define NAVNODKILLED_BMP "res/img/nodkilled.png"
 #define LEVELUP_BMP "res/img/level_up2.png" 
 #define VIDA_BMP "res/img/vida.png"  
-
+#define LEVELUP_BMP "res/img/level_up2.png"  
+  
 // --- audio ---
 #define GAME_SOUND "../../../res/audio/"
 #define OPTION_SOUND "../../../res/audio/"
@@ -125,6 +126,8 @@ typedef struct GRAPHICS {
     ALLEGRO_BITMAP* enemykilled_bitmap;
     ALLEGRO_BITMAP* navnodkilled_bitmap;
     ALLEGRO_BITMAP* vida_bitmap;
+    ALLEGRO_BITMAP* levelup_bitmap;
+    
 } GRAPHICS;
 
 // --- buttons struct ---
