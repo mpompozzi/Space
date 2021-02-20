@@ -52,7 +52,7 @@ extern "C" {
 #define GREEN   al_map_rgb(0,155,0)
   
 // --- bitmap ---
-#define MENU_BACKGROUND "res/img/invaddx.png"
+#define MENU_BACKGROUND "res/img/menuback.png"
 #define GAME_BACKGROUND "res/img/invaders.png"
 #define ENEMY_BMP "res/img/saucer1a.png"
 #define ENEMY2_BMP "res/img/saucer2a.png"
@@ -71,8 +71,8 @@ extern "C" {
 #define GAMEOVER_SOUND "res/audio/gameOver.wav"
   
 // --- display ---
-#define BUFFER_W 640
-#define BUFFER_H 640
+#define BUFFER_W 800
+#define BUFFER_H 800
 #define DISP_SCALE 1
 #define DISP_W (BUFFER_W * DISP_SCALE)
 #define DISP_H (BUFFER_H * DISP_SCALE)
@@ -95,12 +95,12 @@ extern "C" {
 
 // --- board constants ---
 #define MAX_SHOTS       20
-#define MAX_ENEMIES     30
+#define MAX_ENEMIES     40
 #define MAX_MURO        50  
   
 // --- draw constants ---  
 #define CELL    20
-#define SCALE 20
+#define SCALE 25
   
 // --- graphic struct ---
 typedef struct GRAPHICS {
