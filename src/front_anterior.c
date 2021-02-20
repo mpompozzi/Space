@@ -170,7 +170,7 @@ void hud_deinit(){
 void hud_draw(juego_t * juego){
     char puntaje_str[10];
     sprintf(puntaje_str, "%i", juego->puntaje);
-    al_draw_text(font, WHITE, 1, 1, 0, puntaje_str);
+    al_draw_text(font, WHITE, 1, 1, 10, puntaje_str);
 
     for(int i = 0; i < juego->vidas; i++)
         al_draw_filled_circle(10 + i*10, 14, 5, WHITE);

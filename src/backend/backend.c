@@ -76,7 +76,7 @@ void inigame(juego_t *juego, int nivel_inicial) {
     ininiv(nivel_inicial);
     juego->nivel = nivel_inicial;
     juego->puntaje = 0;
-    juego->vidas = 3;
+    juego->vidas = 6;
     juego->tablero = &space[0][0];
     juego->omit =0;
 }

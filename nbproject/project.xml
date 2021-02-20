@@ -12,6 +12,7 @@
             <sourceRootList>
                 <sourceRootElem>src</sourceRootElem>
                 <sourceRootElem>headers</sourceRootElem>
+                <sourceRootElem>res/fonts</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

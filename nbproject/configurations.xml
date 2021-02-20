@@ -28,6 +28,9 @@
         <itemPath>res/audio/ufo_highpitch.wav</itemPath>
         <itemPath>res/audio/ufo_lowpitch.wav</itemPath>
       </logicalFolder>
+      <logicalFolder name="fonts" displayName="Fuentes" projectFiles="true">
+        <itemPath>res/fonts/ARCADE_N.TTF</itemPath>
+      </logicalFolder>
       <logicalFolder name="f2" displayName="Imagenes" projectFiles="true">
         <itemPath>res/img/baseshipa.png</itemPath>
         <itemPath>res/img/baseshipb.png</itemPath>
@@ -46,8 +49,8 @@
         <itemPath>res/img/saucer2b.png</itemPath>
         <itemPath>res/img/saucer3a.png</itemPath>
         <itemPath>res/img/saucer3b.png</itemPath>
+        <itemPath>res/img/vida.png</itemPath>
       </logicalFolder>
-      <itemPath>res/img/life.png</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -81,6 +84,7 @@
   <sourceRootList>
     <Elem>src</Elem>
     <Elem>headers</Elem>
+    <Elem>res/fonts</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -147,11 +151,11 @@
       </item>
       <item path="res/audio/ufo_lowpitch.wav" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="res/fonts/ARCADE_N.TTF" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="res/img/block.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/enemykilled.png" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="res/img/life.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/muro.png" ex="false" tool="3" flavor2="0">
       </item>
@@ -160,6 +164,8 @@
       <item path="res/img/nodkilled.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/playerkilled.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/vida.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/backend/backend.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -228,6 +234,8 @@
       </item>
       <item path="res/audio/ufo_lowpitch.wav" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="res/fonts/ARCADE_N.TTF" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="res/img/baseshipa.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/baseshipb.png" ex="false" tool="3" flavor2="0">
@@ -239,8 +247,6 @@
       <item path="res/img/invaddx.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/invaders.png" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="res/img/life.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/muro.png" ex="false" tool="3" flavor2="0">
       </item>
@@ -263,6 +269,8 @@
       <item path="res/img/saucer3a.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/saucer3b.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/vida.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/backend/backend.c" ex="false" tool="0" flavor2="0">
       </item>
