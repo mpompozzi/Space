@@ -74,7 +74,7 @@ extern "C" {
 #define GAMEOVER_SOUND "res/audio/gameOver.wav"
   
 // --- display ---
-#define BUFFER_W 820
+#define BUFFER_W 800
 #define BUFFER_H 800
 #define DISP_SCALE 1
 #define DISP_W (BUFFER_W * DISP_SCALE)

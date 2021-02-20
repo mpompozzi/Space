@@ -56,8 +56,37 @@ void disp_post_draw(){
 // --- keyboard ---
 
 unsigned char key[ALLEGRO_KEY_MAX];
+unsigned char counterKey[ALLEGRO_KEY_MAX];
 
-void keyboard_init(){
+int keyboard_counter(unsigned char keyName){
+    
+    key[keyName] &= KEY_SEEN;   // Clear key
+    
+    if(game_states == STATE_PLAY){ 
+        counterKey[keyName]++;  // Increase counter of this key
+        if(counterKey[keyName] == 1)
+            return 1;
+        if(keyName == ALLEGRO_KEY_SPACE){
+            if(counterKey[keyName] == 5) 
+                counterKey[keyName] = 0;
+        }
+        else{
+            if(counterKey[keyName] == 2) 
+                counterKey[keyName] = 0;
+        }
+    }
+    else{
+
+    counterKey[keyName]++;  // Increase counter of this key
+    if(counterKey[keyName] == 1)
+        return 1;
+    if(counterKey[keyName] == 10) 
+        counterKey[keyName] = 0;
+    }
+    return 0;
+}
+
+void keyboard_init(void){
     memset(key, 0, sizeof(key));
 }
 
@@ -69,11 +98,6 @@ void keyboard_update(ALLEGRO_EVENT* event){
             break;
         case ALLEGRO_EVENT_KEY_UP:
             key[event->keyboard.keycode] &= KEY_RELEASED;
-            break;
-        case ALLEGRO_EVENT_TIMER:  
-            if(key[ALLEGRO_KEY_RIGHT]) key[ALLEGRO_KEY_RIGHT] &= KEY_SEEN;
-            if(key[ALLEGRO_KEY_LEFT]) key[ALLEGRO_KEY_LEFT] &= KEY_SEEN;
-            if(key[ALLEGRO_KEY_SPACE]) key[ALLEGRO_KEY_SPACE] &= KEY_SEEN;
             break;
     }
 }
@@ -108,20 +132,7 @@ void audio_init(){
 }
 
 void audio_deinit(){
-    /*al_destroy_sampvoid call_nod(void){// funcion que genera el llamado aleatorio para la nave nodriza.
-  static int nav=0;
-  static int random=0;
-  if(nav == 0){ //si no hay nave nodriza en el juego, que busque crearla cuando coincida los rangos que emite rand.
-      random = (rand () % 10) ; //numero entre 25 y 35
-      if((random >=5)&& (random<=7)){
-          nav=nav_nod();
-          random=0;
-        }
-    }
-  else{
-      nav=nav_nod();//cuando ya hay nave, solamente la mueve.
-    }
-}le(game_sound);
+    /*al_destroy_sample(game_sound);
     al_destroy_sample(option_sound);*/
     al_destroy_sample(shot_sound);
     al_destroy_sample(collision_sound);
@@ -135,7 +146,6 @@ GRAPHICS graphics;
 
 void graphics_init()
 {
-    //graphics.menu_background = al_load_bitmap("/home/famolina/Escritorio/Recursos/space-invaders-1978-cabinet-artwork-1/invadbez.png");
     graphics.menu_background = al_load_bitmap(MENU_BACKGROUND);
     must_init(graphics.menu_background, "menu background");
   
@@ -160,6 +170,15 @@ void graphics_init()
      graphics.muro_bitmap = al_load_bitmap(MURO_BMP);
     must_init(graphics.muro_bitmap, "muro bitmap");
     
+    graphics.playerkilled_bitmap = al_load_bitmap(PLAYERKILLED_BMP);
+    must_init(graphics.playerkilled_bitmap, "player killed bitmap");
+    
+    graphics.enemykilled_bitmap = al_load_bitmap(ENEMYKILLED_BMP);
+    must_init(graphics.enemykilled_bitmap, "enemy killed bitmap");
+    
+    graphics.navnodkilled_bitmap = al_load_bitmap(NAVNODKILLED_BMP);
+    must_init(graphics.navnodkilled_bitmap, "navnod killed bitmap");
+    
     graphics.vida_bitmap = al_load_bitmap(VIDA_BMP);
     must_init(graphics.vida_bitmap, "vida bitmap");
 }
@@ -173,6 +192,9 @@ void graphics_deinit()
     al_destroy_bitmap(graphics.enemy3_bitmap);
     al_destroy_bitmap(graphics.navnod_bitmap);
     al_destroy_bitmap(graphics.player_bitmap);
+    al_destroy_bitmap(graphics.playerkilled_bitmap);
+    al_destroy_bitmap(graphics.enemykilled_bitmap);
+    al_destroy_bitmap(graphics.navnodkilled_bitmap);
     al_destroy_bitmap(graphics.vida_bitmap);
 }
 
@@ -209,29 +231,33 @@ void hud_draw(juego_t * juego){
 juego_t juego;
 
 //-------- lee teclado e indica movimiento de jugador --------
-void move_player(ALLEGRO_EVENT ev){ 
+void move_player(void){ 
     if(key[ALLEGRO_KEY_SPACE] && key[ALLEGRO_KEY_RIGHT]){
-        juego.mov = SHOOT_RIGHT;
+        if(keyboard_counter(ALLEGRO_KEY_SPACE) && keyboard_counter(ALLEGRO_KEY_RIGHT))
+            juego.mov = SHOOT_RIGHT;     
     }  
     else if(key[ALLEGRO_KEY_SPACE] && key[ALLEGRO_KEY_LEFT]){
-        juego.mov = SHOOT_LEFT;
-    }  
+        if(keyboard_counter(ALLEGRO_KEY_SPACE) && keyboard_counter(ALLEGRO_KEY_LEFT))
+            juego.mov = SHOOT_LEFT;
+    } 
     else if(key[ALLEGRO_KEY_SPACE]){
-        juego.mov = SHOOT;
-    }   
-    else if(key[ALLEGRO_KEY_RIGHT]){
-        juego.mov = RIGHT;
+        if(keyboard_counter(ALLEGRO_KEY_SPACE))
+            juego.mov = SHOOT;
     }
+    else if(key[ALLEGRO_KEY_RIGHT]){
+        if(keyboard_counter(ALLEGRO_KEY_RIGHT))
+            juego.mov = RIGHT;
+    }        
     else if(key[ALLEGRO_KEY_LEFT]){
-        juego.mov = LEFT;
+        if(keyboard_counter(ALLEGRO_KEY_LEFT))
+            juego.mov = LEFT;  
     }
 }
 
 //-------- actualiza juego (hasta ahora enemigos y disparo por separado, luego ver timers) --------
 
-void game_update(ALLEGRO_EVENT ev, juego_t * juego){
-    keyboard_update(&ev);
-    move_player(ev);
+void game_update(juego_t * juego){
+    move_player();
     getcoordp(juego);
     pmov(juego);
     verparams(juego);
@@ -246,6 +272,7 @@ coord_t muro[MAX_MURO];
 
 enemylogic_t enemy_logic;
 
+coord_t explosion [MAX_EXPLOSIONS];
 
 int frontboard[LARGO][ANCHO];
 
@@ -310,31 +337,92 @@ void board_update(juego_t * juego){
 
 //-------- movimiento de disparos --------
 
-void shots_update(ALLEGRO_EVENT ev){
-    int n;
+void shots_update(void){
+    int n, k, ok;
     coord_t eventoe, eventop;
     if(pshot.objeto == PSHOT){
         eventop = ciclodispp(&juego, pshot.i, pshot.j);
-        /*if(eventop.objeto == NADA){ 
-        ACA VAN COLISIONES, ETC
-        }*/
+        for(k = 0, ok = 1; explosion[k].objeto == NADA && ok; k++){
+            if(eventop.objeto == NAVE_NODRIZA){
+                explosion[k].objeto = NAVNOD;
+                explosion[k].i = pshot.i - 1;
+                explosion[k].j = pshot.j;
+                ok = 0;
+            }
+            else if(eventop.objeto == NAVE_ENEMIGA){
+                explosion[k].objeto = ENEMY1;
+                explosion[k].i = pshot.i - 1;
+                explosion[k].j = pshot.j;
+                ok = 0;
+            }
+        }
     }
     for(n = 0; n < enemy_logic.max_shots; n++){
         if(enemy_logic.shot[n].objeto == ESHOT){
             eventoe = ciclodispe(&juego, enemy_logic.shot[n].i, enemy_logic.shot[n].j);
-            /*
-            if(eventoe.objeto == NADA){
-            ACA VAN COLISIONES, ETC
-            }*/
+            if(eventoe.objeto == JUGADOR){
+                explosion[k].objeto = PLAYER;
+                explosion[k].i = enemy_logic.shot[n].i + 1;
+                explosion[k].j = enemy_logic.shot[n].j;
+            }
         }
     } 
 }
+
 
 //-------- movimiento y disparo de enemigos --------
 
 void enemies_update(juego_t * juego){ //va a manejar timers de enemigos segun nivel
     navdisp();
     if(ciclonaves(juego)) juego->vidas = 0;
+}
+
+void vel_nod(void){
+    if(juego.naves <= 40)
+         al_set_timer_speed(enemy_logic.timers[0] , (1/ 0.5));
+
+    else if(juego.naves <= 35)
+         al_set_timer_speed(enemy_logic.timers[0] , (1/ 0.8));
+
+    else if(juego.naves <= 30)
+       al_set_timer_speed(enemy_logic.timers[0] , (1 / 1.4));
+
+    else if(juego.naves <= 25)
+       al_set_timer_speed(enemy_logic.timers[0] , (1 / 1.8));
+
+    else if(juego.naves <= 20)
+       al_set_timer_speed(enemy_logic.timers[0] ,(1/ 2.2));
+
+    else if(juego.naves <= 15)
+       al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.4));
+
+    else if(juego.naves <= 10)
+       al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.4));
+
+    else if(juego.naves <= 5)
+       al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.8));
+
+    else if(juego.naves <= 4)
+       al_set_timer_speed(enemy_logic.timers[0] , (1/3.2));
+
+    else if(juego.naves <= 2)
+      al_set_timer_speed(enemy_logic.timers[0] , (1/5.2));
+}
+
+
+void call_nod(void){// funcion que genera el llamado aleatorio para la nave nodriza.
+    static int nav=0;
+    static int random=0;
+    if(nav == 0){ //si no hay nave nodriza en el juego, que busque crearla cuando coincida los rangos que emite rand.
+        random = (rand () % 100) ; //numero entre 25 y 35
+        if((random >=5)&&(random<=7)){
+            nav=nav_nod();
+            random=0;
+        }
+    } 
+    else{
+        nav=nav_nod();//cuando ya hay nave, solamente la mueve.
+    }
 }
 
 /*****************************************************
@@ -349,7 +437,6 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                 game_states = STATE_MENU;
                 buttons[0][0].keyboard = 1; 
             }
-            //keyboard_update(&ev);
             break;
         case(STATE_MENU):
             if(buttons[0][0].keyboard){
@@ -357,7 +444,6 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                     game_states = STATE_PLAY; //habria que poner un break adentro para evitar presionar otro boton rapido??
                     buttons[0][0].keyboard = 0;
                     inigame(&juego, 1);
-                    //board_init(&juego);
                 }
                 else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
                     buttons[0][2].keyboard = 1;
@@ -485,7 +571,7 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
     }
 } 
 
-void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
+void menu_draw(BUTTON * buttons[]){
     switch(game_states){
         case(STATE_START):
             al_clear_to_color(BLACK);
@@ -505,9 +591,6 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
         case(STATE_PLAY):
             al_clear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics.game_background,0,0,0);
-            getcoordp(&juego);
-            al_draw_bitmap(graphics.player_bitmap, SCALE*juego.coordsp.j - CELL/2, SCALE*juego.coordsp.i - CELL/2, 0);
-            hud_draw(&juego);
             break;
             
         case(STATE_GAMEOVER):
@@ -542,6 +625,11 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
     }
 }    
 
+void player_draw(juego_t * juego){
+    getcoordp(juego);
+    al_draw_bitmap(graphics.player_bitmap, SCALE*juego->coordsp.j - CELL/2, SCALE*juego->coordsp.i - CELL/2, 0);
+}
+
 void enemies_draw(void){
     int n, aux;
     for(n = 0, aux = 1; n < enemy_logic.max_enemies && aux == 1; n++){
@@ -572,23 +660,8 @@ void navnod_draw(void){
     
 }
 
-void call_nod(void){// funcion que genera el llamado aleatorio para la nave nodriza.
-  static int nav=0;
-  static int random=0;
-  if(nav == 0){ //si no hay nave nodriza en el juego, que busque crearla cuando coincida los rangos que emite rand.
-      random = (rand () % 100) ; //numero entre 25 y 35
-      if((random >=5)&&(random<=7)){
-          nav=nav_nod();
-          random=0;
-        }
-    }
-  else{
-      nav=nav_nod();//cuando ya hay nave, solamente la mueve.
-    }
-}
-
-void shots_draw(ALLEGRO_EVENT ev){
-    int n, aux;
+void shots_draw(){
+    int n;
     if(pshot.objeto == PSHOT){
         al_draw_line(SCALE * pshot.j, SCALE * pshot.i - 5, SCALE * pshot.j, SCALE * pshot.i + 5, RED, 4);
         if(pshot.i > LARGO - 2) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
@@ -610,47 +683,26 @@ void muro_draw(void){
     }                        
 }
 
-
-void vel_nod(){
-  
-      if(juego.naves <= 40)
-           al_set_timer_speed(enemy_logic.timers[0] , (1/ 0.5));
-      
-      if(juego.naves <= 35)
-           al_set_timer_speed(enemy_logic.timers[0] , (1/ 0.8));
-      
-      if(juego.naves <= 30)
-         al_set_timer_speed(enemy_logic.timers[0] , (1 / 1.4));
-      
-      if(juego.naves <= 25)
-         al_set_timer_speed(enemy_logic.timers[0] , (1 / 1.8));
-      
-      if(juego.naves <= 20)
-         al_set_timer_speed(enemy_logic.timers[0] ,(1/ 2.2));
-      
-      if(juego.naves <= 15)
-         al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.4));
-      
-      if(juego.naves <= 10)
-         al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.4));
-      
-      if(juego.naves <= 5)
-         al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.8));
-      
-      if(juego.naves <= 4)
-         al_set_timer_speed(enemy_logic.timers[0] , (1/3.2));
-      
-      if(juego.naves <= 2)
-        al_set_timer_speed(enemy_logic.timers[0] , (1/5.2));
-      
-
-   }
-
+void explosion_draw(void){
+    int k;
+    for(k = 0; k < MAX_EXPLOSIONS; k++){
+        switch(explosion[k].objeto){
+            case(PLAYER):
+                al_draw_bitmap(graphics.playerkilled_bitmap, SCALE*explosion[k].j - CELL/2, SCALE*explosion[k].i - CELL/2, 0);
+                break;
+            case(ENEMY1):
+                al_draw_bitmap(graphics.enemykilled_bitmap, SCALE*explosion[k].j - CELL/2, SCALE*explosion[k].i - CELL/2, 0);
+                break;
+            case(NAVNOD):
+                al_draw_bitmap(graphics.navnodkilled_bitmap, SCALE*explosion[k].j - CELL/2, SCALE*explosion[k].i - CELL/2, 0);
+                break;
+        }
+    }
+}
 
 
 int main(void){
    
-     
     must_init(al_init(), "allegro");
     must_init(al_install_keyboard(), "keyboard");
     must_init(al_install_mouse(), "mouse");
@@ -667,6 +719,9 @@ int main(void){
     
     ALLEGRO_TIMER* timer_nod = al_create_timer(1.0/ 6.0);
     must_init(timer_nod, "timer_nod");
+    
+    ALLEGRO_TIMER* timer_explosion = al_create_timer(0.8 / 1.0);
+    must_init(timer_explosion, "timer_explosion");
 
     enemy_logic.timers[0] = al_create_timer(1.0/10);
     must_init(enemy_logic.timers[0], "timer_enemy");
@@ -691,6 +746,7 @@ int main(void){
     al_register_event_source(queue, al_get_timer_event_source(timer_nod));
     al_register_event_source(queue, al_get_timer_event_source(timer_shot));
     al_register_event_source(queue, al_get_timer_event_source(enemy_logic.timers[0]));
+    al_register_event_source(queue, al_get_timer_event_source(timer_explosion));
 
     BUTTON buttons_menu [] = {{300,25, "START", font, 0},
                         {350,25, "STATS", font, 0},
@@ -718,25 +774,31 @@ int main(void){
     
     game_states = STATE_START;
     
+    int k;
+    
     ALLEGRO_EVENT event;
     
     al_start_timer(timer);
     al_start_timer(timer_shot);
     al_start_timer(enemy_logic.timers[0]);
     al_start_timer(timer_nod);
+    al_start_timer(timer_explosion);
     while(!done){
         
         al_wait_for_event(queue, &event);
         
         if(redraw && al_is_event_queue_empty(queue)){
             disp_pre_draw();
-            menu_draw(event, buttons);
+            menu_draw(buttons);
             if(game_states == STATE_PLAY){
                 vel_nod();
+                player_draw(&juego);
+                hud_draw(&juego);
                 enemies_draw();
-                shots_draw(event);
+                shots_draw();
                 muro_draw();
                 navnod_draw();
+                explosion_draw();
             }
             disp_post_draw();
             redraw = false;
@@ -751,13 +813,13 @@ int main(void){
                     if(game_states == STATE_EXIT)
                         done = true;
                     if(game_states == STATE_PLAY){
-                        game_update(event, &juego);                     
+                        game_update(&juego);                     
                     }
                 }
                 if(event.timer.source == timer_shot){
                     if(game_states == STATE_PLAY){
                         board_update(&juego);
-                        shots_update(event);
+                        shots_update();
                     }   
                 }   
                 if(event.timer.source == enemy_logic.timers[0]){
@@ -771,6 +833,15 @@ int main(void){
                         call_nod();
                     }   
                 }   
+                if(event.timer.source == timer_explosion){
+                    if(game_states == STATE_PLAY){
+                        for(k = 0; k < MAX_EXPLOSIONS; k++){
+                            if(explosion[k].objeto != NADA){
+                                explosion[k].objeto = NADA;
+                            }
+                        }
+                    }   
+                }  
                 break;
             case ALLEGRO_EVENT_KEY_DOWN:
                 menu_update(event, buttons);
@@ -792,6 +863,8 @@ int main(void){
     al_destroy_timer(timer);
     al_destroy_timer(timer_shot);
     al_destroy_timer(enemy_logic.timers[0]);
+    al_destroy_timer(timer_nod);
+    al_destroy_timer(timer_explosion);
     al_destroy_event_queue(queue);
     
     return 0;
