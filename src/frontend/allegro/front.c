@@ -668,7 +668,7 @@ int main(void){
     ALLEGRO_TIMER* timer_nod = al_create_timer(1.0/ 6.0);
     must_init(timer_nod, "timer_nod");
 
-    enemy_logic.timers[0] = al_create_timer(1.0/10);
+    enemy_logic.timers[0] = al_create_timer(1.0/1.0);
     must_init(enemy_logic.timers[0], "timer_enemy");
     
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
