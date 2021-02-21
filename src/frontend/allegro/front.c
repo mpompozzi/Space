@@ -1,19 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <allegro5/allegro5.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_ttf.h> 
-
-#include "../../../headers/backend.h" 
 #include "../../../headers/allegro.h" 
 
 int game_states;
-
-ALLEGRO_MOUSE_STATE mouse;
 
 void must_init(bool test, const char *description)
 {
@@ -23,33 +10,32 @@ void must_init(bool test, const char *description)
     exit(1);
 }
 
-ALLEGRO_DISPLAY* disp;
-ALLEGRO_BITMAP* buffer;
+//ALLEGRO_DISPLAY* disp;
+//ALLEGRO_BITMAP* buffer;
 
-void disp_init(){
+void disp_init(display_t * display){
     al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
     al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
 
-    disp = al_create_display(DISP_W, DISP_H);
-    must_init(disp, "display");
+    display->disp = al_create_display(DISP_W, DISP_H);
+    must_init(display->disp, "display");
 
-    buffer = al_create_bitmap(BUFFER_W, BUFFER_H);
-    must_init(buffer, "bitmap buffer");
+    display->buffer = al_create_bitmap(BUFFER_W, BUFFER_H);
+    must_init(display->buffer, "bitmap buffer");
 }
 
-void disp_deinit(){
-    al_destroy_bitmap(buffer);
-    al_destroy_display(disp);
+void disp_deinit(display_t * display){
+    al_destroy_bitmap(display->buffer);
+    al_destroy_display(display->disp);
 }
 
-void disp_pre_draw(){
-    al_set_target_bitmap(buffer);
+void disp_pre_draw(display_t * display){
+    al_set_target_bitmap(display->buffer);
 }
 
-void disp_post_draw(){
-    al_set_target_backbuffer(disp);
-    al_draw_scaled_bitmap(buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, DISP_W, DISP_H, 0);
-
+void disp_post_draw(display_t * display){
+    al_set_target_backbuffer(display->disp);
+    al_draw_scaled_bitmap(display->buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, DISP_W, DISP_H, 0);
     al_flip_display();
 }
 
@@ -109,7 +95,7 @@ ALLEGRO_SAMPLE* shot_sound;
 ALLEGRO_SAMPLE* collision_sound;
 ALLEGRO_SAMPLE* gameover_sound;
 
-void audio_init(){
+void audio_init(audio_t * audio){
     al_install_audio();
     al_init_acodec_addon();
     al_reserve_samples(128);
@@ -130,7 +116,7 @@ void audio_init(){
     must_init(gameover_sound, "game over sound");
 }
 
-void audio_deinit(){
+void audio_deinit(audio_t * audio){
     /*al_destroy_sampvoid call_nod(void){// funcion que genera el llamado aleatorio para la nave nodriza.
   static int nav=0;
   static int random=0;
@@ -154,61 +140,58 @@ void audio_deinit(){
 
 //------graphics------------
 
-GRAPHICS graphics;
 
-void graphics_init()
-{
-    //graphics.menu_background = al_load_bitmap("/home/famolina/Escritorio/Recursos/space-invaders-1978-cabinet-artwork-1/invadbez.png");
-    graphics.menu_background = al_load_bitmap(MENU_BACKGROUND);
-    must_init(graphics.menu_background, "menu background");
+
+void graphics_init(graphics_t * graphics){
+    graphics->menu_background = al_load_bitmap(MENU_BACKGROUND);
+    must_init(graphics->menu_background, "menu background");
   
-    graphics.game_background = al_load_bitmap(GAME_BACKGROUND);
-    must_init(graphics.game_background, "game background");
+    graphics->game_background = al_load_bitmap(GAME_BACKGROUND);
+    must_init(graphics->game_background, "game background");
     
-    graphics.enemy_bitmap = al_load_bitmap(ENEMY_BMP);
-    must_init(graphics.enemy_bitmap, "enemy bitmap");
+    graphics->enemy_bitmap = al_load_bitmap(ENEMY_BMP);
+    must_init(graphics->enemy_bitmap, "enemy bitmap");
     
-    graphics.enemy2_bitmap = al_load_bitmap(ENEMY2_BMP);
-    must_init(graphics.enemy2_bitmap, "enemy 2 bitmap");
+    graphics->enemy2_bitmap = al_load_bitmap(ENEMY2_BMP);
+    must_init(graphics->enemy2_bitmap, "enemy 2 bitmap");
     
-    graphics.enemy3_bitmap = al_load_bitmap(ENEMY3_BMP);
-    must_init(graphics.enemy3_bitmap, "enemy 3 bitmap");
+    graphics->enemy3_bitmap = al_load_bitmap(ENEMY3_BMP);
+    must_init(graphics->enemy3_bitmap, "enemy 3 bitmap");
     
-    graphics.navnod_bitmap = al_load_bitmap(NAVNOD_BMP);
-    must_init(graphics.navnod_bitmap, "navnod bitmap");        
+    graphics->navnod_bitmap = al_load_bitmap(NAVNOD_BMP);
+    must_init(graphics->navnod_bitmap, "navnod bitmap");        
             
-    graphics.player_bitmap = al_load_bitmap(PLAYER_BMP);
-    must_init(graphics.player_bitmap, "player bitmap");
+    graphics->player_bitmap = al_load_bitmap(PLAYER_BMP);
+    must_init(graphics->player_bitmap, "player bitmap");
     
-     graphics.muro_bitmap = al_load_bitmap(MURO_BMP);
-    must_init(graphics.muro_bitmap, "muro bitmap");
+     graphics->muro_bitmap = al_load_bitmap(MURO_BMP);
+    must_init(graphics->muro_bitmap, "muro bitmap");
     
-    graphics.playerkilled_bitmap = al_load_bitmap(PLAYERKILLED_BMP);
-    must_init(graphics.playerkilled_bitmap, "playerkilled bitmap");
+    graphics->playerkilled_bitmap = al_load_bitmap(PLAYERKILLED_BMP);
+    must_init(graphics->playerkilled_bitmap, "playerkilled bitmap");
     
-    graphics.navnodkilled_bitmap = al_load_bitmap(ENEMYKILLED_BMP);
-    must_init(graphics.navnodkilled_bitmap, "navnodkilled bitmap");
+    graphics->navnodkilled_bitmap = al_load_bitmap(ENEMYKILLED_BMP);
+    must_init(graphics->navnodkilled_bitmap, "navnodkilled bitmap");
     
-    graphics.enemykilled_bitmap = al_load_bitmap(NAVNODKILLED_BMP);
-    must_init(graphics.enemykilled_bitmap, "enemykilled bitmap");
+    graphics->enemykilled_bitmap = al_load_bitmap(NAVNODKILLED_BMP);
+    must_init(graphics->enemykilled_bitmap, "enemykilled bitmap");
     
-    graphics.vida_bitmap = al_load_bitmap(VIDA_BMP);
-    must_init(graphics.vida_bitmap, "vida bitmap");
+    graphics->vida_bitmap = al_load_bitmap(VIDA_BMP);
+    must_init(graphics->vida_bitmap, "vida bitmap");
 }
 
-void graphics_deinit()
-{
-    al_destroy_bitmap(graphics.menu_background);
-    al_destroy_bitmap(graphics.game_background);
-    al_destroy_bitmap(graphics.enemy_bitmap);
-    al_destroy_bitmap(graphics.enemy2_bitmap);
-    al_destroy_bitmap(graphics.enemy3_bitmap);
-    al_destroy_bitmap(graphics.navnod_bitmap);
-    al_destroy_bitmap(graphics.player_bitmap);
-    al_destroy_bitmap(graphics.playerkilled_bitmap);
-    al_destroy_bitmap(graphics.enemykilled_bitmap);
-    al_destroy_bitmap(graphics.navnodkilled_bitmap);
-    al_destroy_bitmap(graphics.vida_bitmap);
+void graphics_deinit(graphics_t * graphics){
+    al_destroy_bitmap(graphics->menu_background);
+    al_destroy_bitmap(graphics->game_background);
+    al_destroy_bitmap(graphics->enemy_bitmap);
+    al_destroy_bitmap(graphics->enemy2_bitmap);
+    al_destroy_bitmap(graphics->enemy3_bitmap);
+    al_destroy_bitmap(graphics->navnod_bitmap);
+    al_destroy_bitmap(graphics->player_bitmap);
+    al_destroy_bitmap(graphics->playerkilled_bitmap);
+    al_destroy_bitmap(graphics->enemykilled_bitmap);
+    al_destroy_bitmap(graphics->navnodkilled_bitmap);
+    al_destroy_bitmap(graphics->vida_bitmap);
 }
 
 
@@ -217,7 +200,7 @@ void graphics_deinit()
 ALLEGRO_FONT* font=NULL;
 
 
-void hud_init(){
+void hud_init(void){
   
     al_init_font_addon(); // initialize the font addon
     al_init_ttf_addon();
@@ -226,52 +209,52 @@ void hud_init(){
 
 }
 
-void hud_deinit(){
+void hud_deinit(void){
     al_destroy_font(font);
 }
 
-void hud_draw(juego_t * juego){
+void hud_draw(juego_t * juego, graphics_t * graphics){
     char puntaje_str[10];
     sprintf(puntaje_str, "%i", juego->puntaje);
     al_draw_text(font, WHITE, BUFFER_W -150, 1, 0, puntaje_str);
-    for(int i = 0; i < juego->vidas; i++)
-      al_draw_bitmap(graphics.vida_bitmap, SCALE * i, 1 , 0);
+    for(int i = 1; i <= juego->vidas; i++)
+      al_draw_bitmap(graphics->vida_bitmap, SCALE * i, 1 , 0);
 }
 
 /*****************************************************
 *--------------- LOGICA DE JUEGO----------------------
 ******************************************************/
-juego_t juego;
+
 
 //-------- lee teclado e indica movimiento de jugador --------
-void move_player(void){ 
+void move_player(juego_t * juego){ 
     if(key[ALLEGRO_KEY_SPACE] && key[ALLEGRO_KEY_RIGHT]){
         if(keyboard_counter(ALLEGRO_KEY_SPACE) && keyboard_counter(ALLEGRO_KEY_RIGHT))
-            juego.mov = SHOOT_RIGHT;     
+            juego->mov = SHOOT_RIGHT;     
     }  
     else if(key[ALLEGRO_KEY_SPACE] && key[ALLEGRO_KEY_LEFT]){
         if(keyboard_counter(ALLEGRO_KEY_SPACE) && keyboard_counter(ALLEGRO_KEY_LEFT))
-            juego.mov = SHOOT_LEFT;
+            juego->mov = SHOOT_LEFT;
     } 
     else if(key[ALLEGRO_KEY_SPACE]){
         if(keyboard_counter(ALLEGRO_KEY_SPACE))
-            juego.mov = SHOOT;
+            juego->mov = SHOOT;
     }
     else if(key[ALLEGRO_KEY_RIGHT]){
         if(keyboard_counter(ALLEGRO_KEY_RIGHT))
-            juego.mov = RIGHT;
+            juego->mov = RIGHT;
     }        
     else if(key[ALLEGRO_KEY_LEFT]){
         if(keyboard_counter(ALLEGRO_KEY_LEFT))
-            juego.mov = LEFT;  
+            juego->mov = LEFT;  
     }
 }
 
 //-------- actualiza juego (hasta ahora enemigos y disparo por separado, luego ver timers) --------
 
-void game_update(ALLEGRO_EVENT ev, juego_t * juego){
-    keyboard_update(&ev);
-    move_player();
+void game_update(juego_t * juego){
+    //keyboard_update();
+    move_player(juego);
     getcoordp(juego);
     pmov(juego);
     verparams(juego);
@@ -281,42 +264,42 @@ void game_update(ALLEGRO_EVENT ev, juego_t * juego){
         ininiv(juego->nivel );
     }
 }
-
+/*
 coord_t pshot;
 coord_t muro[MAX_MURO];
 
 enemylogic_t enemy_logic;
-coord_t explosion [MAX_EXPLOSIONS];
+coord_t explosion [MAX_EXPLOSIONS];*/
 
 int frontboard[LARGO][ANCHO];
 
 //-------- lee tablero y guarda informacion --------
 
-void board_update(juego_t * juego){
+void board_update(juego_t * juego, board_t * board){
     int i, j, a, b, c; 
     //frontboard[1][1] = juego->tablero;
-    pshot.objeto = NADA;    //previamente limpio lo que habia
-    enemy_logic.navnod.objeto = NADA;
+    board->pshot.objeto = NADA;    //previamente limpio lo que habia
+    board->navnod.objeto = NADA;
     for (i = 0, a = 0, b = 0, c = 0; i < LARGO ; i++) {
         for (j = 0; j < ANCHO; j++){  
             frontboard[i][j] = getmat(i, j);
             switch(frontboard[i][j]){
                 case(NADA):
-                    enemy_logic.shot[a].objeto = NADA;    
-                    enemy_logic.cell[b].objeto = NADA;     
-                    muro[c].objeto = NADA;  //limpio antes
+                    board->enemy_shot[a].objeto = NADA;    
+                    board->enemy_cell[b].objeto = NADA;     
+                    board->muro[c].objeto = NADA;  //limpio antes
                     break;
                 case(PLAYER):
                     break;
                 case(PSHOT):
-                    pshot.i = i;
-                    pshot.j = j; 
-                    pshot.objeto = frontboard[i][j];
+                    board->pshot.i = i;
+                    board->pshot.j = j; 
+                    board->pshot.objeto = frontboard[i][j];
                     break;
                 case(ESHOT):
-                    enemy_logic.shot[a].i = i;
-                    enemy_logic.shot[a].j = j; 
-                    enemy_logic.shot[a].objeto = frontboard[i][j];
+                    board->enemy_shot[a].i = i;
+                    board->enemy_shot[a].j = j; 
+                    board->enemy_shot[a].objeto = frontboard[i][j];
                     a += 1;
                     break;
                 case(ENEMY1):
@@ -325,59 +308,59 @@ void board_update(juego_t * juego){
                 case(ENEMYSHOT1):
                 case(ENEMYSHOT2):
                 case(ENEMYSHOT3): 
-                    enemy_logic.cell[b].i = i;
-                    enemy_logic.cell[b].j = j; 
-                    enemy_logic.cell[b].objeto = frontboard[i][j]; 
+                    board->enemy_cell[b].i = i;
+                    board->enemy_cell[b].j = j; 
+                    board->enemy_cell[b].objeto = frontboard[i][j]; 
                     b += 1;
                     break;
                 case(NAVNOD):
-                    enemy_logic.navnod.i = i;
-                    enemy_logic.navnod.j = j;
-                    enemy_logic.navnod.objeto = frontboard[i][j];
+                    board->navnod.i = i;
+                    board->navnod.j = j;
+                    board->navnod.objeto = frontboard[i][j];
                     j += 1;
                     break;
                 case(MURO):
-                    muro[c].i = i;
-                    muro[c].j = j;
-                    muro[c].objeto = frontboard[i][j];
+                    board->muro[c].i = i;
+                    board->muro[c].j = j;
+                    board->muro[c].objeto = frontboard[i][j];
                     c += 1;
                     break;
             }
         }
     }
-    enemy_logic.max_shots = a;
-    enemy_logic.max_enemies = b;
+    board->enemy_maxshots = a;
+    board->enemy_maxcells = b;
 }
 
 //-------- movimiento de disparos --------
 
-void shots_update(void){
+void shots_update(juego_t * juego, board_t * board){
     int n, k = 0, ok;
     coord_t eventoe, eventop;
-    if(pshot.objeto == PSHOT){
-        eventop = ciclodispp(&juego, pshot.i, pshot.j);
-        for(k = 0, ok = 1; explosion[k].objeto == NADA && ok; k++){
+    if(board->pshot.objeto == PSHOT){
+        eventop = ciclodispp(juego, board->pshot.i, board->pshot.j);
+        for(k = 0, ok = 1; board->explosion[k].objeto == NADA && ok; k++){
             if(eventop.objeto == NAVE_NODRIZA){
-                explosion[k].objeto = NAVNOD;
-                explosion[k].i = pshot.i - 1;
-                explosion[k].j = pshot.j;
+                board->explosion[k].objeto = NAVNOD;
+                board->explosion[k].i = board->pshot.i - 1;
+                board->explosion[k].j = board->pshot.j;
                 ok = 0;
             }
             else if(eventop.objeto == NAVE_ENEMIGA){
-                explosion[k].objeto = ENEMY1;
-                explosion[k].i = pshot.i - 1;
-                explosion[k].j = pshot.j;
+                board->explosion[k].objeto = ENEMY1;
+                board->explosion[k].i = board->pshot.i - 1;
+                board->explosion[k].j = board->pshot.j;
                 ok = 0;
             }
         }
     }
-    for(n = 0; n < enemy_logic.max_shots; n++){
-        if(enemy_logic.shot[n].objeto == ESHOT){
-            eventoe = ciclodispe(&juego, enemy_logic.shot[n].i, enemy_logic.shot[n].j);
+    for(n = 0; n < board->enemy_maxshots; n++){
+        if(board->enemy_shot[n].objeto == ESHOT){
+            eventoe = ciclodispe(juego, board->enemy_shot[n].i, board->enemy_shot[n].j);
             if(eventoe.objeto == JUGADOR){
-                explosion[k].objeto = PLAYER;
-                explosion[k].i = enemy_logic.shot[n].i + 1;
-                explosion[k].j = enemy_logic.shot[n].j;
+                board->explosion[k].objeto = PLAYER;
+                board->explosion[k].i = board->enemy_shot[n].i + 1;
+                board->explosion[k].j = board->enemy_shot[n].j;
             }
         }
     } 
@@ -394,7 +377,7 @@ void enemies_update(juego_t * juego){ //va a manejar timers de enemigos segun ni
 *------------------CONTROL DE MENU--------------------
 ******************************************************/
 
-void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
+void menu_update(ALLEGRO_EVENT ev, juego_t * juego, button_t * buttons[]){
     
     switch(game_states){
         case(STATE_START):
@@ -409,8 +392,7 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
                     game_states = STATE_PLAY; //habria que poner un break adentro para evitar presionar otro boton rapido??
                     buttons[0][0].keyboard = 0;
-                    inigame(&juego, 3);
-                    //board_init(&juego);
+                    inigame(juego, 3);
                 }
                 else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
                     buttons[0][2].keyboard = 1;
@@ -457,7 +439,7 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                 game_states = STATE_PAUSE;         
                 buttons[2][0].keyboard = 1;
             }
-            else if(juego.vidas == 0){
+            else if(juego->vidas == 0){
                 game_states = STATE_GAMEOVER;
                 buttons[4][0].keyboard = 1;
             }
@@ -538,16 +520,16 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
     }
 } 
 
-void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
+void menu_draw(ALLEGRO_EVENT ev, button_t * buttons[], graphics_t * graphics, juego_t * juego){
     switch(game_states){
         case(STATE_START):
             al_clear_to_color(BLACK);
-            al_draw_bitmap(graphics.menu_background,0,0,0);            
+            al_draw_bitmap(graphics->menu_background,0,0,0);            
             al_draw_text(buttons[3][0].font, WHITE, (float) DISP_W / 2, (float) buttons[3][0].y + 80, ALLEGRO_ALIGN_CENTRE, buttons[3][0].text);
             break;
         case(STATE_MENU):
             al_clear_to_color(al_map_rgb(0,0,0));
-            al_draw_bitmap(graphics.menu_background,0,0,0);
+            al_draw_bitmap(graphics->menu_background,0,0,0);
             for(int i=0; i<3; i++){
                 if(buttons[0][i].keyboard)//
                     al_draw_text(buttons[0][i].font, RED, DISP_W / 2, buttons[0][i].y + 80 , ALLEGRO_ALIGN_CENTRE, buttons[0][i].text);
@@ -557,10 +539,7 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             break;
         case(STATE_PLAY):
             al_clear_to_color(al_map_rgb(0,0,0));
-            al_draw_bitmap(graphics.game_background,0,0,0);
-            getcoordp(&juego);
-            al_draw_bitmap(graphics.player_bitmap, SCALE*juego.coordsp.j - CELL/2, SCALE*juego.coordsp.i - CELL/2, 0);
-            hud_draw(&juego);
+            al_draw_bitmap(graphics->game_background,0,0,0);
             break;
             
         case(STATE_GAMEOVER):
@@ -569,7 +548,7 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             al_draw_text(font, WHITE, DISP_W / 2, buttons[4][0].y -100, ALLEGRO_ALIGN_CENTRE, "G A M E  O V E R");
             
             char puntaje_str[10];
-            sprintf(puntaje_str, "%i", juego.puntaje);
+            sprintf(puntaje_str, "%i", juego->puntaje);
             al_draw_text(font, WHITE, DISP_W / 2, buttons[4][0].y -200, ALLEGRO_ALIGN_CENTRE,puntaje_str);
             
             for(int i=0; i<2; i++){
@@ -582,7 +561,7 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             
         case(STATE_STATS):
             al_clear_to_color(al_map_rgb(0,0,0));
-            al_draw_bitmap(graphics.menu_background,0,0,0);
+            al_draw_bitmap(graphics->menu_background,0,0,0);
             if(buttons[1][0].keyboard)
                 al_draw_text(buttons[1][0].font, RED, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTRE, buttons[1][0].text);
             else
@@ -590,7 +569,7 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             break;
         case(STATE_PAUSE):
             al_clear_to_color(al_map_rgb(0,0,0));
-            al_draw_bitmap(graphics.game_background,0,0,0);
+            al_draw_bitmap(graphics->game_background,0,0,0);
             for(int i=0; i<2; i++){
                 if(buttons[2][i].keyboard)
                     al_draw_text(buttons[2][i].font, RED, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTRE, buttons[2][i].text);
@@ -601,21 +580,26 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
     }
 }    
 
-void enemies_draw(void){
+void player_draw(juego_t * juego, graphics_t * graphics){
+    getcoordp(juego);
+    al_draw_bitmap(graphics->player_bitmap, SCALE*juego->coordsp.j - CELL/2, SCALE*juego->coordsp.i - CELL/2, 0);
+}
+
+void enemies_draw(graphics_t * graphics, board_t * board){
     int n, aux;
-    for(n = 0, aux = 1; n < enemy_logic.max_enemies && aux == 1; n++){
-        switch(enemy_logic.cell[n].objeto){
+    for(n = 0, aux = 1; n < board->enemy_maxcells && aux == 1; n++){
+        switch(board->enemy_cell[n].objeto){
              case(ENEMY1):
              case(ENEMYSHOT1):
-                al_draw_bitmap(graphics.enemy_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2  ,SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+                al_draw_bitmap(graphics->enemy_bitmap, SCALE*board->enemy_cell[n].j - CELL/2  ,SCALE*board->enemy_cell[n].i - CELL/2, 0);
                 break;
              case(ENEMY2):
              case(ENEMYSHOT2):
-                al_draw_bitmap(graphics.enemy2_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2 , SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+                al_draw_bitmap(graphics->enemy2_bitmap, SCALE*board->enemy_cell[n].j - CELL/2 , SCALE*board->enemy_cell[n].i - CELL/2, 0);
                 break;    
              case(ENEMY3):
              case(ENEMYSHOT3):
-                al_draw_bitmap(graphics.enemy3_bitmap, SCALE*enemy_logic.cell[n].j - CELL/2, SCALE*enemy_logic.cell[n].i - CELL/2, 0);
+                al_draw_bitmap(graphics->enemy3_bitmap, SCALE*board->enemy_cell[n].j - CELL/2, SCALE*board->enemy_cell[n].i - CELL/2, 0);
                 break;
              default:
                 aux = 0;
@@ -624,9 +608,9 @@ void enemies_draw(void){
     }
 }
 
-void navnod_draw(void){
-    if(enemy_logic.navnod.objeto == NAVNOD){
-        al_draw_bitmap(graphics.navnod_bitmap, SCALE *enemy_logic.navnod.j - CELL/2, SCALE * enemy_logic.navnod.i - CELL/2, 0);
+void navnod_draw(graphics_t * graphics, board_t * board){
+    if(board->navnod.objeto == NAVNOD){
+        al_draw_bitmap(graphics->navnod_bitmap, SCALE *board->navnod.j - CELL/2, SCALE * board->navnod.i - CELL/2, 0);
     }
     
 }
@@ -646,76 +630,76 @@ void call_nod(void){// funcion que genera el llamado aleatorio para la nave nodr
     }
 }
 
-void shots_draw(ALLEGRO_EVENT ev){
-    int n, aux;
-    if(pshot.objeto == PSHOT){
-        al_draw_line(SCALE * pshot.j, SCALE * pshot.i - 5, SCALE * pshot.j, SCALE * pshot.i + 5, RED, 4);
-        if(pshot.i > LARGO - 2) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+void shots_draw(graphics_t * graphics, board_t * board){
+    int n;
+    if(board->pshot.objeto == PSHOT){
+        al_draw_line(SCALE * board->pshot.j, SCALE * board->pshot.i - 5, SCALE * board->pshot.j, SCALE * board->pshot.i + 5, RED, 4);
+        if(board->pshot.i > LARGO - 2) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
-    for(n = 0; n < enemy_logic.max_shots; n++){
-        if(enemy_logic.shot[n].objeto == ESHOT){
-            al_draw_line(SCALE * enemy_logic.shot[n].j, SCALE * enemy_logic.shot[n].i - 5, SCALE * enemy_logic.shot[n].j, SCALE * enemy_logic.shot[n].i + 5, GREEN, 4);
+    for(n = 0; n < board->enemy_maxshots; n++){
+        if(board->enemy_shot[n].objeto == ESHOT){
+            al_draw_line(SCALE * board->enemy_shot[n].j, SCALE * board->enemy_shot[n].i - 5, SCALE * board->enemy_shot[n].j, SCALE * board->enemy_shot[n].i + 5, GREEN, 4);
         }                        
     }
 }
 
-void muro_draw(void){
+void muro_draw(graphics_t * graphics, board_t * board){
     int n, aux;
     for(n = 0, aux = 1; n < MAX_MURO && aux == 1; n++){
-        if(muro[n].objeto == MURO){
-            al_draw_bitmap(graphics.muro_bitmap, SCALE*muro[n].j - CELL/2, SCALE*muro[n].i - CELL/2, 0);
+        if(board->muro[n].objeto == MURO){
+            al_draw_bitmap(graphics->muro_bitmap, SCALE*board->muro[n].j - CELL/2, SCALE*board->muro[n].i - CELL/2, 0);
         }       
         else aux = 0;
     }                        
 }
 
 
-void vel_nod(){
+void vel_nod(juego_t * juego, board_t * board){
   
-    if(juego.naves <= 40)
-         al_set_timer_speed(enemy_logic.timers[0] , (1/ 0.5));
+    if(juego->naves <= 40)
+         al_set_timer_speed(board->timer_enemy , (1/ 0.5));
 
-    if(juego.naves <= 35)
-         al_set_timer_speed(enemy_logic.timers[0] , (1/ 0.8));
+    if(juego->naves <= 35)
+         al_set_timer_speed(board->timer_enemy , (1/ 0.8));
 
-    if(juego.naves <= 30)
-       al_set_timer_speed(enemy_logic.timers[0] , (1 / 1.4));
+    if(juego->naves <= 30)
+       al_set_timer_speed(board->timer_enemy , (1 / 1.4));
 
-    if(juego.naves <= 25)
-       al_set_timer_speed(enemy_logic.timers[0] , (1 / 1.8));
+    if(juego->naves <= 25)
+       al_set_timer_speed(board->timer_enemy , (1 / 1.8));
 
-    if(juego.naves <= 20)
-       al_set_timer_speed(enemy_logic.timers[0] ,(1/ 2.2));
+    if(juego->naves <= 20)
+       al_set_timer_speed(board->timer_enemy ,(1/ 2.2));
 
-    if(juego.naves <= 15)
-       al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.4));
+    if(juego->naves <= 15)
+       al_set_timer_speed(board->timer_enemy , (1 / 2.4));
 
-    if(juego.naves <= 10)
-       al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.4));
+    if(juego->naves <= 10)
+       al_set_timer_speed(board->timer_enemy , (1 / 2.4));
 
-    if(juego.naves <= 5)
-       al_set_timer_speed(enemy_logic.timers[0] , (1 / 2.8));
+    if(juego->naves <= 5)
+       al_set_timer_speed(board->timer_enemy , (1 / 2.8));
 
-    if(juego.naves <= 4)
-       al_set_timer_speed(enemy_logic.timers[0] , (1/3.2));
+    if(juego->naves <= 4)
+       al_set_timer_speed(board->timer_enemy , (1/3.2));
 
-    if(juego.naves <= 2)
-      al_set_timer_speed(enemy_logic.timers[0] , (1/5.2));
+    if(juego->naves <= 2)
+      al_set_timer_speed(board->timer_enemy , (1/5.2));
       
    }
 
-void explosion_draw(void){
+void explosion_draw(graphics_t * graphics, board_t * board){
     int k;
     for(k = 0; k < MAX_EXPLOSIONS; k++){
-        switch(explosion[k].objeto){
+        switch(board->explosion[k].objeto){
             case(PLAYER):
-                al_draw_bitmap(graphics.playerkilled_bitmap, SCALE*explosion[k].j - CELL, SCALE*explosion[k].i - CELL, 0);
+                al_draw_bitmap(graphics->playerkilled_bitmap, SCALE*board->explosion[k].j - CELL, SCALE*board->explosion[k].i - CELL, 0);
                 break;
             case(ENEMY1):
-                al_draw_bitmap(graphics.enemykilled_bitmap, SCALE*explosion[k].j - CELL/2, SCALE*explosion[k].i - CELL/2, 0);
+                al_draw_bitmap(graphics->enemykilled_bitmap, SCALE*board->explosion[k].j - CELL/2, SCALE*board->explosion[k].i - CELL/2, 0);
                 break;
             case(NAVNOD):
-                al_draw_bitmap(graphics.navnodkilled_bitmap, SCALE*explosion[k].j - CELL/2, SCALE*explosion[k].i - CELL/2, 0);
+                al_draw_bitmap(graphics->navnodkilled_bitmap, SCALE*board->explosion[k].j - CELL/2, SCALE*board->explosion[k].i - CELL/2, 0);
                 break;
         }
     }
@@ -725,6 +709,11 @@ void explosion_draw(void){
 
 int main(void){
    
+    juego_t juego;
+    display_t display;
+    audio_t audio;
+    graphics_t graphics;
+    board_t board;
      
     must_init(al_init(), "allegro");
     must_init(al_install_keyboard(), "keyboard");
@@ -743,8 +732,8 @@ int main(void){
     ALLEGRO_TIMER* timer_nod = al_create_timer(1.0/ 6.0);
     must_init(timer_nod, "timer_nod");
 
-    enemy_logic.timers[0] = al_create_timer(1.0/1.0);
-    must_init(enemy_logic.timers[0], "timer_enemy");
+    board.timer_enemy = al_create_timer(1.0/1.0);
+    must_init(board.timer_enemy, "timer_enemy");
     
     ALLEGRO_TIMER* timer_explosion = al_create_timer(0.8 / 1.0);
     must_init(timer_explosion, "timer_explosion");
@@ -757,33 +746,33 @@ int main(void){
     
     must_init(al_init_image_addon(), "image");
     
-    disp_init();
-    audio_init();
+    disp_init(&display);
+    audio_init(&audio);
     hud_init();
     keyboard_init();
-    graphics_init();
+    graphics_init(&graphics);
     
     al_register_event_source(queue, al_get_keyboard_event_source());
-    al_register_event_source(queue, al_get_display_event_source(disp));
+    al_register_event_source(queue, al_get_display_event_source(display.disp));
     al_register_event_source(queue, al_get_timer_event_source(timer));
     al_register_event_source(queue, al_get_timer_event_source(timer_nod));
     al_register_event_source(queue, al_get_timer_event_source(timer_shot));
     al_register_event_source(queue, al_get_timer_event_source(timer_explosion));
-    al_register_event_source(queue, al_get_timer_event_source(enemy_logic.timers[0]));
+    al_register_event_source(queue, al_get_timer_event_source(board.timer_enemy));
 
-    BUTTON buttons_menu [] = {{300,25, "START", font, 0},
+    button_t buttons_menu [] = {{300,25, "START", font, 0},
                         {350,25, "STATS", font, 0},
                         {400,25, "EXIT", font, 0}};
     
-    BUTTON buttons_stats [] = {{450,25, "BACK", font, 0}};
+    button_t buttons_stats [] = {{450,25, "BACK", font, 0}};
     
-    BUTTON buttons_pause [] = {{300,25, "BACK", font, 0}, {400,25, "EXIT", font, 0}};
+    button_t buttons_pause [] = {{300,25, "BACK", font, 0}, {400,25, "EXIT", font, 0}};
     
-    BUTTON buttons_gameover [] = {{300,25, "STATS", font, 0}, {400,25, "EXIT", font, 0}};
+    button_t buttons_gameover [] = {{300,25, "STATS", font, 0}, {400,25, "EXIT", font, 0}};
     
-    BUTTON buttons_start [] = {{350,25, "PRESS ENTER", font, 1}};
+    button_t buttons_start [] = {{350,25, "PRESS ENTER", font, 1}};
     
-    BUTTON * buttons[5];
+    button_t * buttons[5];
     
     buttons[0] = buttons_menu;
     buttons[1] = buttons_stats;
@@ -803,7 +792,7 @@ int main(void){
     
     al_start_timer(timer);
     al_start_timer(timer_shot);
-    al_start_timer(enemy_logic.timers[0]);
+    al_start_timer(board.timer_enemy);
     al_start_timer(timer_nod);
     al_start_timer(timer_explosion);
     while(!done){
@@ -811,17 +800,19 @@ int main(void){
         al_wait_for_event(queue, &event);
         
         if(redraw && al_is_event_queue_empty(queue)){
-            disp_pre_draw();
-            menu_draw(event, buttons);
+            disp_pre_draw(&display);
+            menu_draw(event, buttons, &graphics, &juego);
             if(game_states == STATE_PLAY){
-                vel_nod();
-                enemies_draw();
-                shots_draw(event);
-                muro_draw();
-                navnod_draw();
-                explosion_draw();
+                player_draw(&juego, &graphics);
+                vel_nod(&juego, &board);
+                hud_draw(&juego, &graphics);
+                enemies_draw(&graphics, &board);
+                shots_draw(&graphics, &board);
+                muro_draw(&graphics, &board);
+                navnod_draw(&graphics, &board);
+                explosion_draw(&graphics, &board);
             }
-            disp_post_draw();
+            disp_post_draw(&display);
             redraw = false;
         }
         
@@ -830,42 +821,37 @@ int main(void){
             case ALLEGRO_EVENT_TIMER:
                 if(event.timer.source == timer){
                     redraw = true;
-                    menu_update(event, buttons);
+                    //menu_update(event, &juego, buttons);
                     if(game_states == STATE_EXIT)
                         done = true;
                     if(game_states == STATE_PLAY){
-                        game_update(event, &juego);                     
+                        game_update(&juego);                     
                     }
                 }
-                if(event.timer.source == timer_shot){
-                    if(game_states == STATE_PLAY){
-                        board_update(&juego);
-                        shots_update();
+                if(game_states == STATE_PLAY){
+                    if(event.timer.source == timer_shot){
+
+                            board_update(&juego, &board);
+                            shots_update(&juego, &board);
+
                     }   
-                }   
-                if(event.timer.source == enemy_logic.timers[0]){
-                    if(game_states == STATE_PLAY){
+                    if(event.timer.source == board.timer_enemy){
                         enemies_update(&juego);
-                        
                     }
-                }
-                if(event.timer.source == timer_nod){
-                    if(game_states == STATE_PLAY){
-                        call_nod();
-                    }   
-                } 
-                if(event.timer.source == timer_explosion){
-                    if(game_states == STATE_PLAY){
+                    if(event.timer.source == timer_nod){
+                            call_nod();  
+                    } 
+                    if(event.timer.source == timer_explosion){
                         for(k = 0; k < MAX_EXPLOSIONS; k++){
-                            if(explosion[k].objeto != NADA){
-                                explosion[k].objeto = NADA;
+                            if(board.explosion[k].objeto != NADA){
+                                board.explosion[k].objeto = NADA;
                             }
-                        }
-                    }   
-                }    
+                        }   
+                    } 
+                }
                 break;
             case ALLEGRO_EVENT_KEY_DOWN:
-                menu_update(event, buttons);
+                menu_update(event, &juego, buttons);
                 break;
            
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
@@ -876,14 +862,14 @@ int main(void){
         keyboard_update(&event);
     }
     
-    disp_deinit();
+    disp_deinit(&display);
     al_destroy_font(font);
-    graphics_deinit();
+    graphics_deinit(&graphics);
     hud_deinit();
-    audio_deinit();
+    audio_deinit(&audio);
     al_destroy_timer(timer);
     al_destroy_timer(timer_shot);
-    al_destroy_timer(enemy_logic.timers[0]);
+    al_destroy_timer(board.timer_enemy);
     al_destroy_timer(timer_explosion);
     al_destroy_event_queue(queue);
     

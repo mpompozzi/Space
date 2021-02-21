@@ -1,33 +1,8 @@
-/*
- * The MIT License
- *
- * Copyright 2021 famolina.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-/* 
- * File:   allegro.h
- * Author: famolina
- *
- * Created on 15 de febrero de 2021, 18:22
- */
+/*******************************************************************************
+  @file     allegro.h
+  @brief    
+  @author   Alejandro Alatsis, Axel Cincunegui, Facundo Molina, Magali Pompozzi 
+ ******************************************************************************/
 
 #ifndef ALLEGRO_H
 #define ALLEGRO_H
@@ -36,15 +11,26 @@
 extern "C" {
 #endif
 
-// --- menu states ---
-#define STATE_START 0
-#define STATE_MENU  1
-#define STATE_PLAY  2
-#define STATE_STATS 3
-#define STATE_EXIT  4
-#define STATE_PAUSE 5
-#define STATE_GAMEOVER    6
-  
+/*******************************************************************************
+ * INCLUDE HEADER FILES
+ ******************************************************************************/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <allegro5/allegro5.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_ttf.h> 
+
+#include "backend.h" 
+
+/*******************************************************************************
+ * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
+ ******************************************************************************/
+
 // --- colors ---
 #define BLACK   al_map_rgb(0,0,0)
 #define WHITE   al_map_rgb(155,155,155)
@@ -76,7 +62,7 @@ extern "C" {
   
 // --- display ---
 #define BUFFER_W 800
-#define BUFFER_H 600
+#define BUFFER_H 800
 #define DISP_SCALE 1
 #define DISP_W (BUFFER_W * DISP_SCALE)
 #define DISP_H (BUFFER_H * DISP_SCALE)
@@ -94,13 +80,6 @@ extern "C" {
 #define MOUSE       0
 #define KEYBOARD    1
   
-// --- player movement ---
-#define STAY    0
-#define RIGHT   1
-#define LEFT    2
-#define SHOOT   3
-#define SHOOT_RIGHT 4
-#define SHOOT_LEFT  5
 
 // --- board constants ---
 #define MAX_SHOTS       20
@@ -111,9 +90,17 @@ extern "C" {
 // --- draw constants ---  
 #define CELL    20
 #define SCALE 25
-  
+
+/*******************************************************************************
+ * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
+ ******************************************************************************/
+
+enum menu_states {STATE_START, STATE_MENU, STATE_PLAY, STATE_STATS, STATE_EXIT, STATE_PAUSE, STATE_GAMEOVER};
+
+enum player_move {STAY, RIGHT, LEFT, SHOOT, SHOOT_RIGHT, SHOOT_LEFT};
+
 // --- graphic struct ---
-typedef struct GRAPHICS {
+typedef struct {
     ALLEGRO_BITMAP* menu_background;
     ALLEGRO_BITMAP* game_background;
     ALLEGRO_BITMAP* enemy_bitmap;
@@ -128,16 +115,74 @@ typedef struct GRAPHICS {
     ALLEGRO_BITMAP* vida_bitmap;
     ALLEGRO_BITMAP* levelup_bitmap;
     
-} GRAPHICS;
+} graphics_t;
 
 // --- buttons struct ---
-typedef struct BUTTON {
+typedef struct {
     int y;
     int h;
     const char * text;
     ALLEGRO_FONT * font;
     int keyboard; //flag de posicion sobre boton de menu
-} BUTTON; 
+} button_t; 
+
+/*******************************************************************************
+ * VARIABLE PROTOTYPES WITH GLOBAL SCOPE
+ ******************************************************************************/
+
+// +ej: extern unsigned int anio_actual;+
+
+
+/*******************************************************************************
+ * FUNCTION PROTOTYPES WITH GLOBAL SCOPE
+ ******************************************************************************/
+
+/**
+ * @brief TODO: completar descripcion
+ * @param param1 Descripcion parametro 1
+ * @param param2 Descripcion parametro 2
+ * @return Descripcion valor que devuelve
+*/
+// +ej: char lcd_goto (int fil, int col);+
+
+
+/*******************************************************************************
+ ******************************************************************************/
+
+// ---------------     display struct      --------------- //
+typedef struct {
+    ALLEGRO_DISPLAY* disp;
+    ALLEGRO_BITMAP* buffer;
+} display_t;
+
+// ---------------     keyboard struct      --------------- //
+/*
+typedef struct {
+    unsigned char key[ALLEGRO_KEY_MAX];
+    unsigned char counterKey[ALLEGRO_KEY_MAX];
+} keyboard_t;*/
+
+typedef struct{
+    ALLEGRO_SAMPLE* game_sound;
+    ALLEGRO_SAMPLE* option_sound;
+    ALLEGRO_SAMPLE* shot_sound;
+    ALLEGRO_SAMPLE* collision_sound;
+    ALLEGRO_SAMPLE* gameover_sound;
+} audio_t;
+
+// ---------------     enemies struct      --------------- //
+typedef struct{
+    ALLEGRO_TIMER* timer_enemy;
+    coord_t pshot;
+    coord_t muro[MAX_MURO];
+    coord_t enemy_cell [MAX_ENEMIES]; 
+    coord_t enemy_shot [MAX_SHOTS];
+    coord_t navnod;
+    coord_t explosion [MAX_EXPLOSIONS];
+    int   enemy_maxshots;
+    int   enemy_maxcells;
+} board_t;
+  
 
 // --- enemies struct ---
 typedef struct {
@@ -148,14 +193,36 @@ typedef struct {
   int   max_shots;
   int   max_enemies;
 } enemylogic_t;
-  
-/*
-void game_update(void);
-void move_player(void);
+
+void must_init(bool test, const char *description);
+void disp_init(display_t * display);
+void disp_deinit(display_t * display);
+void disp_pre_draw(display_t * display);
+void disp_post_draw(display_t * display);
 int keyboard_counter(unsigned char keyName);
-void board_update(juego_t *);
-void menu_update(BUTTON * buttons[]);
-*/
+void keyboard_init(void);
+void keyboard_update(ALLEGRO_EVENT* event);
+void audio_init(audio_t * audio);
+void audio_deinit(audio_t * audio);
+void graphics_deinit(graphics_t * graphics);
+void hud_init(void);
+void hud_deinit(void);
+void hud_draw(juego_t * juego, graphics_t * graphics);
+void move_player(juego_t * juego);
+void game_update(juego_t * juego);
+void board_update(juego_t * juego, board_t * board);
+void shots_update(juego_t * juego, board_t * board);
+void enemies_update(juego_t * juego);
+void menu_update(ALLEGRO_EVENT ev, juego_t * juego, button_t * buttons[]);
+void menu_draw(ALLEGRO_EVENT ev, button_t * buttons[], graphics_t * graphics, juego_t * juego);
+void player_draw(juego_t * juego, graphics_t * graphics);
+void enemies_draw(graphics_t * graphics, board_t * board);
+void navnod_draw(graphics_t * graphics, board_t * board);
+void call_nod(void);
+void shots_draw(graphics_t * graphics, board_t * board);
+void muro_draw(graphics_t * graphics, board_t * board);
+void vel_nod(juego_t * juego, board_t * board);
+void explosion_draw(graphics_t * graphics, board_t * board);
 #ifdef __cplusplus
 }
 #endif
