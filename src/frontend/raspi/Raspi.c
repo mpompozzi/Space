@@ -103,7 +103,7 @@ void sounds (int what);
 #define MAX_CICLOS 8
 
 //PARA EL AUDIO
-#define AUDIOREAD
+#define AUDIOREADY
 #define PARLANTE
 
 #define DISP_EN 1   //Los defines para la eleccion del audio
@@ -139,15 +139,15 @@ int main (void)
 {
 
   raspinit (); //Inicializo los componentes de la raspi
-  int audio = NO_INIT;
+  int audio = 0;
 
 #ifdef AUDIOREADY 
   // SDL_Init(SDL_INIT_AUDIO);
 
   audio = initAudio ();
-  initAudio ();
+  //initAudio ();
 
-  if (audio == NO_INIT) //Inicio el audio
+  if (audio == 0) //Inicio el audio
     {
       printf ("Audio no inicializado\n");
       endAudio ();
@@ -167,7 +167,7 @@ int main (void)
   int random;
   int get_disp;
   jswitch_t pausa = J_NOPRESS;
-
+ 
   componentes.naves = 12;
   jcoord_t coord = {0, 0}; //coordenadas medidas del joystick
 
@@ -459,7 +459,7 @@ int main (void)
             verparams (&componentes);
             rasprint (GAME);
             usleep (200);
-
+            
             ciclos++; //Paso al ciclo siguiente
 
             rasprint (GAME); //Imprimo el juego
@@ -680,11 +680,7 @@ int naves_por_ciclo (juego_t* componentes, int times)
     }
   else if (cantidad > 10)
     {
-      conta = 3; 
-    }
-  else if(cantidad > 6)
-    {
-      conta=2;
+      conta = 2; 
     }
 
   return conta;
