@@ -277,6 +277,7 @@ void game_update(ALLEGRO_EVENT ev, juego_t * juego){
     verparams(juego);
     if(juego->naves == 0){
         //agregar secuencia de level up
+        juego->vidas+=1;
         ininiv(juego->nivel );
     }
 }
@@ -408,7 +409,7 @@ void menu_update(ALLEGRO_EVENT ev, BUTTON * buttons[]){
                 if(ev.keyboard.keycode == ALLEGRO_KEY_ENTER){
                     game_states = STATE_PLAY; //habria que poner un break adentro para evitar presionar otro boton rapido??
                     buttons[0][0].keyboard = 0;
-                    inigame(&juego, 1);
+                    inigame(&juego, 3);
                     //board_init(&juego);
                 }
                 else if(ev.keyboard.keycode == ALLEGRO_KEY_UP){
@@ -563,13 +564,19 @@ void menu_draw(ALLEGRO_EVENT ev, BUTTON * buttons[]){
             break;
             
         case(STATE_GAMEOVER):
+          
             al_clear_to_color(al_map_rgb(0,0,0));
-            al_draw_text(buttons[4][0].font, WHITE, DISP_W / 2, buttons[4][0].y -100, ALLEGRO_ALIGN_CENTRE, "G A M E  O V E R");
+            al_draw_text(font, WHITE, DISP_W / 2, buttons[4][0].y -100, ALLEGRO_ALIGN_CENTRE, "G A M E  O V E R");
+            
+            char puntaje_str[10];
+            sprintf(puntaje_str, "%i", juego.puntaje);
+            al_draw_text(font, WHITE, DISP_W / 2, buttons[4][0].y -200, ALLEGRO_ALIGN_CENTRE,puntaje_str);
+            
             for(int i=0; i<2; i++){
                 if(buttons[4][i].keyboard)
-                    al_draw_text(buttons[4][i].font, RED, DISP_W / 2, buttons[4][i].y  , ALLEGRO_ALIGN_CENTRE, buttons[4][i].text);
+                    al_draw_text(font, RED, DISP_W / 2, buttons[4][i].y  , ALLEGRO_ALIGN_CENTRE, buttons[4][i].text);
                 else
-                    al_draw_text(buttons[4][i].font, WHITE, DISP_W / 2, buttons[4][i].y , ALLEGRO_ALIGN_CENTRE, buttons[4][i].text);
+                    al_draw_text(font, WHITE, DISP_W / 2, buttons[4][i].y , ALLEGRO_ALIGN_CENTRE, buttons[4][i].text);
             }
             break;
             

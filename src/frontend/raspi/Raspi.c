@@ -469,8 +469,10 @@ int main (void)
                 if (audio == READY)
                   {
                     sounds (LVUP);
+                    sounds (MASVIDA);
                   }
-                componentes.nivel++; //Aumento de nivel    
+                componentes.nivel++; //Aumento de nivel   
+                componentes.vidas++; //Agrega una vida
                 ciclos = 1; //Reinicio los ciclos
                 random = (rand () % 10) + 26; //numero entre 25 y 35
                 get_disp = (rand () % 4) + 2; //numero entre 1 y 5
