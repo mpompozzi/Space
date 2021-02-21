@@ -129,7 +129,7 @@ void game_update(juego_t * juego, int game_states){
     if(juego->naves == 0){
         //agregar secuencia de level up
         juego->vidas+=1;
-        ininiv(juego->nivel );
+        ininiv(juego->nivel +1 );
     }
 }
 

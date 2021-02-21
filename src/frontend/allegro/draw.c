@@ -200,7 +200,7 @@ void enemies_draw(graphics_t * graphics, board_t * board){
 *///----------------------------------------------------- //
 void navnod_draw(graphics_t * graphics, board_t * board){
     if(board->navnod.objeto == NAVNOD){
-        al_draw_bitmap(graphics->navnod_bitmap, SCALE *board->navnod.j - CELL/2, SCALE * board->navnod.i - CELL/2 + CORRECCION , 0);
+        al_draw_bitmap(graphics->navnod_bitmap, SCALE *board->navnod.j - CELL/2, SCALE * board->navnod.i - CELL/2 +25 , 0);
     }
     
 }
