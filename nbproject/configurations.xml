@@ -8,9 +8,12 @@
       <itemPath>headers/audio.h</itemPath>
       <itemPath>headers/backend.h</itemPath>
       <itemPath>headers/disdrv.h</itemPath>
+      <itemPath>headers/draw.h</itemPath>
       <itemPath>headers/joydrv.h</itemPath>
       <itemPath>headers/libaudio.h</itemPath>
+      <itemPath>headers/logic.h</itemPath>
       <itemPath>headers/menu.h</itemPath>
+      <itemPath>headers/structures.h</itemPath>
       <itemPath>headers/termlib.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -62,7 +65,9 @@
       </logicalFolder>
       <logicalFolder name="f2" displayName="Frontend" projectFiles="true">
         <logicalFolder name="f1" displayName="Allegro" projectFiles="true">
+          <itemPath>src/frontend/allegro/draw.c</itemPath>
           <itemPath>src/frontend/allegro/front.c</itemPath>
+          <itemPath>src/frontend/allegro/logic.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="Raspi" projectFiles="true">
           <itemPath>src/frontend/raspi/Raspi.c</itemPath>
@@ -124,11 +129,17 @@
       </item>
       <item path="headers/disdrv.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="headers/draw.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="headers/joydrv.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/libaudio.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="headers/logic.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="headers/menu.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/structures.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/termlib.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -174,7 +185,11 @@
       </item>
       <item path="src/backend/backend.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="src/frontend/allegro/draw.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="src/frontend/allegro/front.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/frontend/allegro/logic.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/frontend/raspi/Raspi.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -218,6 +233,12 @@
       <item path="headers/audio.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/backend.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/draw.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/logic.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/structures.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/audio/disparo.wav" ex="false" tool="3" flavor2="0">
       </item>
@@ -283,7 +304,11 @@
       </item>
       <item path="src/backend/backend.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="src/frontend/allegro/draw.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="src/frontend/allegro/front.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/frontend/allegro/logic.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>

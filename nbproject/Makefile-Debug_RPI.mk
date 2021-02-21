@@ -36,7 +36,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/backend/backend.o \
+	${OBJECTDIR}/src/frontend/allegro/draw.o \
 	${OBJECTDIR}/src/frontend/allegro/front.o \
+	${OBJECTDIR}/src/frontend/allegro/logic.o \
 	${OBJECTDIR}/src/frontend/raspi/Raspi.o \
 	${OBJECTDIR}/src/frontend/raspi/menu.o
 
@@ -70,10 +72,20 @@ ${OBJECTDIR}/src/backend/backend.o: src/backend/backend.c
 	${RM} "$@.d"
 	$(COMPILE.c) -g -Wall -DRASPI -I/usr/local/include `pkg-config --cflags sdl` `pkg-config --cflags sdl2`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/backend/backend.o src/backend/backend.c
 
+${OBJECTDIR}/src/frontend/allegro/draw.o: src/frontend/allegro/draw.c
+	${MKDIR} -p ${OBJECTDIR}/src/frontend/allegro
+	${RM} "$@.d"
+	$(COMPILE.c) -g -Wall -DRASPI -I/usr/local/include `pkg-config --cflags sdl` `pkg-config --cflags sdl2`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/frontend/allegro/draw.o src/frontend/allegro/draw.c
+
 ${OBJECTDIR}/src/frontend/allegro/front.o: src/frontend/allegro/front.c
 	${MKDIR} -p ${OBJECTDIR}/src/frontend/allegro
 	${RM} "$@.d"
 	$(COMPILE.c) -g -Wall -DRASPI -I/usr/local/include `pkg-config --cflags sdl` `pkg-config --cflags sdl2`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/frontend/allegro/front.o src/frontend/allegro/front.c
+
+${OBJECTDIR}/src/frontend/allegro/logic.o: src/frontend/allegro/logic.c
+	${MKDIR} -p ${OBJECTDIR}/src/frontend/allegro
+	${RM} "$@.d"
+	$(COMPILE.c) -g -Wall -DRASPI -I/usr/local/include `pkg-config --cflags sdl` `pkg-config --cflags sdl2`   -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/frontend/allegro/logic.o src/frontend/allegro/logic.c
 
 ${OBJECTDIR}/src/frontend/raspi/Raspi.o: src/frontend/raspi/Raspi.c
 	${MKDIR} -p ${OBJECTDIR}/src/frontend/raspi
