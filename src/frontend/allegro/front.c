@@ -50,7 +50,6 @@ int frontboard[LARGO][ANCHO];
 
 unsigned char key[ALLEGRO_KEY_MAX];
 unsigned char counterKey[ALLEGRO_KEY_MAX];
-ALLEGRO_FONT* font = NULL;
 
 /*******************************************************************************
  *******************************************************************************
@@ -259,18 +258,21 @@ void graphics_deinit(graphics_t * graphics){
  * hud_deinit:  destruye fuente cargada.
  * hud_draw: imprime en pantalla vidas y puntaje del jugador.
 *///---------------------------------------------------------- //
-void hud_init(){
+ALLEGRO_FONT * hud_init(ALLEGRO_FONT* font){
     al_init_font_addon(); // initialize the font addon
     al_init_ttf_addon();
     font =  al_load_ttf_font("res/fonts/ARCADE_N.TTF", 20, 0);
     must_init(font, "font");
+    
+    return font;
+    
 }
 
-void hud_deinit(){
+void hud_deinit(ALLEGRO_FONT* font){
     al_destroy_font(font);
 }
 
-void hud_draw(juego_t * juego, graphics_t * graphics){
+void hud_draw(ALLEGRO_FONT* font, juego_t * juego, graphics_t * graphics){
     char puntaje_str[10];
     sprintf(puntaje_str, "%i", juego->puntaje);
     al_draw_text(font, WHITE, BUFFER_W -150, 1, 0, puntaje_str);
@@ -886,10 +888,12 @@ int main(void){
     must_init(al_init_image_addon(), "image");
     
     disp_init(&display);
-    audio_init(&audio);
-    hud_init();
+    audio_init(&audio);    
     keyboard_init();
     graphics_init(&graphics);
+    
+    ALLEGRO_FONT* font_hud = NULL;
+    font_hud = hud_init(font_hud);
     
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_display_event_source(display.disp));
@@ -945,7 +949,7 @@ int main(void){
                 //draw_all(&juego, &graphics, &board);              
                 player_draw(&juego, &graphics);
                 vel_nod(&juego, &board);
-                hud_draw(&juego, &graphics);
+                hud_draw(font_hud, &juego, &graphics);
                 enemies_draw(&graphics, &board);
                 shots_draw(&graphics, &board);
                 muro_draw(&graphics, &board);
@@ -1008,7 +1012,7 @@ int main(void){
     }
     
     disp_deinit(&display);
-    hud_deinit();
+    hud_deinit(font_hud);
     al_destroy_font(font);
     graphics_deinit(&graphics);
     audio_deinit(&audio);

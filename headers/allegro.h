@@ -201,9 +201,9 @@ void graphics_deinit(graphics_t * graphics);
  * hud_deinit:  destruye fuente cargada.
  * hud_draw: imprime en pantalla vidas y puntaje del jugador.
 *///---------------------------------------------------------- //
-void hud_init();  //recibe fuente
-void hud_deinit();
-void hud_draw(juego_t * juego, graphics_t * graphics); //recibe fuente, puntero a juego y graficos
+ALLEGRO_FONT * hud_init(ALLEGRO_FONT* font);  //recibe fuente
+void hud_deinit(ALLEGRO_FONT* font);
+void hud_draw(ALLEGRO_FONT* font, juego_t * juego, graphics_t * graphics); //recibe fuente, puntero a juego y graficos
 
 /****************************************************************************
 *---------------------------- LOGICA DE JUEGO ----------------------------
