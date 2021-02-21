@@ -115,17 +115,17 @@ void sounds (int what);
 #define MASVIDA 7
 #define MENOSVIDA 8
 
-#define SND_DISP_EN "../../../res/audio/disparo.wav"
-#define SND_DISP_PL "../../../res/audio/invaderkilled.wav"
-#define SND_ENEMIGO "../../../res/audio/naveImpacto.wav"
-#define SND_NODRIZA "../../../res/audio/ufo_lowpitch.wav"
-#define SND_GAMEOVER "../../../res/audio/gameOver.wav"
-#define SND_LVUP "../../../res/audio/lvlup.wav"
-#define SND_MASVIDA "../../../res/audio/masvidas.wav"
-#define SND_MENOSVIDA "../../../res/audio/menosvida.wav"
+#define SND_DISP_EN "res/audio/disparo.wav"
+#define SND_DISP_PL "res/audio/invaderkilled.wav"
+#define SND_ENEMIGO "res/audio/naveImpacto.wav"
+#define SND_NODRIZA "res/audio/ufo_lowpitch.wav"
+#define SND_GAMEOVER "res/audio/gameOver.wav"
+#define SND_LVUP "res/audio/lvlup.wav"
+#define SND_MASVIDA "res/audio/masvidas.wav"
+#define SND_MENOSVIDA "res/audio/menosvida.wav"
 
 #ifdef PARLANTE
-#define VOL 50
+#define VOL 60
 #elif AURICULARES
 #define VOL 40
 #endif
@@ -669,21 +669,24 @@ int llamo_naves (juego_t* componentes, int ciclos)
 
 int naves_por_ciclo (juego_t* componentes, int times)
 {
-  static int conta = 0;
+  int conta = 1;
   int cantidad = MAX_ENEM - componentes->naves; //Cantidad de enemigos eliminados
   int p;
   (componentes->nivel >= 4) ? p = 4 : (p = componentes->nivel);
-
-  int velocidad = 9 - p; //numeros del 8 al 5
 
   if (times > 1)
     { //Si todavia times tiene un valor mayor a uno, 
       conta = 1; // le va a devolver el contador en 1
     }
-  else
+  else if (cantidad > 10)
     {
-      conta = ((cantidad / velocidad) + 1); //Caso contrario, devuelve un numero del 1 al 4
+      conta = 3; 
     }
+  else if(cantidad > 6)
+    {
+      conta=2;
+    }
+
   return conta;
 }
 
