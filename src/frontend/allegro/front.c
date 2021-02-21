@@ -1014,13 +1014,13 @@ int main(void){
     
     disp_deinit(&display);
     hud_deinit(font);
-    al_destroy_font(font);
     graphics_deinit(&graphics);
     audio_deinit(&audio);
     al_destroy_timer(timer);
     al_destroy_timer(timer_shot);
     al_destroy_timer(board.timer_enemy);
     al_destroy_timer(timer_explosion);
+    al_destroy_timer(timer_nod);
     al_destroy_event_queue(queue);
     
     return 0;
