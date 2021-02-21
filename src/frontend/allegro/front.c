@@ -179,7 +179,16 @@ void graphics_init(graphics_t * graphics){
     
     graphics->vida_bitmap = al_load_bitmap(VIDA_BMP);
     must_init(graphics->vida_bitmap, "vida bitmap");
-}
+    
+    graphics->levelup_bitmap = al_load_bitmap(LEVELUP_BMP);
+    must_init(graphics->levelup_bitmap, "levelup bitmap");
+    
+    graphics->start_bitmap = al_load_bitmap(START_BMP);
+    must_init(graphics->start_bitmap, "start bitmap");
+    
+    graphics->gameover_bitmap = al_load_bitmap(GAMEOVER_BMP);
+    must_init(graphics->gameover_bitmap, "gameover bitmap");
+} 
 
 void graphics_deinit(graphics_t * graphics){
     al_destroy_bitmap(graphics->menu_background);
@@ -193,6 +202,10 @@ void graphics_deinit(graphics_t * graphics){
     al_destroy_bitmap(graphics->enemykilled_bitmap);
     al_destroy_bitmap(graphics->navnodkilled_bitmap);
     al_destroy_bitmap(graphics->vida_bitmap);
+    al_destroy_bitmap(graphics->levelup_bitmap);
+    al_destroy_bitmap(graphics->start_bitmap);
+    al_destroy_bitmap(graphics->gameover_bitmap);
+    
 }
 
 
@@ -240,7 +253,6 @@ void board_init(board_t * board){
 *****************************************************************************/
 int main(void){
   
-  
     int game_states;
    
     juego_t juego;
@@ -265,6 +277,9 @@ int main(void){
     
     ALLEGRO_TIMER* timer_nod = al_create_timer(1.0/ 6.0);
     must_init(timer_nod, "timer_nod");
+    
+    ALLEGRO_TIMER* timer_transition = al_create_timer(3.0/ 1.0);
+    must_init(timer_transition, "timer_transition");
 
     board.timer_enemy = al_create_timer(1.0/1.0);
     must_init(board.timer_enemy, "timer_enemy");
@@ -296,6 +311,7 @@ int main(void){
     al_register_event_source(queue, al_get_timer_event_source(timer_nod));
     al_register_event_source(queue, al_get_timer_event_source(timer_shot));
     al_register_event_source(queue, al_get_timer_event_source(timer_explosion));
+    al_register_event_source(queue, al_get_timer_event_source(timer_transition));
     al_register_event_source(queue, al_get_timer_event_source(board.timer_enemy));
 
     button_t buttons_menu [] = {{300, 30, "START", font, 0},
@@ -306,7 +322,7 @@ int main(void){
     
     button_t buttons_pause [] = {{300,25, "BACK", font, 0}, {400,25, "EXIT", font, 0}};
     
-    button_t buttons_gameover [] = {{300,25, "STATS", font, 1}, {400,25, "EXIT", font, 0}};
+    button_t buttons_gameover [] = {{300,25, "STATS", font, 0}, {400,25, "EXIT", font, 0}};
     
     button_t buttons_start [] = {{350,25, "PRESS ENTER", font, 1}};
     
@@ -325,18 +341,19 @@ int main(void){
     game_states = STATE_START;
     
     int k;
-    
+    int transition = 0;
+
     ALLEGRO_EVENT event;
     
     al_start_timer(timer);
     al_start_timer(timer_shot);
     al_start_timer(board.timer_enemy);
     al_start_timer(timer_nod);
-    al_start_timer(timer_explosion);
+    
+
     while(!done){
         
         al_wait_for_event(queue, &event);
-        
         if(redraw && al_is_event_queue_empty(queue)){
             disp_pre_draw(&display);
             menu_draw(buttons, &graphics, &juego, game_states);
@@ -349,7 +366,29 @@ int main(void){
                 shots_draw(&graphics, &board);
                 muro_draw(&graphics, &board);
                 navnod_draw(&graphics, &board);
-                explosion_draw(&graphics, &board);
+                explosion_draw(&graphics, &board); 
+            }
+            if((game_states == TRANSITION_LEVELUP) || (game_states == TRANSITION_LEVELSTART) || (game_states == TRANSITION_GAMEOVER)){
+                menu_draw(buttons, &graphics, &juego, STATE_PLAY);
+                player_draw(&juego, &graphics);
+                muro_draw(&graphics, &board);
+                enemies_draw(&graphics, &board);
+                hud_draw(font, &juego, &graphics);
+                transition_draw(&graphics, game_states);
+                if(transition){
+                    if(game_states == TRANSITION_LEVELUP){
+                        game_states = STATE_PLAY;
+                    }
+                    else if(game_states == TRANSITION_LEVELSTART){
+                        game_states = STATE_PLAY;
+                    }
+                    else if(game_states == TRANSITION_GAMEOVER){
+                        game_states = STATE_GAMEOVER;
+                        buttons[4][1].keyboard = 1;
+                    } 
+                    al_stop_timer(timer_transition);
+                    transition = 0;
+                }
             }
             disp_post_draw(&display);
             redraw = false;
@@ -360,19 +399,16 @@ int main(void){
             case ALLEGRO_EVENT_TIMER:
                 if(event.timer.source == timer){
                     redraw = true;
-                    //menu_update(&event, &juego, buttons);
                     if(game_states == STATE_EXIT)
                         done = true;
                     if(game_states == STATE_PLAY){
-                        game_update(&juego, game_states);                     
+                        game_states = game_update(&juego, game_states);                     
                     }
                 }
                 if(game_states == STATE_PLAY){
                     if(event.timer.source == timer_shot){
-
-                            board_update(&juego, &board);
-                            shots_update(&juego, &board);
-
+                        board_update(&juego, &board);
+                        shots_update(&juego, &board);
                     }   
                     if(event.timer.source == board.timer_enemy){
                         enemies_update(&juego);
@@ -380,17 +416,27 @@ int main(void){
                     if(event.timer.source == timer_nod){
                             call_nod();  
                     } 
+                    
+                    for(k = 0; k < MAX_EXPLOSIONS; k++){
+                        if(board.explosion[k].objeto != NADA){
+                            al_start_timer(timer_explosion);
+                        }
+                    }
                     if(event.timer.source == timer_explosion){
                         for(k = 0; k < MAX_EXPLOSIONS; k++){
                             if(board.explosion[k].objeto != NADA){
                                 board.explosion[k].objeto = NADA;
                             }
-                        }   
-                    } 
+                        }
+                        al_stop_timer(timer_explosion);
+                    }
+                            
                 }
-                if(game_states == STATE_TRANSITION){
-                    if(event.timer.source == board.timer_enemy){
-                        enemies_update(&juego);
+                if((game_states == TRANSITION_LEVELUP) || (game_states == TRANSITION_LEVELSTART) || (game_states == TRANSITION_GAMEOVER)){
+                    al_start_timer(timer_transition);
+                    board_update(&juego, &board);
+                    if(event.timer.source == timer_transition){
+                        transition = !transition;
                     }
                 }
                 break;
@@ -414,6 +460,7 @@ int main(void){
     al_destroy_timer(timer_shot);
     al_destroy_timer(board.timer_enemy);
     al_destroy_timer(timer_explosion);
+    al_destroy_timer(timer_transition);
     al_destroy_timer(timer_nod);
     al_destroy_event_queue(queue);
     

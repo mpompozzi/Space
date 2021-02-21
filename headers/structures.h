@@ -50,7 +50,8 @@ extern "C" {
  ******************************************************************************/
 
 // ---------------------     estados de menu      --------------------- //
-enum menu_states {STATE_START, STATE_MENU, STATE_PLAY, STATE_STATS, STATE_EXIT, STATE_PAUSE, STATE_GAMEOVER, STATE_LEVELUP, STATE_TRANSITION};
+enum menu_states {STATE_START, STATE_MENU, STATE_PLAY, STATE_STATS, STATE_EXIT, STATE_PAUSE, STATE_GAMEOVER};
+enum transitions_states {TRANSITION_LEVELUP = 7, TRANSITION_LEVELSTART, TRANSITION_GAMEOVER};
 
 // ---------------------     estructura graficos      --------------------- //
 typedef struct {
@@ -67,7 +68,8 @@ typedef struct {
     ALLEGRO_BITMAP* navnodkilled_bitmap;
     ALLEGRO_BITMAP* vida_bitmap;
     ALLEGRO_BITMAP* levelup_bitmap;
-    
+    ALLEGRO_BITMAP* start_bitmap;
+    ALLEGRO_BITMAP* gameover_bitmap;
 } graphics_t;
 
 // ---------------------     estructuras botones      --------------------- //

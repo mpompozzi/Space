@@ -121,16 +121,20 @@ int keyboard_counter(unsigned char keyName, int game_states){
  *               cuando ocurre transicion de nivel.
  * Recibe: puntero a estructura juego.
 *///------------------------------------------------------------------------ //
-void game_update(juego_t * juego, int game_states){
+int game_update(juego_t * juego, int game_states){
     move_player(juego, game_states);
     getcoordp(juego);
     pmov(juego);
     verparams(juego);
     if(juego->naves == 0){
-        //agregar secuencia de level up
+        game_states = TRANSITION_LEVELUP;
         juego->vidas+=1;
         ininiv(juego->nivel +1 );
     }
+    if(juego->vidas == 0){
+        game_states = TRANSITION_GAMEOVER;
+    }
+    return game_states;
 }
 
 /* ----------------- GESTION MOVIMIENTO DE JUGADOR Y VIDAS ----------------- //
@@ -291,7 +295,7 @@ int menu_update(ALLEGRO_EVENT * ev, juego_t * juego, button_t * buttons[], int g
         case(STATE_MENU):
             if(buttons[0][0].keyboard){
                 if(ev->keyboard.keycode == ALLEGRO_KEY_ENTER){
-                    game_states = STATE_PLAY; //habria que poner un break adentro para evitar presionar otro boton rapido??
+                    game_states = TRANSITION_LEVELSTART; //habria que poner un break adentro para evitar presionar otro boton rapido??
                     buttons[0][0].keyboard = 0;
                     inigame(juego, 1);
                 }
@@ -413,10 +417,6 @@ int menu_update(ALLEGRO_EVENT * ev, juego_t * juego, button_t * buttons[], int g
                     buttons[4][1].keyboard = 0;
                 }
             }
-            break;
-        case(STATE_TRANSITION):
-            break;
-        case(STATE_LEVELUP):  
             break;
     }
     return game_states;

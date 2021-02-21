@@ -67,7 +67,7 @@ int keyboard_counter(unsigned char keyName, int game_states); //recibe tecla pre
  *               cuando ocurre transicion de nivel.
  * Recibe: puntero a estructura juego.
 *///----------------------------------------------------------- //
-void game_update(juego_t * juego, int);
+int game_update(juego_t * juego, int);
 
 /* ---------------- ACTUALIZACION DE TABLERO --------------- //
  * board_update: lee tablero desde backend y guarda elementos en front. Llama a 

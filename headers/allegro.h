@@ -36,7 +36,8 @@ extern "C" {
 #define NAVNODKILLED_BMP "res/img/nodkilled.png"
 #define LEVELUP_BMP "res/img/level_up2.png" 
 #define VIDA_BMP "res/img/vida.png"  
-#define LEVELUP_BMP "res/img/level_up2.png"  
+#define START_BMP "res/img/start.png"  
+#define GAMEOVER_BMP "res/img/gameover.png"  
   
 // --------------------------     audio      -------------------------- //
 #define GAME_SOUND "../../../res/audio/"

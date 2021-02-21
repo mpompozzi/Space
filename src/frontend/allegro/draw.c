@@ -131,33 +131,24 @@ void menu_draw(button_t * buttons[], graphics_t * graphics, juego_t * juego, int
                 else
                     al_draw_text(buttons[1][0].font, WHITE, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTRE, buttons[2][i].text);
             }
-            break;
-        /*case(STATE_TRANSITION):
-            al_draw_bitmap(graphics->menu_background,0,0,0); 
-            break;
-        case(STATE_LEVELUP):  
-            break;     */       
+            break;   
     }
 }    
-/*
-void transition_draw(graphics_t * graphics, int from){
-    int i, j;
-    if(from == STATE_MENU){
-        al_draw_bitmap(graphics->menu_background,0,0,0); 
-        for (i = 0; i < LARGO ; i++){
-            for(j = 0; j < ANCHO; j++){ 
-                 al_draw_bitmap_region(graphics->game_background,0,0, j + CELL/2, i - CELL/2, 0, 0); 
-            }
-        }
-    }
-    else if(from == STATE_PLAY){
-        
-    }
-    else if(from == STATE_LEVELUP){
-        
-    }  
-}*/
 
+
+void transition_draw(graphics_t * graphics, int game_states){
+    switch(game_states){
+        case(TRANSITION_LEVELUP):
+            al_draw_bitmap(graphics->levelup_bitmap, SCALE * ANCHO/2 - 130, SCALE * LARGO/2 - 96, 0);
+            break;
+        case(TRANSITION_LEVELSTART):
+            al_draw_bitmap(graphics->start_bitmap, SCALE * ANCHO/2 - 122, SCALE * LARGO/2 - 60, 0);
+            break;
+        case(TRANSITION_GAMEOVER):
+            al_draw_bitmap(graphics->gameover_bitmap, SCALE * ANCHO/2 - 150, SCALE * LARGO/2 - 150 , 0);
+            break;
+    }
+}
 /* --------------     DIBUJO DE JUGADOR      -------------- //
  * player_draw: ubica imagen de jugador en diplay.
  * Recibe: puntero a estructura juego y graficos.

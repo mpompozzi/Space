@@ -100,6 +100,9 @@ void muro_draw(graphics_t * graphics, board_t * board);
 *///---------------------------------------------------------- //
 void explosion_draw(graphics_t * graphics, board_t * board);
 
+
+void transition_draw(graphics_t * graphics, int game_states);
+
 /*******************************************************************************
  ******************************************************************************/
 
