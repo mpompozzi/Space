@@ -164,7 +164,7 @@ void transition_draw(graphics_t * graphics, int from){
 *///------------------------------------------------------- //
 void player_draw(juego_t * juego, graphics_t * graphics){
     getcoordp(juego);
-    al_draw_bitmap(graphics->player_bitmap, SCALE*juego->coordsp.j - CELL/2, SCALE*juego->coordsp.i - CELL/2, 0);
+    al_draw_bitmap(graphics->player_bitmap, SCALE*juego->coordsp.j - CELL/2, SCALE*juego->coordsp.i - CELL/2 + CORRECCION , 0);
 }
 
 /* -------------- DIBUJO DE ENEMIGOS -------------------- //
@@ -177,15 +177,15 @@ void enemies_draw(graphics_t * graphics, board_t * board){
         switch(board->enemy_cell[n].objeto){
             case(ENEMY1):
             case(ENEMYSHOT1):
-                al_draw_bitmap(graphics->enemy_bitmap, SCALE*board->enemy_cell[n].j - CELL/2  ,SCALE*board->enemy_cell[n].i - CELL/2, 0);
+                al_draw_bitmap(graphics->enemy_bitmap, SCALE*board->enemy_cell[n].j - CELL/2  ,SCALE*board->enemy_cell[n].i - CELL/2 +CORRECCION , 0);
                 break;
             case(ENEMY2):
             case(ENEMYSHOT2):
-                al_draw_bitmap(graphics->enemy2_bitmap, SCALE*board->enemy_cell[n].j - CELL/2 , SCALE*board->enemy_cell[n].i - CELL/2, 0);
+                al_draw_bitmap(graphics->enemy2_bitmap, SCALE*board->enemy_cell[n].j - CELL/2 , SCALE*board->enemy_cell[n].i - CELL/2 +CORRECCION , 0);
                 break;    
             case(ENEMY3):
             case(ENEMYSHOT3):
-                al_draw_bitmap(graphics->enemy3_bitmap, SCALE*board->enemy_cell[n].j - CELL/2, SCALE*board->enemy_cell[n].i - CELL/2, 0);
+                al_draw_bitmap(graphics->enemy3_bitmap, SCALE*board->enemy_cell[n].j - CELL/2, SCALE*board->enemy_cell[n].i - CELL/2 +CORRECCION , 0);
                 break;
             default:
                 check = 0;
@@ -200,7 +200,7 @@ void enemies_draw(graphics_t * graphics, board_t * board){
 *///----------------------------------------------------- //
 void navnod_draw(graphics_t * graphics, board_t * board){
     if(board->navnod.objeto == NAVNOD){
-        al_draw_bitmap(graphics->navnod_bitmap, SCALE *board->navnod.j - CELL/2, SCALE * board->navnod.i - CELL/2, 0);
+        al_draw_bitmap(graphics->navnod_bitmap, SCALE *board->navnod.j - CELL/2, SCALE * board->navnod.i - CELL/2 + CORRECCION , 0);
     }
     
 }
@@ -231,7 +231,7 @@ void muro_draw(graphics_t * graphics, board_t * board){
     int n, check;
     for(n = 0, check = 1; n < MAX_MURO && check == 1; n++){
         if(board->muro[n].objeto == MURO){
-            al_draw_bitmap(graphics->muro_bitmap, SCALE*board->muro[n].j - CELL/2, SCALE*board->muro[n].i - CELL/2, 0);
+            al_draw_bitmap(graphics->muro_bitmap, SCALE*board->muro[n].j - CELL/2, SCALE*board->muro[n].i - CELL/2 +CORRECCION , 0);
         }       
         else check = 0;
     }                        
@@ -246,13 +246,13 @@ void explosion_draw(graphics_t * graphics, board_t * board){
     for(k = 0; k < MAX_EXPLOSIONS; k++){
         switch(board->explosion[k].objeto){
             case(PLAYER):
-                al_draw_bitmap(graphics->playerkilled_bitmap, SCALE*board->explosion[k].j - CELL, SCALE*board->explosion[k].i - CELL, 0);
+                al_draw_bitmap(graphics->playerkilled_bitmap, SCALE*board->explosion[k].j - CELL, SCALE*board->explosion[k].i - CELL +CORRECCION , 0);
                 break;
             case(ENEMY1):
-                al_draw_bitmap(graphics->enemykilled_bitmap, SCALE*board->explosion[k].j - CELL/2, SCALE*board->explosion[k].i - CELL/2, 0);
+                al_draw_bitmap(graphics->enemykilled_bitmap, SCALE*board->explosion[k].j - CELL/2, SCALE*board->explosion[k].i - CELL/2 + CORRECCION , 0);
                 break;
             case(NAVNOD):
-                al_draw_bitmap(graphics->navnodkilled_bitmap, SCALE*board->explosion[k].j - CELL/2, SCALE*board->explosion[k].i - CELL/2, 0);
+                al_draw_bitmap(graphics->navnodkilled_bitmap, SCALE*board->explosion[k].j - CELL/2, SCALE*board->explosion[k].i - CELL/2 +CORRECCION , 0);
                 break;
         }
     }
