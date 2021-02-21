@@ -882,8 +882,8 @@ int main(void){
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
     must_init(queue, "queue");
     
-    ALLEGRO_FONT * font = al_create_builtin_font();
-    must_init(font, "font");
+    /*ALLEGRO_FONT * font = al_create_builtin_font();
+    must_init(font, "font");*/
     
     must_init(al_init_image_addon(), "image");
     
@@ -892,8 +892,9 @@ int main(void){
     keyboard_init();
     graphics_init(&graphics);
     
-    ALLEGRO_FONT* font_hud = NULL;
-    font_hud = hud_init(font_hud);
+    ALLEGRO_FONT* font = NULL;
+    
+    font = hud_init(font);
     
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_display_event_source(display.disp));
@@ -903,9 +904,9 @@ int main(void){
     al_register_event_source(queue, al_get_timer_event_source(timer_explosion));
     al_register_event_source(queue, al_get_timer_event_source(board.timer_enemy));
 
-    button_t buttons_menu [] = {{300,25, "START", font, 0},
-                        {350,25, "STATS", font, 0},
-                        {400,25, "EXIT", font, 0}};
+    button_t buttons_menu [] = {{300, 30, "START", font, 0},
+                        {350, 30, "STATS", font, 0},
+                        {400, 30, "EXIT", font, 0}};
     
     button_t buttons_stats [] = {{450,25, "BACK", font, 0}};
     
@@ -949,7 +950,7 @@ int main(void){
                 //draw_all(&juego, &graphics, &board);              
                 player_draw(&juego, &graphics);
                 vel_nod(&juego, &board);
-                hud_draw(font_hud, &juego, &graphics);
+                hud_draw(font, &juego, &graphics);
                 enemies_draw(&graphics, &board);
                 shots_draw(&graphics, &board);
                 muro_draw(&graphics, &board);
@@ -1012,7 +1013,7 @@ int main(void){
     }
     
     disp_deinit(&display);
-    hud_deinit(font_hud);
+    hud_deinit(font);
     al_destroy_font(font);
     graphics_deinit(&graphics);
     audio_deinit(&audio);
