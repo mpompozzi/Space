@@ -87,7 +87,7 @@ extern "C" {
   
   
 // ---------------------     estados de menu      --------------------- //
-enum menu_states {STATE_START, STATE_MENU, STATE_PLAY, STATE_STATS, STATE_EXIT, STATE_PAUSE, STATE_GAMEOVER};
+enum menu_states {STATE_START, STATE_MENU, STATE_PLAY, STATE_STATS, STATE_EXIT, STATE_PAUSE, STATE_GAMEOVER, STATE_LEVELUP, STATE_TRANSITION};
 
 // -------------------     constantes de movimiento      ------------------- //
 enum player_move {STAY, RIGHT, LEFT, SHOOT, SHOOT_RIGHT, SHOOT_LEFT};
@@ -201,9 +201,9 @@ void graphics_deinit(graphics_t * graphics);
  * hud_deinit:  destruye fuente cargada.
  * hud_draw: imprime en pantalla vidas y puntaje del jugador.
 *///---------------------------------------------------------- //
-void hud_init(ALLEGRO_FONT* font);  //recibe fuente
-void hud_deinit(ALLEGRO_FONT* font);
-void hud_draw(ALLEGRO_FONT* font, juego_t * juego, graphics_t * graphics); //recibe fuente, puntero a juego y graficos
+void hud_init();  //recibe fuente
+void hud_deinit();
+void hud_draw(juego_t * juego, graphics_t * graphics); //recibe fuente, puntero a juego y graficos
 
 /****************************************************************************
 *---------------------------- LOGICA DE JUEGO ----------------------------
@@ -263,6 +263,8 @@ void call_nod(void);
 *///------------------------------------------------------- //
 void vel_nod(juego_t * juego, board_t * board);
 
+
+void draw_all(juego_t * juego, graphics_t * graphics, board_t * board);
 
 /*-------------- DIBUJO DE BOTONES Y FONDOS DE ESTADOS -------------- //
  * menu_draw: dibuja botones, texto y fondos principales de estados.

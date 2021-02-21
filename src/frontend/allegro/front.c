@@ -50,7 +50,7 @@ int frontboard[LARGO][ANCHO];
 
 unsigned char key[ALLEGRO_KEY_MAX];
 unsigned char counterKey[ALLEGRO_KEY_MAX];
-
+ALLEGRO_FONT* font = NULL;
 
 /*******************************************************************************
  *******************************************************************************
@@ -259,20 +259,18 @@ void graphics_deinit(graphics_t * graphics){
  * hud_deinit:  destruye fuente cargada.
  * hud_draw: imprime en pantalla vidas y puntaje del jugador.
 *///---------------------------------------------------------- //
-void hud_init(ALLEGRO_FONT* font){
-  
+void hud_init(){
     al_init_font_addon(); // initialize the font addon
     al_init_ttf_addon();
+    font =  al_load_ttf_font("res/fonts/ARCADE_N.TTF", 20, 0);
     must_init(font, "font");
-
 }
 
-void hud_deinit(ALLEGRO_FONT* font){
+void hud_deinit(){
     al_destroy_font(font);
 }
 
-void hud_draw(ALLEGRO_FONT* font, juego_t * juego, graphics_t * graphics){
-    font =  al_load_ttf_font("res/fonts/ARCADE_N.TTF", 20, 0);
+void hud_draw(juego_t * juego, graphics_t * graphics){
     char puntaje_str[10];
     sprintf(puntaje_str, "%i", juego->puntaje);
     al_draw_text(font, WHITE, BUFFER_W -150, 1, 0, puntaje_str);
@@ -587,6 +585,10 @@ void menu_update(ALLEGRO_EVENT * ev, juego_t * juego, button_t * buttons[]){
                 }
             }
             break;
+        case(STATE_TRANSITION):
+            break;
+        case(STATE_LEVELUP):  
+            break;
     }
 } 
 
@@ -650,8 +652,31 @@ void menu_draw(button_t * buttons[], graphics_t * graphics, juego_t * juego){
                     al_draw_text(buttons[1][0].font, WHITE, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTRE, buttons[2][i].text);
             }
             break;
+        /*case(STATE_TRANSITION):
+            al_draw_bitmap(graphics->menu_background,0,0,0); 
+            break;
+        case(STATE_LEVELUP):  
+            break;     */       
     }
 }    
+/*
+void transition_draw(graphics_t * graphics, int from){
+    int i, j;
+    if(from == STATE_MENU){
+        al_draw_bitmap(graphics->menu_background,0,0,0); 
+        for (i = 0; i < LARGO ; i++){
+            for(j = 0; j < ANCHO; j++){ 
+                 al_draw_bitmap_region(graphics->game_background,0,0, j + CELL/2, i - CELL/2, 0, 0); 
+            }
+        }
+    }
+    else if(from == STATE_PLAY){
+        
+    }
+    else if(from == STATE_LEVELUP){
+        
+    }  
+}*/
 
 /* --------------     DIBUJO DE JUGADOR      -------------- //
  * player_draw: ubica imagen de jugador en diplay.
@@ -668,8 +693,9 @@ void player_draw(juego_t * juego, graphics_t * graphics){
 *///----------------------------------------------------- //
 void enemies_draw(graphics_t * graphics, board_t * board){
     int n, aux;
-    for(n = 0, aux = 1; n < board->enemy_maxcells && aux == 1; n++){
-        switch(board->enemy_cell[n].objeto){
+    for(n = 0; n < MAX_ENEMIES; n++){
+        aux = board->enemy_cell[n].objeto;
+        switch(aux){
              case(ENEMY1):
              case(ENEMYSHOT1):
                 al_draw_bitmap(graphics->enemy_bitmap, SCALE*board->enemy_cell[n].j - CELL/2  ,SCALE*board->enemy_cell[n].i - CELL/2, 0);
@@ -681,9 +707,6 @@ void enemies_draw(graphics_t * graphics, board_t * board){
              case(ENEMY3):
              case(ENEMYSHOT3):
                 al_draw_bitmap(graphics->enemy3_bitmap, SCALE*board->enemy_cell[n].j - CELL/2, SCALE*board->enemy_cell[n].i - CELL/2, 0);
-                break;
-             default:
-                aux = 0;
                 break;
         }                        
     }
@@ -725,7 +748,7 @@ void shots_draw(graphics_t * graphics, board_t * board){
         al_draw_line(SCALE * board->pshot.j, SCALE * board->pshot.i - 5, SCALE * board->pshot.j, SCALE * board->pshot.i + 5, RED, 4);
         //if(board->pshot.i > LARGO - 2) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
-    for(n = 0; n < board->enemy_maxshots; n++){
+    for(n = 0; n < MAX_SHOTS; n++){
         if(board->enemy_shot[n].objeto == ESHOT){
             al_draw_line(SCALE * board->enemy_shot[n].j, SCALE * board->enemy_shot[n].i - 5, SCALE * board->enemy_shot[n].j, SCALE * board->enemy_shot[n].i + 5, GREEN, 4);
         }                        
@@ -805,6 +828,17 @@ void explosion_draw(graphics_t * graphics, board_t * board){
         }
     }
 }
+/*
+void draw_all(juego_t * juego, graphics_t * graphics, board_t * board){
+    player_draw(juego, graphics);
+    vel_nod(juego, board);
+    hud_draw(juego, graphics);
+    enemies_draw(graphics, board);
+    shots_draw(graphics, board);
+    muro_draw(graphics, board);
+    navnod_draw(graphics, board);
+    explosion_draw(graphics, board);
+}*/
 
 /*****************************************************************************
 *----------------------------------- MAIN -----------------------------------*
@@ -853,7 +887,7 @@ int main(void){
     
     disp_init(&display);
     audio_init(&audio);
-    hud_init(font);
+    hud_init();
     keyboard_init();
     graphics_init(&graphics);
     
@@ -908,9 +942,10 @@ int main(void){
             disp_pre_draw(&display);
             menu_draw(buttons, &graphics, &juego);
             if(game_states == STATE_PLAY){
+                //draw_all(&juego, &graphics, &board);              
                 player_draw(&juego, &graphics);
                 vel_nod(&juego, &board);
-                hud_draw(font, &juego, &graphics);
+                hud_draw(&juego, &graphics);
                 enemies_draw(&graphics, &board);
                 shots_draw(&graphics, &board);
                 muro_draw(&graphics, &board);
@@ -954,6 +989,11 @@ int main(void){
                         }   
                     } 
                 }
+                if(game_states == STATE_TRANSITION){
+                    if(event.timer.source == board.timer_enemy){
+                        enemies_update(&juego);
+                    }
+                }
                 break;
             case ALLEGRO_EVENT_KEY_DOWN:
                 menu_update(&event, &juego, buttons);
@@ -968,7 +1008,7 @@ int main(void){
     }
     
     disp_deinit(&display);
-     hud_deinit(font);
+    hud_deinit();
     al_destroy_font(font);
     graphics_deinit(&graphics);
     audio_deinit(&audio);
