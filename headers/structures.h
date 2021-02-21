@@ -35,10 +35,11 @@ extern "C" {
 #define MAX_ENEMIES     50
 #define MAX_MURO        50  
 #define MAX_EXPLOSIONS  10
+#define CORRECCION      30
   
 // --------------------------     display      -------------------------- //
 #define BUFFER_W 800
-#define BUFFER_H 600
+#define BUFFER_H 620
 #define DISP_SCALE 1
 #define DISP_W (BUFFER_W * DISP_SCALE)
 #define DISP_H (BUFFER_H * DISP_SCALE)
