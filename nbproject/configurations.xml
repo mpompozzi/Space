@@ -54,6 +54,7 @@
         <itemPath>res/img/saucer2b.png</itemPath>
         <itemPath>res/img/saucer3a.png</itemPath>
         <itemPath>res/img/saucer3b.png</itemPath>
+        <itemPath>res/img/start.png</itemPath>
         <itemPath>res/img/vida.png</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -181,6 +182,8 @@
       </item>
       <item path="res/img/playerkilled.png" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="res/img/start.png" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="res/img/vida.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/backend/backend.c" ex="false" tool="0" flavor2="0">
@@ -299,6 +302,8 @@
       <item path="res/img/saucer3a.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/saucer3b.png" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/img/start.png" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/img/vida.png" ex="false" tool="3" flavor2="0">
       </item>

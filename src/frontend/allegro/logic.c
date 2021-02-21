@@ -440,6 +440,11 @@ void call_nod(void){
     }
 }
 
+
+
+
+
+
 /* ----------------- ACTUALIZACION DE VELOCIDADES ENEMIGOS ----------------- //
  * vel_nod: administracion de velocidad de timer de enemigos segun cantidad de 
  *          enemigos en juego.'
@@ -478,6 +483,16 @@ void vel_nod(juego_t * juego, board_t * board){
       al_set_timer_speed(board->timer_enemy , (1/5.2));
       
    }
+
+
+/* ----------------- AUDIO DEL JUEGO ----------------- //
+ * call_audio: esta funcion reprodice la pista de audio segun el evento que se 
+ * requiere.
+*///------------------------------------------------------------------------ //
+/*void call_audio(audio_t * audio){
+  al_play_sample();
+  
+}*/
 
 /*******************************************************************************
  *******************************************************************************
