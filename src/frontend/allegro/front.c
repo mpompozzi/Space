@@ -525,16 +525,16 @@ void menu_draw(ALLEGRO_EVENT ev, button_t * buttons[], graphics_t * graphics, ju
         case(STATE_START):
             al_clear_to_color(BLACK);
             al_draw_bitmap(graphics->menu_background,0,0,0);            
-            al_draw_text(buttons[3][0].font, WHITE, (float) DISP_W / 2, (float) buttons[3][0].y + 80, ALLEGRO_ALIGN_CENTRE, buttons[3][0].text);
+            al_draw_text(font, WHITE, (float) DISP_W / 2, (float) buttons[3][0].y + 80, ALLEGRO_ALIGN_CENTRE, buttons[3][0].text);
             break;
         case(STATE_MENU):
             al_clear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics->menu_background,0,0,0);
             for(int i=0; i<3; i++){
                 if(buttons[0][i].keyboard)//
-                    al_draw_text(buttons[0][i].font, RED, DISP_W / 2, buttons[0][i].y + 80 , ALLEGRO_ALIGN_CENTRE, buttons[0][i].text);
+                    al_draw_text(font, RED, DISP_W / 2, buttons[0][i].y + 80 , ALLEGRO_ALIGN_CENTRE, buttons[0][i].text);
                 else
-                    al_draw_text(buttons[0][i].font, WHITE, DISP_W / 2, buttons[0][i].y+ 80, ALLEGRO_ALIGN_CENTRE, buttons[0][i].text);
+                    al_draw_text(font, WHITE, DISP_W / 2, buttons[0][i].y+ 80, ALLEGRO_ALIGN_CENTRE, buttons[0][i].text);
             }
             break;
         case(STATE_PLAY):
@@ -545,11 +545,11 @@ void menu_draw(ALLEGRO_EVENT ev, button_t * buttons[], graphics_t * graphics, ju
         case(STATE_GAMEOVER):
           
             al_clear_to_color(al_map_rgb(0,0,0));
-            al_draw_text(font, WHITE, DISP_W / 2, buttons[4][0].y -100, ALLEGRO_ALIGN_CENTRE, "G A M E  O V E R");
-            
+            al_draw_text(font, WHITE, DISP_W / 2, buttons[4][0].y -200, ALLEGRO_ALIGN_CENTRE, "G A M E  O V E R");
+            al_draw_text(font, WHITE, DISP_W / 2, buttons[4][0].y -150, ALLEGRO_ALIGN_CENTRE, "FINAL SCORE:");
             char puntaje_str[10];
             sprintf(puntaje_str, "%i", juego->puntaje);
-            al_draw_text(font, WHITE, DISP_W / 2, buttons[4][0].y -200, ALLEGRO_ALIGN_CENTRE,puntaje_str);
+            al_draw_text(font, WHITE, DISP_W / 2, buttons[4][0].y -100, ALLEGRO_ALIGN_CENTRE,puntaje_str);
             
             for(int i=0; i<2; i++){
                 if(buttons[4][i].keyboard)
@@ -563,28 +563,38 @@ void menu_draw(ALLEGRO_EVENT ev, button_t * buttons[], graphics_t * graphics, ju
             al_clear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics->menu_background,0,0,0);
             if(buttons[1][0].keyboard)
-                al_draw_text(buttons[1][0].font, RED, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTRE, buttons[1][0].text);
+                al_draw_text(font, RED, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTRE, buttons[1][0].text);
             else
-                al_draw_text(buttons[1][0].font, WHITE, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTRE, buttons[1][0].text);
+                al_draw_text(font, WHITE, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTRE, buttons[1][0].text);
             break;
         case(STATE_PAUSE):
             al_clear_to_color(al_map_rgb(0,0,0));
             al_draw_bitmap(graphics->game_background,0,0,0);
             for(int i=0; i<2; i++){
                 if(buttons[2][i].keyboard)
-                    al_draw_text(buttons[2][i].font, RED, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTRE, buttons[2][i].text);
+                    al_draw_text(font, RED, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTRE, buttons[2][i].text);
                 else
-                    al_draw_text(buttons[2][i].font, WHITE, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTRE, buttons[2][i].text);
+                    al_draw_text(font, WHITE, DISP_W / 2, buttons[2][i].y, ALLEGRO_ALIGN_CENTRE, buttons[2][i].text);
             }
             break;
     }
 }    
 
+/***********************************************************
+ * Función que localiza al jugador y ubica sus respectiva  *
+ * imagen en el diplay                                     *
+ *                                                         *
+ ***********************************************************/
+
 void player_draw(juego_t * juego, graphics_t * graphics){
     getcoordp(juego);
     al_draw_bitmap(graphics->player_bitmap, SCALE*juego->coordsp.j - CELL/2, SCALE*juego->coordsp.i - CELL/2, 0);
 }
-
+/************************************************************
+ * Función que localiza los enemigos expresados en simbolos *
+ * y ubica sus respectivas imagenes en el diplay            *
+ *                                                          *
+ ***********************************************************/
 void enemies_draw(graphics_t * graphics, board_t * board){
     int n, aux;
     for(n = 0, aux = 1; n < board->enemy_maxcells && aux == 1; n++){
@@ -821,7 +831,7 @@ int main(void){
             case ALLEGRO_EVENT_TIMER:
                 if(event.timer.source == timer){
                     redraw = true;
-                    //menu_update(event, &juego, buttons);
+                    menu_update(event, &juego, buttons);
                     if(game_states == STATE_EXIT)
                         done = true;
                     if(game_states == STATE_PLAY){

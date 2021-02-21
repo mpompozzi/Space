@@ -62,7 +62,7 @@ extern "C" {
   
 // --- display ---
 #define BUFFER_W 800
-#define BUFFER_H 800
+#define BUFFER_H 600
 #define DISP_SCALE 1
 #define DISP_W (BUFFER_W * DISP_SCALE)
 #define DISP_H (BUFFER_H * DISP_SCALE)

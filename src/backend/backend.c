@@ -76,7 +76,7 @@ void inigame(juego_t *juego, int nivel_inicial) {
     ininiv(nivel_inicial);
     juego->nivel = nivel_inicial;
     juego->puntaje = 0;
-    juego->vidas = 3;
+    juego->vidas = 4;
     juego->tablero = &space[0][0];
     juego->omit =0;
 }
@@ -542,7 +542,7 @@ void crear_muro(void) {
     for(i=LARGO-4;i<LARGO-2;++i){
         for(j=1;j<ANCHO;j+=6){
             a=j;
-            for(j;j<a+6;++j){
+            for(;j<a+6;++j){
                space[i][j] = MURO; 
               }
           }

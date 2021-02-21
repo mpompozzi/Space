@@ -63,7 +63,6 @@
       <logicalFolder name="f2" displayName="Frontend" projectFiles="true">
         <logicalFolder name="f1" displayName="Allegro" projectFiles="true">
           <itemPath>src/frontend/allegro/front.c</itemPath>
-          <itemPath>src/front_anterior.c</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="Raspi" projectFiles="true">
           <itemPath>src/frontend/raspi/Raspi.c</itemPath>

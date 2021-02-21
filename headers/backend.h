@@ -25,7 +25,9 @@ extern "C" {
 #elif ALLEGRO 
 #define LARGO 24 //el largo de la matriz
 #define ANCHO 32
-#define SEPARACION 4 // Separacion entre enemegios por fila para allegro
+#define SEPARACION 4
+  
+  // Separacion entre enemegios por fila para allegro
 //#define CELL    0
 #endif
 
