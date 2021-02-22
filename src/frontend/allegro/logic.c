@@ -452,11 +452,6 @@ void call_nod(void){
     }
 }
 
-
-
-
-
-
 /* ----------------- ACTUALIZACION DE VELOCIDADES ENEMIGOS ----------------- //
  * vel_nod: administracion de velocidad de timer de enemigos segun cantidad de 
  *          enemigos en juego.'

@@ -139,7 +139,7 @@ int main (void)
 {
 
   raspinit (); //Inicializo los componentes de la raspi
-  int audio = 0;
+  int audio = NO_INIT;
 
 #ifdef AUDIOREADY 
   // SDL_Init(SDL_INIT_AUDIO);

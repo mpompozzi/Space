@@ -112,7 +112,6 @@ void disp_post_draw(display_t * display){
 void audio_init(audio_t * audio){
     al_install_audio();
     al_init_acodec_addon();
-    al_reserve_samples(20);
 
     
     audio->gameover_sound = al_load_sample(GAMEOVER_SOUND);
@@ -265,10 +264,10 @@ int main(void){
     must_init(al_install_mouse(), "mouse");
     must_init(al_install_audio(), "audio");
     must_init(al_init_acodec_addon(), "audio codecs");
-    must_init(al_reserve_samples(16), "reserve samples");
+    must_init(al_reserve_samples(4), "reserve samples");
     must_init(al_init_primitives_addon(), "primitives");
 
-    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 40.0);
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 50.0);
     must_init(timer, "timer");
     
     ALLEGRO_TIMER* timer_shot = al_create_timer(1.0 / 40.0);
@@ -444,7 +443,6 @@ int main(void){
                 break;
             case ALLEGRO_EVENT_KEY_DOWN:
                 game_states = menu_update(&event, &juego, buttons, game_states);
-               // call_audio(&audio,PSHOT);
                 break;
            
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
