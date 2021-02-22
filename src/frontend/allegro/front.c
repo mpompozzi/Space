@@ -355,7 +355,7 @@ int main(void){
         if(redraw && al_is_event_queue_empty(queue)){
             disp_pre_draw(&display);
             menu_draw(buttons, &graphics, &juego, game_states);
-            call_audio(&audio,&board,game_states);
+           // call_audio(&audio,&board,game_states);
             if(game_states == STATE_PLAY){
                 
                 //draw_all(&juego, &graphics, &board);              
