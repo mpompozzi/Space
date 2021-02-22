@@ -49,7 +49,7 @@ int llamo_naves (juego_t* componentes, int ciclos);
  * Recibe un puntero a la estructura que tiene todos los componentes del juego,
  *  un int (ciclos) con la cantidad de ciclos que se ha realizado 
  *  
- * Devuelve un int entre 9 y 1
+ * Devuelve un int entre 7 y 1
  */
 
 //////////// NAVES_POR_CICLO ///////////
@@ -60,7 +60,7 @@ int naves_por_ciclo (juego_t* componentes, int times);
  * Recibe un puntero a la estructura que tiene todos los componentes del juego,
  *  un int (times) con el valor que indica cada cuantos ciclos se mueven los enemigos 
  * 
- * Devuelve un int entre 1 y 4
+ * Devuelve un int entre 1 y 2
  */
 //////////// CONTROL_AUDIO_PLAYER ///////////
 
