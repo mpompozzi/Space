@@ -31,7 +31,7 @@
 
 
 ///////////////// RASPINIT ///////////////
-void raspinit (void); //Inicializa el joystick y el display
+void raspinit (void); //Inicializa el joystick y el display.
 
 
 ///////////////// RASPRINT ////////////////
