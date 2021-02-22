@@ -440,13 +440,13 @@ int menu_update(ALLEGRO_EVENT * ev, juego_t * juego, button_t * buttons[], int g
 void call_nod(void){
   static int nav=0;
   static int random=0;
+  
+  if(nav == 0){ //si no hay nave nodriza en el juego, que busque crearla cuando coincida los rangos que emite rand.
   random = (rand () % 100) ; //numero entre 25 y 35
       if((random >=5)&&(random<=7)){
           nav=nav_nod();
           random=0;
-        }
-  if(nav == 0){ //si no hay nave nodriza en el juego, que busque crearla cuando coincida los rangos que emite rand.
-      
+        }    
     }
   else{
       nav=nav_nod();//cuando ya hay nave, solamente la mueve.
