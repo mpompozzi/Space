@@ -78,7 +78,7 @@ typedef struct{
 }juego_t;
 ///////////////////////////////////////////
 void getcoordp(juego_t*);
-void inimat (void);//inicializa la matriz en 0
+void inimat (void);//inicializgea la matriz en 0
 void printmat (void);//imprime la matriz (testeo)
 void ininiv(int);//se fija en que nivel estas y carga cierto patron de naves, pone los escudos y la nave del player
 int ciclonaves (juego_t *);//mueve las naves enemigas

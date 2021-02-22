@@ -1,11 +1,11 @@
 /*******************************************************************************
-  @file     allegro.h
+  @file     front.h
   @brief    
   @author   Alejandro Alatsis, Axel Cincunegui, Facundo Molina, Magali Pompozzi 
  ******************************************************************************/
 
-#ifndef ALLEGRO_H
-#define ALLEGRO_H
+#ifndef FRONT_H
+#define FRONT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,11 +40,12 @@ extern "C" {
 #define GAMEOVER_BMP "res/img/gameover.png"  
   
 // --------------------------     audio      -------------------------- //
-#define GAME_SOUND "../../../res/audio/"
-#define OPTION_SOUND "../../../res/audio/"
-#define SHOT_SOUND "res/audio/disparo.wav"
-#define COLLISION_SOUND "res/audio/naveImpacto.wav"
-#define GAMEOVER_SOUND "res/audio/gameOver.wav"
+
+#define PLAYERSHOT_SOUND    "res/audio/disparo.wav"
+#define GAMEOVER_SOUND      "res/audio/gameOver.wav"
+#define NAVNOD_SOUND        "res/audio/ufo_lowpitch.wav"
+#define LEVELUP_SOUND       "res/audio/lvlup.wav"
+
   
 
 /*******************************************************************************
@@ -123,4 +124,4 @@ void board_init(board_t * board);
 }
 #endif
 
-#endif /* ALLEGRO_H */
+#endif /* FRONT_H */

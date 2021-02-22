@@ -4,11 +4,11 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>headers/allegro.h</itemPath>
       <itemPath>headers/audio.h</itemPath>
       <itemPath>headers/backend.h</itemPath>
       <itemPath>headers/disdrv.h</itemPath>
       <itemPath>headers/draw.h</itemPath>
+      <itemPath>headers/front.h</itemPath>
       <itemPath>headers/joydrv.h</itemPath>
       <itemPath>headers/libaudio.h</itemPath>
       <itemPath>headers/logic.h</itemPath>
@@ -123,8 +123,6 @@
           <commandLine>libs/disdrv.o libs/joydrv.o libs/termlib.o</commandLine>
         </linkerTool>
       </compileType>
-      <item path="headers/allegro.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="headers/audio.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/backend.h" ex="false" tool="3" flavor2="0">
@@ -132,6 +130,8 @@
       <item path="headers/disdrv.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/draw.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/front.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/joydrv.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -234,13 +234,13 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="headers/allegro.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="headers/audio.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/backend.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/draw.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="headers/front.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="headers/logic.h" ex="false" tool="3" flavor2="0">
       </item>

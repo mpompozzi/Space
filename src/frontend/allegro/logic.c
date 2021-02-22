@@ -10,12 +10,19 @@
 
 #include "../../../headers/logic.h" 
 
+#include "../../../headers/structures.h" 
+
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
 
-
+#define PLAYERKILLED 22
+#define LVLUP        23
+#define GAMEOVER     24
+#define MASVIDA      25
+#define MENOSVIDA    26
+#define OPTION       27
 
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
@@ -121,6 +128,9 @@ int keyboard_counter(unsigned char keyName, int game_states){
  *               cuando ocurre transicion de nivel.
  * Recibe: puntero a estructura juego.
 *///------------------------------------------------------------------------ //
+
+
+
 int game_update(juego_t * juego, int game_states){
     move_player(juego, game_states);
     getcoordp(juego);
@@ -129,6 +139,7 @@ int game_update(juego_t * juego, int game_states){
     if(juego->naves == 0){
         game_states = TRANSITION_LEVELUP;
         juego->vidas+=1;
+        
         ininiv(juego->nivel +1 );
     }
     if(juego->vidas == 0){
@@ -233,7 +244,7 @@ void board_update(juego_t * juego, board_t * board){
 void shots_update(juego_t * juego, board_t * board){
     int n, k = 0, ok;
     coord_t eventoe, eventop;
-    if(board->pshot.objeto == PSHOT){
+    if(board->pshot.objeto == PSHOT){        
         eventop = ciclodispp(juego, board->pshot.i, board->pshot.j);
         for(k = 0, ok = 1; board->explosion[k].objeto == NADA && ok; k++){
             if(eventop.objeto == NAVE_NODRIZA){
@@ -269,6 +280,7 @@ void shots_update(juego_t * juego, board_t * board){
 *///------------------------------------------------------------------------ //
 void enemies_update(juego_t * juego){ //va a manejar timers de enemigos segun nivel
     navdisp();
+    //call_audio(&audio,NAVNOD);
     if(ciclonaves(juego)) juego->vidas = 0;
 }
 
@@ -485,14 +497,50 @@ void vel_nod(juego_t * juego, board_t * board){
    }
 
 
+
+
+
 /* ----------------- AUDIO DEL JUEGO ----------------- //
  * call_audio: esta funcion reprodice la pista de audio segun el evento que se 
  * requiere.
 *///------------------------------------------------------------------------ //
-/*void call_audio(audio_t * audio){
-  al_play_sample();
+
+
+ void call_audio(audio_t * audio,board_t * board,int game_states){
   
-}*/
+   static int flag[3];
+   
+   
+   
+   if(board->pshot.objeto == PSHOT){
+      if(board->pshot.i >= LARGO-2) 
+        al_play_sample(audio->playershot_sound,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,NULL);
+    }    
+  
+   if(game_states == TRANSITION_LEVELUP && flag[0] == 1){
+       flag[0]=0;
+       al_play_sample(audio->levelup_sound,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,NULL);
+     }
+   else if(game_states != TRANSITION_LEVELUP)
+     flag[0]=1;
+    
+   
+   if(board->navnod.objeto == NAVNOD && flag[1] == 1){
+      if(board->navnod.j <2 ) {
+         flag[1]=0;
+        al_play_sample(audio->navnod_sound,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,NULL);
+        }
+    } else if(board->navnod.objeto != NAVNOD)  
+      flag[1]=1;
+  
+   if(game_states == TRANSITION_GAMEOVER && flag[2] == 1){
+       flag[2]=0;
+       al_play_sample(audio->gameover_sound,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,NULL);
+     }
+   else if(game_states != TRANSITION_GAMEOVER)
+     flag[2]=1;
+    
+}
 
 /*******************************************************************************
  *******************************************************************************

@@ -9,6 +9,7 @@
  ******************************************************************************/
 
 #include "../../../headers/draw.h" 
+#include "../../../headers/logic.h" 
 
 
 /*******************************************************************************
@@ -116,7 +117,7 @@ void menu_draw(button_t * buttons[], graphics_t * graphics, juego_t * juego, int
             
         case(STATE_STATS):
             al_clear_to_color(al_map_rgb(0,0,0));
-            al_draw_bitmap(graphics->menu_background,0,0,0);
+            al_draw_text(buttons[1][0].font, WHITE, DISP_W / 2, buttons[1][0].y -200, ALLEGRO_ALIGN_CENTRE, "W O R K   I N  P R O G R E S S    :D");
             if(buttons[1][0].keyboard)
                 al_draw_text(buttons[1][0].font, RED, DISP_W / 2, buttons[1][0].y, ALLEGRO_ALIGN_CENTRE, buttons[1][0].text);
             else
@@ -135,7 +136,10 @@ void menu_draw(button_t * buttons[], graphics_t * graphics, juego_t * juego, int
     }
 }    
 
-
+/* --------------     DIBUJO DE TRANSIOCIONES     -------------- //
+ * trasition_draw: imprimir las imagenes de transicion segun los estados definidos.
+ * Recibe: puntero a estructura graficos y estados.
+*///------------------------------------------------------- //
 void transition_draw(graphics_t * graphics, int game_states){
     switch(game_states){
         case(TRANSITION_LEVELUP):
@@ -204,7 +208,6 @@ void shots_draw(graphics_t * graphics, board_t * board){
     int n, check;
     if(board->pshot.objeto == PSHOT){
         al_draw_line(SCALE * board->pshot.j, SCALE * board->pshot.i - 5, SCALE * board->pshot.j, SCALE * board->pshot.i + 5, RED, 4);
-        //if(board->pshot.i > LARGO - 2) al_play_sample(shot_sound, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
     for(n = 0, check = 1; n < MAX_SHOTS && check; n++){
         if(board->enemy_shot[n].objeto == ESHOT){
@@ -236,10 +239,10 @@ void explosion_draw(graphics_t * graphics, board_t * board){
     int k;
     for(k = 0; k < MAX_EXPLOSIONS; k++){
         switch(board->explosion[k].objeto){
-            case(PLAYER):
+            case(PLAYER):                
                 al_draw_bitmap(graphics->playerkilled_bitmap, SCALE*board->explosion[k].j - CELL, SCALE*board->explosion[k].i - CELL +CORRECCION , 0);
                 break;
-            case(ENEMY1):
+          case(ENEMY1):
                 al_draw_bitmap(graphics->enemykilled_bitmap, SCALE*board->explosion[k].j - CELL/2, SCALE*board->explosion[k].i - CELL/2 + CORRECCION , 0);
                 break;
             case(NAVNOD):
@@ -248,17 +251,6 @@ void explosion_draw(graphics_t * graphics, board_t * board){
         }
     }
 }
-/*
-void draw_all(juego_t * juego, graphics_t * graphics, board_t * board){
-    player_draw(juego, graphics);
-    vel_nod(juego, board);
-    hud_draw(juego, graphics);
-    enemies_draw(graphics, board);
-    shots_draw(graphics, board);
-    muro_draw(graphics, board);
-    navnod_draw(graphics, board);
-    explosion_draw(graphics, board);
-}*/
 
 /*******************************************************************************
  *******************************************************************************

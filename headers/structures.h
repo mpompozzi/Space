@@ -89,12 +89,12 @@ typedef struct {
 } display_t;
 
 // -------------------     estructura de audio      ------------------ //
+
 typedef struct{
-    ALLEGRO_SAMPLE* game_sound;
-    ALLEGRO_SAMPLE* option_sound;
-    ALLEGRO_SAMPLE* shot_sound;
-    ALLEGRO_SAMPLE* collision_sound;
+    ALLEGRO_SAMPLE* playershot_sound;
     ALLEGRO_SAMPLE* gameover_sound;
+    ALLEGRO_SAMPLE* navnod_sound;
+    ALLEGRO_SAMPLE* levelup_sound;
 } audio_t;
 
 // ---------     estructura de gestion de elementos en tablero      --------- //
@@ -102,7 +102,7 @@ typedef struct{
     ALLEGRO_TIMER* timer_enemy;
     coord_t pshot;
     coord_t muro[MAX_MURO];
-    coord_t enemy_cell [MAX_ENEMIES]; 
+    coord_t enemy_cell [MAX_ENEMIES];
     coord_t enemy_shot [MAX_SHOTS];
     coord_t navnod;
     coord_t explosion [MAX_EXPLOSIONS];

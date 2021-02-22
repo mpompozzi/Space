@@ -8,7 +8,7 @@
  * INCLUDE HEADER FILES
  ******************************************************************************/
 
-#include "../../../headers/allegro.h"   
+#include "../../../headers/front.h"   
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
@@ -112,30 +112,29 @@ void disp_post_draw(display_t * display){
 void audio_init(audio_t * audio){
     al_install_audio();
     al_init_acodec_addon();
-    al_reserve_samples(128);
+    al_reserve_samples(20);
 
-    /*audio->game_sound = al_load_sample("shot.flac");
-    must_init(audio->game_sound, "game sound");
-
-    audio->option_sound = al_load_sample("explode2.flac");
-    must_init(audio->option_sound, "option selected sound");*/
-    
-    audio->shot_sound = al_load_sample(SHOT_SOUND);
-    must_init(audio->shot_sound, "shot sound");
-    
-    audio->collision_sound = al_load_sample(COLLISION_SOUND);
-    must_init(audio->collision_sound, "coliision sound sound");
     
     audio->gameover_sound = al_load_sample(GAMEOVER_SOUND);
     must_init(audio->gameover_sound, "game over sound");
+    
+    audio->playershot_sound = al_load_sample(PLAYERSHOT_SOUND);
+    must_init(audio->playershot_sound, "playershot sound");
+    
+
+    audio->navnod_sound = al_load_sample(NAVNOD_SOUND);
+    must_init(audio->navnod_sound, "navnod sound");
+    
+    audio->levelup_sound = al_load_sample(LEVELUP_SOUND);
+    must_init(audio->levelup_sound, "level up sound");
 }
 
 void audio_deinit(audio_t * audio){
-    /*al_destroy_sample(game_sound);
-    al_destroy_sample(option_sound);*/
-    al_destroy_sample(audio->shot_sound);
-    al_destroy_sample(audio->collision_sound);
+ 
     al_destroy_sample(audio->gameover_sound);
+    al_destroy_sample(audio->playershot_sound);
+    al_destroy_sample(audio->navnod_sound);
+    al_destroy_sample(audio->levelup_sound);
 }
 
 /* ------------------     GRAFICOS      ------------------ //
@@ -165,7 +164,7 @@ void graphics_init(graphics_t * graphics){
     graphics->player_bitmap = al_load_bitmap(PLAYER_BMP);
     must_init(graphics->player_bitmap, "player bitmap");
     
-     graphics->muro_bitmap = al_load_bitmap(MURO_BMP);
+    graphics->muro_bitmap = al_load_bitmap(MURO_BMP);
     must_init(graphics->muro_bitmap, "muro bitmap");
     
     graphics->playerkilled_bitmap = al_load_bitmap(PLAYERKILLED_BMP);
@@ -357,7 +356,9 @@ int main(void){
         if(redraw && al_is_event_queue_empty(queue)){
             disp_pre_draw(&display);
             menu_draw(buttons, &graphics, &juego, game_states);
+            call_audio(&audio,&board,game_states);
             if(game_states == STATE_PLAY){
+                
                 //draw_all(&juego, &graphics, &board);              
                 player_draw(&juego, &graphics);
                 vel_nod(&juego, &board);
@@ -366,7 +367,7 @@ int main(void){
                 shots_draw(&graphics, &board);
                 muro_draw(&graphics, &board);
                 navnod_draw(&graphics, &board);
-                explosion_draw(&graphics, &board); 
+                explosion_draw(&graphics, &board ); 
             }
             if((game_states == TRANSITION_LEVELUP) || (game_states == TRANSITION_LEVELSTART) || (game_states == TRANSITION_GAMEOVER)){
                 menu_draw(buttons, &graphics, &juego, STATE_PLAY);
@@ -399,6 +400,7 @@ int main(void){
             case ALLEGRO_EVENT_TIMER:
                 if(event.timer.source == timer){
                     redraw = true;
+                    //call_audio(&audio,&board);
                     if(game_states == STATE_EXIT)
                         done = true;
                     if(game_states == STATE_PLAY){
@@ -442,6 +444,7 @@ int main(void){
                 break;
             case ALLEGRO_EVENT_KEY_DOWN:
                 game_states = menu_update(&event, &juego, buttons, game_states);
+               // call_audio(&audio,PSHOT);
                 break;
            
             case ALLEGRO_EVENT_DISPLAY_CLOSE:

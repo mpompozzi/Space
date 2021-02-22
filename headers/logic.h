@@ -122,6 +122,11 @@ void vel_nod(juego_t * juego, board_t * board);
 *///-------------------------------------------------------------- //
 void move_player(juego_t * juego, int game_states);
 
+/* ----------------- AUDIO DEL JUEGO ----------------- //
+ * call_audio: esta funcion reprodice la pista de audio segun el evento que se 
+ * requiere.
+*///------------------------------------------------------------------------ //
+void call_audio(audio_t * audio,board_t * board,int game_states);
 
 /*******************************************************************************
  ******************************************************************************/
