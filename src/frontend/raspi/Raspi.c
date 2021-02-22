@@ -96,7 +96,6 @@ void sounds (int what);
 #define THRESHOLD 40    //Límite a partir del cual se mueve el LED encendido
 #define JUGAR 5         //Uso 5 y 12, porque son las posiciones en las que se encuentra el puntero
 #define TERMINA 12
-#define BLANK 0
 #define MAX_ENEM 16     //Cantidad maxima de enemigos en juego
 #define MENU 2          //Opcion menu y juego para saber que matriz voy a tener que llamar a imprimir
 #define GAME 1
@@ -287,8 +286,6 @@ int main (void)
               }
 
             usleep (100);
-
-            menu (BLANK);
             rasprint (MENU);
             usleep (100);
 
