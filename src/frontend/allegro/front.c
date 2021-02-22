@@ -298,7 +298,6 @@ int main(void){
     audio_init(&audio);    
     keyboard_init();
     graphics_init(&graphics);
-    board_init(&board);
     
     ALLEGRO_FONT* font = NULL;
     
@@ -377,6 +376,7 @@ int main(void){
                 hud_draw(font, &juego, &graphics);
                 transition_draw(&graphics, game_states);
                 if(transition){
+                    board_init(&board);
                     if(game_states == TRANSITION_LEVELUP){
                         game_states = STATE_PLAY;
                     }
