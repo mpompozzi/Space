@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=SpaceInvaders
+PROJECTNAME=este space si
 
 # Active Configuration
 DEFAULTCONF=Debug_RPI

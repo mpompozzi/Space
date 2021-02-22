@@ -61,11 +61,11 @@ LDLIBSOPTIONS=-L/usr/local/lib `pkg-config --libs sdl` `pkg-config --libs sdl2`
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/spaceinvaders
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/este_space_si
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/spaceinvaders: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/este_space_si: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/spaceinvaders ${OBJECTFILES} ${LDLIBSOPTIONS} libs/disdrv.o libs/joydrv.o libs/termlib.o
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/este_space_si ${OBJECTFILES} ${LDLIBSOPTIONS} libs/disdrv.o libs/joydrv.o libs/termlib.o
 
 ${OBJECTDIR}/src/backend/backend.o: src/backend/backend.c
 	${MKDIR} -p ${OBJECTDIR}/src/backend

@@ -139,7 +139,7 @@ int game_update(juego_t * juego, int game_states){
     if(juego->naves == 0){
         game_states = TRANSITION_LEVELUP;
         juego->vidas+=1;
-        
+        inimat();
         ininiv(juego->nivel +1 );
     }
     if(juego->vidas == 0){

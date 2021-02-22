@@ -492,7 +492,7 @@ if (nivel > 5) { // limita la cantidad de niveles a 5 para evitar desbordamiento
         nivel = 5;
     }
 
-    for (i = nivel; i < (nivel + 5); i += 2) {
+    for (i = nivel; i < (nivel + 8); i += 2) {
         for (j = 1; j < ANCHO; j += SEPARACION) {//seteo enemigos
             if (i == nivel) {
                 space[i][j] = ENEMY3;
@@ -516,7 +516,7 @@ if (nivel > 5) { // limita la cantidad de niveles a 5 para evitar desbordamiento
             }
         }
     }
-    for (i = (nivel + 6); i < (nivel + 7); ++i) {
+    for (i = (nivel + 8); i < (nivel + 9); ++i) {
         for (j = 1; j < ANCHO; j += SEPARACION) {
             space[i][j] = ENEMYSHOT1;
         }
